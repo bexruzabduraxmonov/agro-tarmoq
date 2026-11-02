@@ -84,9 +84,20 @@ export default function PwaInstallBanner({ onShowToast }) {
         >
           <div 
             onClick={handleInstallClick} 
-            style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}
+            style={{ display: 'flex', alignItems: 'center', gap: '9px', cursor: 'pointer' }}
           >
-            <span style={{ fontSize: '18px' }}>📲</span>
+            <img 
+              src="/logo.png" 
+              alt="Agro Tarmoq" 
+              style={{ 
+                width: '28px', 
+                height: '28px', 
+                borderRadius: '50%', 
+                objectFit: 'cover',
+                border: '1.5px solid rgba(255,255,255,0.85)',
+                boxShadow: '0 2px 6px rgba(0,0,0,0.2)'
+              }} 
+            />
             <span style={{ fontSize: '0.86rem', fontWeight: 700, letterSpacing: '-0.01em' }}>
               {t('pwa_btn')}
             </span>
@@ -138,16 +149,32 @@ export default function PwaInstallBanner({ onShowToast }) {
             onClick={(e) => e.stopPropagation()}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <Logo size={36} showTagline={false} />
-                <h3 style={{ fontSize: '1.2rem', fontWeight: 800, margin: 0 }}>
-                  Agro Tarmoq Ilovasi
-                </h3>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <img 
+                  src="/logo.png" 
+                  alt="Agro Tarmoq" 
+                  style={{ 
+                    width: '46px', 
+                    height: '46px', 
+                    borderRadius: '50%', 
+                    objectFit: 'cover',
+                    border: '2px solid var(--primary-color)',
+                    boxShadow: '0 4px 14px rgba(21, 128, 61, 0.25)' 
+                  }} 
+                />
+                <div>
+                  <h3 style={{ fontSize: '1.18rem', fontWeight: 800, margin: 0, lineHeight: 1.2 }}>
+                    Agro Tarmoq
+                  </h3>
+                  <span style={{ fontSize: '0.78rem', color: 'var(--muted-color)', fontWeight: 600 }}>
+                    Rasmiy mobil ilova
+                  </span>
+                </div>
               </div>
               <button 
                 type="button" 
                 onClick={() => setShowModal(false)} 
-                style={{ fontSize: '22px', border: 'none', background: 'none', cursor: 'pointer' }}
+                style={{ fontSize: '22px', border: 'none', background: 'none', cursor: 'pointer', color: 'var(--muted-color)' }}
               >
                 ✕
               </button>
