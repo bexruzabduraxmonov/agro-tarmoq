@@ -179,7 +179,8 @@ export default function App() {
 
       {currentPage === 'search' && (
         <SearchPage 
-          query={searchQuery} 
+          query={searchQuery}
+          setQuery={setSearchQuery}
           onAddToCart={handleAddToCart} 
           onNavigate={handleNavigate} 
         />
