@@ -1569,3 +1569,152 @@ ul {
     gap: 6px;
   }
 }
+
+/* ==========================================================================
+   Bottom Navigation Bar (Mobile / Standalone App — Uzum Market style)
+   ========================================================================== */
+
+.pwa-floating-banner {
+  bottom: 24px;
+  left: 20px;
+}
+
+@media (max-width: 768px) {
+  .pwa-floating-banner {
+    bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+    left: 14px;
+    padding: 8px 14px;
+    font-size: 0.8rem;
+  }
+}
+
+.agro-bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 80;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(226, 232, 240, 0.95);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  display: none;
+}
+
+/* Display on mobile screens and when installed as PWA standalone */
+@media (max-width: 768px) {
+  .agro-bottom-nav {
+    display: block;
+  }
+  body {
+    padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+.agro-bottom-nav.is-standalone {
+  display: block;
+}
+body:has(.agro-bottom-nav.is-standalone) {
+  padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px));
+}
+
+.bottom-nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  height: 60px;
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 0 4px;
+}
+
+.bottom-nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 6px 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #64748b;
+  transition: color 0.18s ease, transform 0.15s ease;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  position: relative;
+  font-family: inherit;
+}
+
+.bottom-nav-item:active {
+  transform: scale(0.92);
+}
+
+.bottom-nav-icon-wrap {
+  position: relative;
+  font-size: 20px;
+  line-height: 1;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 24px;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.bottom-nav-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  transition: color 0.2s ease, font-weight 0.2s ease;
+  white-space: nowrap;
+}
+
+/* Active State (Uzum Market Style with top accent indicator) */
+.bottom-nav-item.active {
+  color: var(--primary-color);
+}
+
+.bottom-nav-item.active .bottom-nav-icon-wrap {
+  transform: translateY(-1px) scale(1.08);
+  color: var(--primary-color);
+}
+
+.bottom-nav-item.active .bottom-nav-label {
+  color: var(--primary-color);
+  font-weight: 800;
+}
+
+.bottom-nav-item.active::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 24px;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--primary-color);
+}
+
+/* Live Cart Badge */
+.bottom-nav-badge {
+  position: absolute;
+  top: -4px;
+  right: -6px;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: #ef4444;
+  color: #fff;
+  font-size: 0.64rem;
+  font-weight: 800;
+  display: grid;
+  place-items: center;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 6px rgba(239, 68, 68, 0.4);
+}

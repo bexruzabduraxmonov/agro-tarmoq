@@ -63,13 +63,12 @@ export default function PwaInstallBanner({ onShowToast }) {
 
   return (
     <>
-      {/* Discreet Floating Install Bar at bottom-right or header */}
+      {/* Discreet Floating Install Bar at bottom-left */}
       {!dismissed && (
         <div 
+          className="pwa-floating-banner"
           style={{
             position: 'fixed',
-            bottom: '24px',
-            left: '20px',
             zIndex: 85,
             background: 'linear-gradient(135deg, #064e3b, #047857)',
             color: '#fff',

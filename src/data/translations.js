@@ -25,6 +25,11 @@ export const translations = {
     menu_open: "Menyuni ochish",
     menu_close: "Menyuni yopish",
     sections: "Boʻlimlar",
+    tab_home: "Bosh sahifa",
+    tab_catalog: "Katalog",
+    tab_search: "Qidiruv",
+    tab_cart: "Savat",
+    tab_profile: "Profil",
 
     // Hero
     hero_badge: "🌾 Fermer · Xaridor · Texnika egasi · Agronom",
@@ -238,6 +243,11 @@ export const translations = {
     menu_open: "Открыть меню",
     menu_close: "Закрыть меню",
     sections: "Разделы",
+    tab_home: "Главная",
+    tab_catalog: "Каталог",
+    tab_search: "Поиск",
+    tab_cart: "Корзина",
+    tab_profile: "Профиль",
 
     // Hero
     hero_badge: "🌾 Фермер · Покупатель · Владелец техники · Агроном",
@@ -451,6 +461,11 @@ export const translations = {
     menu_open: "Open menu",
     menu_close: "Close menu",
     sections: "Sections",
+    tab_home: "Home",
+    tab_catalog: "Catalog",
+    tab_search: "Search",
+    tab_cart: "Cart",
+    tab_profile: "Profile",
 
     // Hero
     hero_badge: "🌾 Farmer · Buyer · Machinery Owner · Agronomist",

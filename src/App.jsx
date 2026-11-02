@@ -18,6 +18,7 @@ import ChorvachilikPage from './pages/ChorvachilikPage';
 import AuthPage from './pages/AuthPage';
 import SearchPage from './pages/SearchPage';
 import PwaInstallBanner from './components/PwaInstallBanner';
+import BottomNav from './components/BottomNav';
 
 export default function App() {
   const getInitialPage = () => {
@@ -199,6 +200,14 @@ export default function App() {
 
       {/* PWA Install Banner */}
       <PwaInstallBanner onShowToast={showToast} />
+
+      {/* Mobile & Installed PWA Bottom Navigation Bar (Uzum Market Style) */}
+      <BottomNav
+        currentPage={currentPage}
+        onNavigate={handleNavigate}
+        cartCount={totalCartCount}
+        onOpenCart={() => setIsCartOpen(true)}
+      />
 
       {/* Toast Notification */}
       <div className={`ag-toast ${toastShow ? 'show' : ''}`} id="toast">
