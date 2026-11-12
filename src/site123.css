@@ -2444,7 +2444,45 @@ ul {
   }
   .header-inner {
     padding: 8px 0;
-    gap: 10px;
+    gap: 8px;
+    width: calc(100% - 1rem);
+  }
+  .brand-text small {
+    display: none !important;
+  }
+  .agro-brand-logo {
+    gap: 8px !important;
+  }
+  .agro-official-emblem {
+    width: 34px !important;
+    height: 34px !important;
+  }
+  .brand-text span {
+    font-size: 1.15rem !important;
+  }
+  .header-actions {
+    gap: 6px !important;
+  }
+  .header-actions .account-btn {
+    display: none !important;
+  }
+  .header-actions .lang-select-btn {
+    padding: 4px 8px !important;
+    height: 34px !important;
+    font-size: 0.78rem !important;
+    gap: 4px !important;
+  }
+  .theme-toggle-btn, .cart-btn, .menu-btn {
+    width: 34px !important;
+    height: 34px !important;
+    font-size: 14px !important;
+  }
+  .cart-count {
+    min-width: 17px !important;
+    height: 17px !important;
+    font-size: 0.62rem !important;
+    top: -3px !important;
+    right: -3px !important;
   }
 }
 
@@ -2555,13 +2593,41 @@ ul {
     padding: 11px 18px;
   }
   .header-inner {
-    gap: 8px;
-    width: calc(100% - 1rem);
+    gap: 6px;
+    width: calc(100% - 0.75rem);
+    padding: 6px 0;
   }
-  .account-btn, .cart-btn, .menu-btn {
-    width: 36px;
-    height: 36px;
-    font-size: 16px;
+  .agro-brand-logo {
+    gap: 6px !important;
+  }
+  .agro-official-emblem {
+    width: 32px !important;
+    height: 32px !important;
+  }
+  .brand-text span {
+    font-size: 1.05rem !important;
+  }
+  .header-actions {
+    gap: 5px !important;
+  }
+  .header-actions .lang-select-btn {
+    padding: 3px 6px !important;
+    height: 32px !important;
+    font-size: 0.74rem !important;
+    gap: 3px !important;
+  }
+  .theme-toggle-btn, .cart-btn, .menu-btn {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 13px !important;
+  }
+  .cart-count {
+    min-width: 16px !important;
+    height: 16px !important;
+    font-size: 0.58rem !important;
+    top: -3px !important;
+    right: -3px !important;
+    padding: 0 3px !important;
   }
   .footer-grid {
     grid-template-columns: 1fr;
@@ -2612,7 +2678,32 @@ ul {
     grid-template-columns: 1fr;
   }
   .header-inner {
-    gap: 6px;
+    gap: 4px;
+    width: 100%;
+    padding: 6px 8px;
+  }
+  .agro-brand-logo {
+    gap: 5px !important;
+  }
+  .agro-official-emblem {
+    width: 28px !important;
+    height: 28px !important;
+  }
+  .brand-text span {
+    font-size: 0.95rem !important;
+  }
+  .header-actions {
+    gap: 4px !important;
+  }
+  .header-actions .lang-select-btn {
+    padding: 2px 5px !important;
+    height: 28px !important;
+    font-size: 0.68rem !important;
+  }
+  .theme-toggle-btn, .cart-btn, .menu-btn {
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 12px !important;
   }
 }
 

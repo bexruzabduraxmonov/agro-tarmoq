@@ -68,6 +68,7 @@ export default function LanguageSwitcher({ isMobile = false }) {
     <div ref={containerRef} style={{ position: 'relative', display: 'inline-block' }}>
       <button
         type="button"
+        className="lang-select-btn"
         onClick={() => setIsOpen(!isOpen)}
         style={{
           display: 'inline-flex',

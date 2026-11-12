@@ -170,7 +170,7 @@ export default function Header({ currentPage, setCurrentPage, cartCount, onOpenC
           </form>
 
           {/* Actions */}
-          <div className="header-actions" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div className="header-actions">
             {/* Language Switcher */}
             <LanguageSwitcher />
 
