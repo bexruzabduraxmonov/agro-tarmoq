@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './site123.css';
 import { LanguageProvider } from './context/LanguageContext';
+import { ThemeProvider } from './context/ThemeContext';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import CartOverlay from './components/CartOverlay';
@@ -114,6 +115,7 @@ export default function App() {
   const totalCartCount = cart.reduce((sum, item) => sum + item.qty, 0);
 
   return (
+    <ThemeProvider>
     <LanguageProvider>
       <div className="app-container">
         {/* Header */}
@@ -123,6 +125,7 @@ export default function App() {
           cartCount={totalCartCount}
           onOpenCart={() => setIsCartOpen(true)}
           onSearch={handleSearch}
+          onShowToast={showToast}
         />
 
       {/* Pages Switcher */}
@@ -216,5 +219,6 @@ export default function App() {
       </div>
     </div>
   </LanguageProvider>
+  </ThemeProvider>
   );
 }

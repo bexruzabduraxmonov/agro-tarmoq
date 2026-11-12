@@ -1,14 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { AGRO_DATA } from '../data/agroData';
 import { useLanguage } from '../context/LanguageContext';
+import { useTheme } from '../context/ThemeContext';
 import Logo from './Logo';
 import LanguageSwitcher from './LanguageSwitcher';
 
-export default function Header({ currentPage, setCurrentPage, cartCount, onOpenCart, onSearch }) {
+export default function Header({ currentPage, setCurrentPage, cartCount, onOpenCart, onSearch, onShowToast }) {
   const { t } = useLanguage();
+  const { isDark, toggleTheme } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [moreMenuOpen, setMoreMenuOpen] = useState(false);
   const [searchVal, setSearchVal] = useState('');
+
+  const handleThemeToggle = () => {
+    toggleTheme();
+    if (onShowToast) {
+      onShowToast(isDark ? "Kunduzgi yorugʻ rejim yoqildi ☀️" : "Tungi qorongʻu rejim yoqildi 🌙");
+    }
+  };
 
   const navMap = {
     '': 'nav_home',
@@ -165,6 +174,21 @@ export default function Header({ currentPage, setCurrentPage, cartCount, onOpenC
             {/* Language Switcher */}
             <LanguageSwitcher />
 
+            {/* Dark/Light Mode Toggle */}
+            <button
+              type="button"
+              className={`theme-toggle-btn ${isDark ? 'is-dark' : 'is-light'}`}
+              onClick={handleThemeToggle}
+              aria-label={isDark ? 'Kunduzgi rejimga oʻtish' : 'Tungi rejimga oʻtish'}
+              title={isDark ? 'Kunduzgi rejimga oʻtish (Hozir tungi)' : 'Tungi rejimga oʻtish (Hozir kunduzgi)'}
+            >
+              {isDark ? (
+                <i className="fa-solid fa-sun" style={{ color: '#f59e0b', fontSize: '1.1rem' }}></i>
+              ) : (
+                <i className="fa-solid fa-moon" style={{ color: '#334155', fontSize: '1rem' }}></i>
+              )}
+            </button>
+
             <button 
               type="button" 
               className={`account-btn ${currentPage === 'royxatdan-otish' ? 'active' : ''}`}
@@ -212,9 +236,39 @@ export default function Header({ currentPage, setCurrentPage, cartCount, onOpenC
           </button>
         </div>
 
-        {/* Mobile Language Switcher */}
-        <div style={{ padding: '14px 22px 4px', borderBottom: '1px solid var(--border-color)' }}>
+        {/* Mobile Language Switcher & Theme Row */}
+        <div style={{ padding: '14px 22px 10px', borderBottom: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px' }}>
           <LanguageSwitcher isMobile={true} />
+          
+          <button
+            type="button"
+            onClick={handleThemeToggle}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '8px 14px',
+              borderRadius: '12px',
+              border: '1px solid var(--border-color)',
+              background: 'var(--surface-color)',
+              color: 'var(--text-color)',
+              fontSize: '0.85rem',
+              fontWeight: 700,
+              cursor: 'pointer',
+            }}
+          >
+            {isDark ? (
+              <>
+                <i className="fa-solid fa-sun" style={{ color: '#f59e0b' }}></i>
+                <span>Kunduzgi</span>
+              </>
+            ) : (
+              <>
+                <i className="fa-solid fa-moon" style={{ color: '#334155' }}></i>
+                <span>Tungi</span>
+              </>
+            )}
+          </button>
         </div>
 
         <div style={{ padding: '14px 22px', borderBottom: '1px solid var(--border-color)' }}>

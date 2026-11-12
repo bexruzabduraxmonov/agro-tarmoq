@@ -2,10 +2,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import { AGRO_DATA } from '../data/agroData';
 import { useLanguage } from '../context/LanguageContext';
 import { fmt } from '../utils/helpers';
+import ProductDetailModal from '../components/ProductDetailModal';
 
 export default function SearchPage({ query = '', setQuery, onAddToCart, onNavigate }) {
   const { t } = useLanguage();
   const [activeFilter, setActiveFilter] = useState('all'); // all | products | tech | disease | news
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const inputRef = useRef(null);
 
   const currentQuery = query || '';
@@ -221,35 +223,58 @@ export default function SearchPage({ query = '', setQuery, onAddToCart, onNaviga
                     <span>🛒 {t('nav_bozor')}</span>
                     <span className="search-badge-count">{matchedProducts.length}</span>
                   </h3>
-                  <div className="grid-cards">
+                  <div className="uzum-grid">
                     {matchedProducts.map((p) => (
-                      <article key={p.id} className="ag-card">
-                        <div className="card-media">
+                      <div
+                        key={p.id}
+                        className="uzum-card"
+                        onClick={() => setSelectedProduct(p)}
+                      >
+                        <div className="uzum-card-img">
                           <img src={p.img} alt={p.name} loading="lazy" />
+                          <div className="uzum-card-overlay">
+                            <span>Batafsil</span>
+                          </div>
                         </div>
-                        <div className="row" style={{ marginBottom: '6px' }}>
-                          <span className="tag" style={{ background: 'var(--green-soft)', color: 'var(--primary-color)' }}>
-                            {AGRO_DATA.catLabel[p.cat] || p.cat}
-                          </span>
-                          <span style={{ fontSize: '0.8rem', color: 'var(--muted-color)' }}>
-                            📍 {p.region.split(' ')[0]}
-                          </span>
+                        <div className="uzum-card-body">
+                          <div className="uzum-card-cat">{AGRO_DATA.catLabel[p.cat] || p.cat}</div>
+                          <h3 className="uzum-card-name" title={p.name}>
+                            <span>{p.emoji}</span> {p.name}
+                          </h3>
+                          <div className="uzum-card-rating-row">
+                            <i className="fa-solid fa-star"></i>
+                            <span className="rate-val">{p.rating || 4.9}</span>
+                            <span className="rate-count">({p.reviewsCount || 120})</span>
+                          </div>
+                          <div className="uzum-card-monthly">
+                            {fmt(Math.round((p.price * 1.12) / 6))} soʻm/oyiga
+                          </div>
+                          <div className="uzum-card-meta">
+                            <i className="fa-solid fa-location-dot"></i>
+                            <span className="truncate">{p.region.split(' ')[0]} • {p.farmer}</span>
+                          </div>
+                          <div className="uzum-card-footer">
+                            <div>
+                              <div className="uzum-card-price">
+                                {fmt(p.price)} <span className="uzum-card-cur">soʻm</span>
+                              </div>
+                              <div className="uzum-card-unit">1 {p.unit}</div>
+                            </div>
+                            <button
+                              type="button"
+                              className="uzum-card-add"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onAddToCart(p);
+                              }}
+                              aria-label="Savatga qoʻshish"
+                              title="Savatga qoʻshish"
+                            >
+                              <i className="fa-solid fa-cart-plus"></i>
+                            </button>
+                          </div>
                         </div>
-                        <h3 className="card-title" style={{ fontSize: '1.05rem' }}>{p.name}</h3>
-                        <p className="sub" style={{ fontSize: '0.82rem', marginTop: '2px' }}>🧑‍🌾 {p.farmer}</p>
-                        <div className="price-tag" style={{ marginTop: '10px' }}>
-                          {fmt(p.price)} {t('price_unit')}
-                        </div>
-                        <button
-                          type="button"
-                          className="ag-btn ag-btn-green ag-btn-sm"
-                          style={{ marginTop: '12px', width: '100%', justifyContent: 'center' }}
-                          onClick={() => onAddToCart(p)}
-                        >
-                          <i className="fa-solid fa-cart-plus" style={{ marginRight: '6px' }}></i>
-                          {t('add_to_cart')}
-                        </button>
-                      </article>
+                      </div>
                     ))}
                   </div>
                 </div>
@@ -371,35 +396,58 @@ export default function SearchPage({ query = '', setQuery, onAddToCart, onNaviga
                 </p>
               </div>
 
-              <div className="grid-cards">
+              <div className="uzum-grid">
                 {trendingProducts.map((p) => (
-                  <article key={p.id} className="ag-card">
-                    <div className="card-media">
+                  <div
+                    key={p.id}
+                    className="uzum-card"
+                    onClick={() => setSelectedProduct(p)}
+                  >
+                    <div className="uzum-card-img">
                       <img src={p.img} alt={p.name} loading="lazy" />
+                      <div className="uzum-card-overlay">
+                        <span>Batafsil</span>
+                      </div>
                     </div>
-                    <div className="row" style={{ marginBottom: '6px' }}>
-                      <span className="tag" style={{ background: 'var(--green-soft)', color: 'var(--primary-color)' }}>
-                        {AGRO_DATA.catLabel[p.cat] || p.cat}
-                      </span>
-                      <span style={{ fontSize: '0.8rem', color: 'var(--muted-color)' }}>
-                        📍 {p.region.split(' ')[0]}
-                      </span>
+                    <div className="uzum-card-body">
+                      <div className="uzum-card-cat">{AGRO_DATA.catLabel[p.cat] || p.cat}</div>
+                      <h3 className="uzum-card-name" title={p.name}>
+                        <span>{p.emoji}</span> {p.name}
+                      </h3>
+                      <div className="uzum-card-rating-row">
+                        <i className="fa-solid fa-star"></i>
+                        <span className="rate-val">{p.rating || 4.9}</span>
+                        <span className="rate-count">({p.reviewsCount || 100})</span>
+                      </div>
+                      <div className="uzum-card-monthly">
+                        {fmt(Math.round((p.price * 1.12) / 6))} soʻm/oyiga
+                      </div>
+                      <div className="uzum-card-meta">
+                        <i className="fa-solid fa-location-dot"></i>
+                        <span className="truncate">{p.region.split(' ')[0]} • {p.farmer}</span>
+                      </div>
+                      <div className="uzum-card-footer">
+                        <div>
+                          <div className="uzum-card-price">
+                            {fmt(p.price)} <span className="uzum-card-cur">soʻm</span>
+                          </div>
+                          <div className="uzum-card-unit">1 {p.unit}</div>
+                        </div>
+                        <button
+                          type="button"
+                          className="uzum-card-add"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onAddToCart(p);
+                          }}
+                          aria-label="Savatga qoʻshish"
+                          title="Savatga qoʻshish"
+                        >
+                          <i className="fa-solid fa-cart-plus"></i>
+                        </button>
+                      </div>
                     </div>
-                    <h3 className="card-title" style={{ fontSize: '1.05rem' }}>{p.name}</h3>
-                    <p className="sub" style={{ fontSize: '0.82rem', marginTop: '2px' }}>🧑‍🌾 {p.farmer}</p>
-                    <div className="price-tag" style={{ marginTop: '10px' }}>
-                      {fmt(p.price)} {t('price_unit')}
-                    </div>
-                    <button
-                      type="button"
-                      className="ag-btn ag-btn-green ag-btn-sm"
-                      style={{ marginTop: '12px', width: '100%', justifyContent: 'center' }}
-                      onClick={() => onAddToCart(p)}
-                    >
-                      <i className="fa-solid fa-cart-plus" style={{ marginRight: '6px' }}></i>
-                      {t('add_to_cart')}
-                    </button>
-                  </article>
+                  </div>
                 ))}
               </div>
             </div>
@@ -407,6 +455,16 @@ export default function SearchPage({ query = '', setQuery, onAddToCart, onNaviga
 
         </div>
       </section>
+
+      {/* Uzum-style Detailed Product Modal */}
+      {selectedProduct && (
+        <ProductDetailModal
+          product={selectedProduct}
+          onClose={() => setSelectedProduct(null)}
+          onAddToCart={(item) => onAddToCart(item)}
+          t={t}
+        />
+      )}
     </main>
   );
 }
