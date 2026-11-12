@@ -459,7 +459,8 @@ ul {
   font-size: 0.88rem;
   border: 1px solid var(--border-color);
   transition: all 0.18s ease;
-  background: #ffffff;
+  background: var(--surface-color);
+  color: var(--text-color);
 }
 
 .more-btn:hover {
@@ -478,11 +479,11 @@ ul {
   position: absolute;
   right: 0;
   top: calc(100% + 10px);
-  background: #fff;
+  background: var(--surface-color);
   border: 1px solid var(--border-color);
   border-radius: 16px;
   padding: 8px;
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.2);
   min-width: 220px;
   display: none;
   flex-direction: column;
@@ -525,8 +526,8 @@ ul {
 .header-search {
   display: flex;
   align-items: center;
-  background: #f1f5f9;
-  border: 1px solid transparent;
+  background: var(--surface-color);
+  border: 1px solid var(--border-color);
   border-radius: 999px;
   padding: 7px 16px;
   margin-right: 4px;
@@ -534,18 +535,25 @@ ul {
 }
 
 .header-search:focus-within {
-  background: #fff;
+  background: var(--surface-color);
   border-color: var(--primary-color);
   box-shadow: 0 0 0 3px var(--green-soft);
 }
 
 .header-search input {
-  border: none;
-  outline: none;
-  background: transparent;
+  border: none !important;
+  outline: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
   width: 110px;
   font-size: 0.88rem;
+  color: var(--text-color) !important;
   transition: width 0.25s ease;
+}
+
+.header-search input::placeholder {
+  color: var(--muted-color);
+  opacity: 0.8;
 }
 
 .header-search input:focus {
@@ -580,7 +588,7 @@ ul {
   width: 40px;
   height: 40px;
   border-radius: 999px;
-  background: #f1f5f9;
+  background: var(--surface-color);
   border: 1px solid var(--border-color);
   font-size: 17px;
   display: grid;
