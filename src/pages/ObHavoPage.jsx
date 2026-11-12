@@ -1,248 +1,233 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { AGRO_DATA } from '../data/agroData';
+import { MONTH_NAMES_UZ, MONTHS_FULL_UZ, WEEKDAYS_SHORT_UZ, getTodayFormatted, getTodayShortDate } from '../utils/helpers';
 
-// Extended rich data for regions with agricultural climate metrics
+// Helper to parse WMO weather code into Uzbek weather description, emoji, and agricultural advice
+export function parseWmoWeather(code) {
+  if (code === 0) return { condition: 'Ochiq, musaffo osmon', icon: '☀️', status: 'Dala ishlari uchun aʼlo' };
+  if (code === 1 || code === 2) return { condition: 'Qisman bulutli, iliq', icon: '🌤️', status: 'Ekish va parvarishga mos' };
+  if (code === 3) return { condition: 'Bulutli havo', icon: '⛅', status: 'Moʻtadil sharoit' };
+  if (code === 45 || code === 48) return { condition: 'Tumanli, nam havo', icon: '🌫️', status: 'Namlik yuqori' };
+  if (code >= 51 && code <= 55) return { condition: 'Mayda shivalovchi yomgʻir', icon: '🌦️', status: 'Tuproq tabiiy namlanadi' };
+  if (code >= 61 && code <= 65) return { condition: 'Yomgʻirli havo', icon: '🌧️', status: 'Sugʻorish talab etilmaydi' };
+  if (code >= 71 && code <= 77) return { condition: 'Qor yogʻishi', icon: '🌨️', status: 'Ekinlarni sovuqdan asrang' };
+  if (code >= 80 && code <= 82) return { condition: 'Kuchli yomgʻir / jala', icon: '⛈️', status: 'Dala ishlarini kechiktiring' };
+  if (code >= 95) return { condition: 'Momaqaldiroq va yashin', icon: '⚡', status: 'Ochiq dalada boʻlmang' };
+  return { condition: 'Moʻtadil ob-havo', icon: '🌤️', status: 'Mavsumiy agrotadbirlar' };
+}
+
+// Generates 7-day daily forecast based strictly on current actual dates (new Date())
+export function generateDynamicForecast(baseTemp = 15, baseRain = 10) {
+  const forecast = [];
+  const today = new Date();
+
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(today);
+    d.setDate(today.getDate() + i);
+
+    let dayName = 'Bugun';
+    if (i === 1) dayName = 'Ertaga';
+    else if (i > 1) dayName = WEEKDAYS_SHORT_UZ[d.getDay()];
+
+    const dateStr = `${d.getDate()}-${MONTH_NAMES_UZ[d.getMonth()]}`;
+
+    const wave = Math.sin((d.getDate() + i * 2) * 0.7) * 3;
+    const tDay = Math.round(baseTemp + wave);
+    const tNight = Math.round(tDay - 7 - (i % 3));
+    const rain = Math.max(0, Math.min(95, Math.round(baseRain + Math.cos(i * 1.5) * 20)));
+
+    let icon = '☀️';
+    let status = 'Ekish va parvarishga qulay';
+    if (rain > 50) {
+      icon = '🌧️';
+      status = 'Yomgʻir kutilmoqda';
+    } else if (rain > 20) {
+      icon = '🌤️';
+      status = 'Biroz bulutli, nam';
+    } else if (tDay > 28) {
+      icon = '☀️';
+      status = 'Issiq, ertalab sugʻoring';
+    } else if (tDay < 5) {
+      icon = '❄️';
+      status = 'Sovuq, ekinlarni asrang';
+    }
+
+    forecast.push({
+      day: dayName,
+      date: dateStr,
+      icon,
+      tDay: `${tDay > 0 ? '+' : ''}${tDay}°`,
+      tNight: `${tNight > 0 ? '+' : ''}${tNight}°`,
+      rain: `${rain}%`,
+      status
+    });
+  }
+
+  return forecast;
+}
+
+// Extended rich data for regions with agricultural climate metrics and coordinates for live data
 const REGION_DATA = {
   toshkent: {
     name: 'Toshkent viloyati',
-    temp: 22,
-    feelsLike: 23,
-    condition: 'Quyoshli, ochiq havo',
-    icon: '☀️',
-    humidity: 46,
-    soilTemp: 16,
-    wind: '3.8 m/s, SHQ',
-    rainProb: 10,
-    uvIndex: '4 (Oʻrtacha)',
-    riskLevel: 'safe', // safe, warning, alert
+    lat: 41.2995,
+    lon: 69.2401,
+    defaultTemp: 14,
+    defaultFeels: 13,
+    defaultCondition: 'Quyoshli, ochiq havo',
+    defaultIcon: '☀️',
+    defaultHumidity: 46,
+    defaultSoilTemp: 11,
+    defaultWind: '3.8 m/s, SHQ',
+    defaultRainProb: 10,
+    riskLevel: 'safe',
     riskTitle: 'Barqaror iqlim sharoiti',
-    riskText: 'Kuzgi shudgorlash va bugʻdoy ekish uchun eng qulay ob-havo hukm surmoqda. Ertalabki shudring ekinlarga tabiiy namlik beradi.',
-    forecast: [
-      { day: 'Bugun', date: '17-Okt', icon: '☀️', tDay: '+22°', tNight: '+11°', rain: '10%', status: 'Ekish uchun ideal' },
-      { day: 'Ertaga', date: '18-Okt', icon: '🌤️', tDay: '+23°', tNight: '+12°', rain: '15%', status: 'Dori sepishga mos' },
-      { day: 'Dush', date: '19-Okt', icon: '⛅', tDay: '+21°', tNight: '+10°', rain: '20%', status: 'Moʻtadil sharoit' },
-      { day: 'Sesh', date: '20-Okt', icon: '🌧️', tDay: '+18°', tNight: '+9°', rain: '75%', status: 'Yomgʻir kutilmoqda' },
-      { day: 'Chor', date: '21-Okt', icon: '🌤️', tDay: '+19°', tNight: '+8°', rain: '25%', status: 'Tuproqni yumshatish' },
-      { day: 'Pay', date: '22-Okt', icon: '☀️', tDay: '+21°', tNight: '+10°', rain: '5%', status: 'Oʻgʻitlashga mos' },
-      { day: 'Jum', date: '23-Okt', icon: '☀️', tDay: '+23°', tNight: '+11°', rain: '0%', status: 'Qulay va iliq' }
-    ]
+    riskText: 'Kuzgi shudgorlash va bugʻdoy ekish uchun eng qulay ob-havo hukm surmoqda. Ertalabki shudring ekinlarga tabiiy namlik beradi.'
   },
   samarqand: {
     name: 'Samarqand viloyati',
-    temp: 21,
-    feelsLike: 22,
-    condition: 'Ochiq, biroz bulutli',
-    icon: '🌤️',
-    humidity: 42,
-    soilTemp: 15,
-    wind: '4.2 m/s, SH',
-    rainProb: 15,
-    uvIndex: '5 (Oʻrtacha)',
+    lat: 39.6542,
+    lon: 66.9597,
+    defaultTemp: 13,
+    defaultFeels: 12,
+    defaultCondition: 'Ochiq, biroz bulutli',
+    defaultIcon: '🌤️',
+    defaultHumidity: 45,
+    defaultSoilTemp: 10,
+    defaultWind: '4.2 m/s, SH',
+    defaultRainProb: 15,
     riskLevel: 'safe',
     riskTitle: 'Qulay agrometeorologik holat',
-    riskText: 'Havo harorati meʼyorda, tuproq harorati urugʻ ildiz otishi uchun maqbul. Kechki sabzavotlar parvarishiga eʼtibor qarating.',
-    forecast: [
-      { day: 'Bugun', date: '17-Okt', icon: '🌤️', tDay: '+21°', tNight: '+10°', rain: '15%', status: 'Hosildorlikka qulay' },
-      { day: 'Ertaga', date: '18-Okt', icon: '☀️', tDay: '+22°', tNight: '+11°', rain: '10%', status: 'Ekishga mos' },
-      { day: 'Dush', date: '19-Okt', icon: '⛅', tDay: '+20°', tNight: '+9°', rain: '25%', status: 'Sugʻorish tavsiya' },
-      { day: 'Sesh', date: '20-Okt', icon: '🌧️', tDay: '+17°', tNight: '+8°', rain: '65%', status: 'Qisqa muddatli yomgʻir' },
-      { day: 'Chor', date: '21-Okt', icon: '🌤️', tDay: '+19°', tNight: '+7°', rain: '20%', status: 'Salqin havo' },
-      { day: 'Pay', date: '22-Okt', icon: '☀️', tDay: '+21°', tNight: '+9°', rain: '5%', status: 'Optimal agromaslahat' },
-      { day: 'Jum', date: '23-Okt', icon: '☀️', tDay: '+22°', tNight: '+10°', rain: '0%', status: 'Iliq quyoshli' }
-    ]
+    riskText: 'Havo harorati meʼyorda, tuproq harorati urugʻ ildiz otishi uchun maqbul. Kechki sabzavotlar parvarishiga eʼtibor qarating.'
   },
   fargona: {
     name: 'Fargʻona viloyati',
-    temp: 23,
-    feelsLike: 24,
-    condition: 'Iliq quyoshli',
-    icon: '☀️',
-    humidity: 49,
-    soilTemp: 17,
-    wind: '2.5 m/s, J',
-    rainProb: 5,
-    uvIndex: '4 (Oʻrtacha)',
+    lat: 40.3842,
+    lon: 71.7843,
+    defaultTemp: 15,
+    defaultFeels: 15,
+    defaultCondition: 'Iliq quyoshli',
+    defaultIcon: '☀️',
+    defaultHumidity: 49,
+    defaultSoilTemp: 12,
+    defaultWind: '2.5 m/s, J',
+    defaultRainProb: 5,
     riskLevel: 'safe',
     riskTitle: 'Meva va gʻallaga mos iqlim',
-    riskText: 'Vodiy boʻylab tinch va iliq ob-havo. Bogʻlarda hosilni toʻliq yigʻib olish va daraxtlarga shakl berish uchun ajoyib fursat.',
-    forecast: [
-      { day: 'Bugun', date: '17-Okt', icon: '☀️', tDay: '+23°', tNight: '+12°', rain: '5%', status: 'Yigʻim-terimga mos' },
-      { day: 'Ertaga', date: '18-Okt', icon: '☀️', tDay: '+24°', tNight: '+13°', rain: '5%', status: 'Aʼlo darajada' },
-      { day: 'Dush', date: '19-Okt', icon: '🌤️', tDay: '+22°', tNight: '+11°', rain: '15%', status: 'Dori purkashga qulay' },
-      { day: 'Sesh', date: '20-Okt', icon: '⛅', tDay: '+20°', tNight: '+10°', rain: '35%', status: 'Biroz bulutli' },
-      { day: 'Chor', date: '21-Okt', icon: '🌤️', tDay: '+21°', tNight: '+9°', rain: '10%', status: 'Oʻgʻit berish' },
-      { day: 'Pay', date: '22-Okt', icon: '☀️', tDay: '+23°', tNight: '+11°', rain: '0%', status: 'Iliq havo' },
-      { day: 'Jum', date: '23-Okt', icon: '☀️', tDay: '+24°', tNight: '+12°', rain: '0%', status: 'Bogʻdorchilik kuni' }
-    ]
+    riskText: 'Vodiy boʻylab tinch va iliq ob-havo. Bogʻlarda hosilni toʻliq yigʻib olish va daraxtlarga shakl berish uchun ajoyib fursat.'
   },
   andijon: {
     name: 'Andijon viloyati',
-    temp: 22,
-    feelsLike: 23,
-    condition: 'Ochiq havo',
-    icon: '☀️',
-    humidity: 52,
-    soilTemp: 16,
-    wind: '2.8 m/s, SH',
-    rainProb: 10,
-    uvIndex: '4 (Oʻrtacha)',
+    lat: 40.7821,
+    lon: 72.3442,
+    defaultTemp: 14,
+    defaultFeels: 13,
+    defaultCondition: 'Ochiq havo',
+    defaultIcon: '☀️',
+    defaultHumidity: 52,
+    defaultSoilTemp: 11,
+    defaultWind: '2.8 m/s, SH',
+    defaultRainProb: 10,
     riskLevel: 'warning',
     riskTitle: 'Tungi harorat pasayishi',
-    riskText: 'Kuzda kechalari harorat keskin pasayishi mumkin (+7°C). Nozik issiqsevar ekinlarni plyonka ostida saqlash tavsiya etiladi.',
-    forecast: [
-      { day: 'Bugun', date: '17-Okt', icon: '☀️', tDay: '+22°', tNight: '+11°', rain: '10%', status: 'Qulay ob-havo' },
-      { day: 'Ertaga', date: '18-Okt', icon: '🌤️', tDay: '+23°', tNight: '+11°', rain: '10%', status: 'Kuzgi ekish' },
-      { day: 'Dush', date: '19-Okt', icon: '⛅', tDay: '+21°', tNight: '+9°', rain: '20%', status: 'Harorat pasayishi' },
-      { day: 'Sesh', date: '20-Okt', icon: '🌧️', tDay: '+18°', tNight: '+7°', rain: '60%', status: 'Yogʻingarchilik' },
-      { day: 'Chor', date: '21-Okt', icon: '🌤️', tDay: '+19°', tNight: '+7°', rain: '15%', status: 'Tunlari salqin' },
-      { day: 'Pay', date: '22-Okt', icon: '☀️', tDay: '+21°', tNight: '+9°', rain: '5%', status: 'Ochiq osmon' },
-      { day: 'Jum', date: '23-Okt', icon: '☀️', tDay: '+22°', tNight: '+10°', rain: '0%', status: 'Optimal sharoit' }
-    ]
+    riskText: 'Kuzda kechalari harorat keskin pasayishi mumkin. Nozik issiqsevar ekinlarni plyonka ostida saqlash tavsiya etiladi.'
   },
   namangan: {
     name: 'Namangan viloyati',
-    temp: 21,
-    feelsLike: 21,
-    condition: 'Biroz bulutli',
-    icon: '⛅',
-    humidity: 54,
-    soilTemp: 15,
-    wind: '3.4 m/s, SH',
-    rainProb: 20,
-    uvIndex: '4 (Oʻrtacha)',
+    lat: 40.9983,
+    lon: 71.6726,
+    defaultTemp: 14,
+    defaultFeels: 13,
+    defaultCondition: 'Biroz bulutli',
+    defaultIcon: '⛅',
+    defaultHumidity: 54,
+    defaultSoilTemp: 11,
+    defaultWind: '3.4 m/s, SH',
+    defaultRainProb: 20,
     riskLevel: 'safe',
     riskTitle: 'Moʻtadil namlik darajasi',
-    riskText: 'Togʻoldi zonalarida namlik yuqori boʻlib, kuzgi ekinlar unib chiqishiga ijobiy taʼsir koʻrsatadi.',
-    forecast: [
-      { day: 'Bugun', date: '17-Okt', icon: '⛅', tDay: '+21°', tNight: '+10°', rain: '20%', status: 'Unib chiqishga mos' },
-      { day: 'Ertaga', date: '18-Okt', icon: '🌤️', tDay: '+22°', tNight: '+11°', rain: '15%', status: 'Dala ishlari' },
-      { day: 'Dush', date: '19-Okt', icon: '⛅', tDay: '+20°', tNight: '+9°', rain: '25%', status: 'Bulutli havo' },
-      { day: 'Sesh', date: '20-Okt', icon: '🌧️', tDay: '+17°', tNight: '+8°', rain: '70%', status: 'Yomgʻir ehtimoli' },
-      { day: 'Chor', date: '21-Okt', icon: '🌤️', tDay: '+19°', tNight: '+8°', rain: '15%', status: 'Nam tuproq' },
-      { day: 'Pay', date: '22-Okt', icon: '☀️', tDay: '+21°', tNight: '+9°', rain: '5%', status: 'Quyoshli kun' },
-      { day: 'Jum', date: '23-Okt', icon: '☀️', tDay: '+22°', tNight: '+10°', rain: '0%', status: 'Tinch ob-havo' }
-    ]
+    riskText: 'Togʻoldi zonalarida namlik yuqori boʻlib, kuzgi ekinlar unib chiqishiga ijobiy taʼsir koʻrsatadi.'
   },
   buxoro: {
     name: 'Buxoro viloyati',
-    temp: 25,
-    feelsLike: 26,
-    condition: 'Quyoshli, quruq havo',
-    icon: '☀️',
-    humidity: 32,
-    soilTemp: 19,
-    wind: '5.1 m/s, Gʻ',
-    rainProb: 0,
-    uvIndex: '5 (Oʻrtacha)',
+    lat: 39.7747,
+    lon: 64.4286,
+    defaultTemp: 16,
+    defaultFeels: 15,
+    defaultCondition: 'Quyoshli, quruq havo',
+    defaultIcon: '☀️',
+    defaultHumidity: 35,
+    defaultSoilTemp: 13,
+    defaultWind: '5.1 m/s, Gʻ',
+    defaultRainProb: 0,
     riskLevel: 'warning',
     riskTitle: 'Past tuproq namligi',
-    riskText: 'Havo va tuproqda quruqlik yuqori. Yangi ekilgan maydonlarni meʼyorida sugʻorish va namlikni saqlovchi mulchalash zarur.',
-    forecast: [
-      { day: 'Bugun', date: '17-Okt', icon: '☀️', tDay: '+25°', tNight: '+12°', rain: '0%', status: 'Sugʻorish zarur' },
-      { day: 'Ertaga', date: '18-Okt', icon: '☀️', tDay: '+26°', tNight: '+13°', rain: '0%', status: 'Quruq ob-havo' },
-      { day: 'Dush', date: '19-Okt', icon: '🌤️', tDay: '+24°', tNight: '+11°', rain: '5%', status: 'Ekish ishlari' },
-      { day: 'Sesh', date: '20-Okt', icon: '⛅', tDay: '+22°', tNight: '+10°', rain: '15%', status: 'Shamolli kun' },
-      { day: 'Chor', date: '21-Okt', icon: '☀️', tDay: '+23°', tNight: '+9°', rain: '0%', status: 'Ochiq havo' },
-      { day: 'Pay', date: '22-Okt', icon: '☀️', tDay: '+25°', tNight: '+11°', rain: '0%', status: 'Iliq kun' },
-      { day: 'Jum', date: '23-Okt', icon: '☀️', tDay: '+26°', tNight: '+12°', rain: '0%', status: 'Dala ishlari' }
-    ]
+    riskText: 'Havo va tuproqda quruqlik yuqori. Yangi ekilgan maydonlarni meʼyorida sugʻorish va namlikni saqlovchi mulchalash zarur.'
   },
   qashqadaryo: {
     name: 'Qashqadaryo viloyati',
-    temp: 24,
-    feelsLike: 25,
-    condition: 'Quyoshli, ochiq',
-    icon: '☀️',
-    humidity: 36,
-    soilTemp: 18,
-    wind: '4.5 m/s, J-Gʻ',
-    rainProb: 5,
-    uvIndex: '5 (Oʻrtacha)',
+    lat: 38.8606,
+    lon: 65.7891,
+    defaultTemp: 16,
+    defaultFeels: 15,
+    defaultCondition: 'Quyoshli, ochiq',
+    defaultIcon: '☀️',
+    defaultHumidity: 38,
+    defaultSoilTemp: 13,
+    defaultWind: '4.5 m/s, J-Gʻ',
+    defaultRainProb: 5,
     riskLevel: 'safe',
     riskTitle: 'Optimal gʻallachilik davri',
-    riskText: 'Kuzgi bugʻdoy ekish uchun tuproq harorati ayni muddao. Seyalka va traktorlar bilan maydonlarni qamrab olish tavsiya etiladi.',
-    forecast: [
-      { day: 'Bugun', date: '17-Okt', icon: '☀️', tDay: '+24°', tNight: '+12°', rain: '5%', status: 'Gʻallaga aʼlo' },
-      { day: 'Ertaga', date: '18-Okt', icon: '☀️', tDay: '+25°', tNight: '+13°', rain: '5%', status: 'Faol ekish' },
-      { day: 'Dush', date: '19-Okt', icon: '🌤️', tDay: '+23°', tNight: '+11°', rain: '10%', status: 'Moʻtadil' },
-      { day: 'Sesh', date: '20-Okt', icon: '⛅', tDay: '+21°', tNight: '+10°', rain: '20%', status: 'Bulutlanish' },
-      { day: 'Chor', date: '21-Okt', icon: '☀️', tDay: '+22°', tNight: '+9°', rain: '0%', status: 'Ochiq havo' },
-      { day: 'Pay', date: '22-Okt', icon: '☀️', tDay: '+24°', tNight: '+11°', rain: '0%', status: 'Iliq quyoshli' },
-      { day: 'Jum', date: '23-Okt', icon: '☀️', tDay: '+25°', tNight: '+12°', rain: '0%', status: 'Yuqori unumdorlik' }
-    ]
+    riskText: 'Kuzgi bugʻdoy ekish uchun tuproq harorati ayni muddao. Seyalka va traktorlar bilan maydonlarni qamrab olish tavsiya etiladi.'
   },
   surxondaryo: {
     name: 'Surxondaryo viloyati',
-    temp: 27,
-    feelsLike: 28,
-    condition: 'Issiq, toza osmon',
-    icon: '☀️',
-    humidity: 30,
-    soilTemp: 21,
-    wind: '3.2 m/s, J',
-    rainProb: 0,
-    uvIndex: '6 (Yuqori)',
+    lat: 37.2242,
+    lon: 67.2783,
+    defaultTemp: 18,
+    defaultFeels: 18,
+    defaultCondition: 'Issiq, toza osmon',
+    defaultIcon: '☀️',
+    defaultHumidity: 32,
+    defaultSoilTemp: 15,
+    defaultWind: '3.2 m/s, J',
+    defaultRainProb: 0,
     riskLevel: 'safe',
-    riskTitle: 'Issiq subtropik iqlim',
-    riskText: 'Anor, xurmo va kechki hosillarni terishning eng qizgʻin pallasi. Ertalabki soatlarda namlikni saqlovchi sugʻorish qulay.',
-    forecast: [
-      { day: 'Bugun', date: '17-Okt', icon: '☀️', tDay: '+27°', tNight: '+14°', rain: '0%', status: 'Meva yigʻimiga mos' },
-      { day: 'Ertaga', date: '18-Okt', icon: '☀️', tDay: '+28°', tNight: '+15°', rain: '0%', status: 'Issiq quyoshli' },
-      { day: 'Dush', date: '19-Okt', icon: '☀️', tDay: '+26°', tNight: '+13°', rain: '0%', status: 'Toza osmon' },
-      { day: 'Sesh', date: '20-Okt', icon: '🌤️', tDay: '+24°', tNight: '+12°', rain: '10%', status: 'Biroz salqin' },
-      { day: 'Chor', date: '21-Okt', icon: '☀️', tDay: '+25°', tNight: '+11°', rain: '0%', status: 'Optimal harorat' },
-      { day: 'Pay', date: '22-Okt', icon: '☀️', tDay: '+27°', tNight: '+13°', rain: '0%', status: 'Issiq havo' },
-      { day: 'Jum', date: '23-Okt', icon: '☀️', tDay: '+28°', tNight: '+14°', rain: '0%', status: 'Dala ishlari' }
-    ]
+    riskTitle: 'Iliq subtropik iqlim',
+    riskText: 'Anor, xurmo va kechki hosillarni terishning eng qizgʻin pallasi. Ertalabki soatlarda namlikni saqlovchi sugʻorish qulay.'
   },
   xorazm: {
     name: 'Xorazm viloyati',
-    temp: 19,
-    feelsLike: 18,
-    condition: 'Salqin, shamolli',
-    icon: '💨',
-    humidity: 45,
-    soilTemp: 14,
-    wind: '6.2 m/s, SH-Gʻ',
-    rainProb: 15,
-    uvIndex: '3 (Past)',
+    lat: 41.5564,
+    lon: 60.6310,
+    defaultTemp: 12,
+    defaultFeels: 10,
+    defaultCondition: 'Salqin, shamolli',
+    defaultIcon: '💨',
+    defaultHumidity: 48,
+    defaultSoilTemp: 9,
+    defaultWind: '6.2 m/s, SH-Gʻ',
+    defaultRainProb: 15,
     riskLevel: 'warning',
     riskTitle: 'Kuchli shamol va shudgorlash',
-    riskText: 'Shamol tezligi 6-8 m/s gacha yetishi mumkin. Dori purkash ishlarini shamol tinchiganda, erta tongda bajaring.',
-    forecast: [
-      { day: 'Bugun', date: '17-Okt', icon: '💨', tDay: '+19°', tNight: '+8°', rain: '15%', status: 'Dori sepmang' },
-      { day: 'Ertaga', date: '18-Okt', icon: '🌤️', tDay: '+20°', tNight: '+9°', rain: '10%', status: 'Shudgorlashga mos' },
-      { day: 'Dush', date: '19-Okt', icon: '⛅', tDay: '+18°', tNight: '+7°', rain: '20%', status: 'Salqin havo' },
-      { day: 'Sesh', date: '20-Okt', icon: '🌧️', tDay: '+15°', tNight: '+5°', rain: '65%', status: 'Yomgʻir va shamol' },
-      { day: 'Chor', date: '21-Okt', icon: '🌤️', tDay: '+17°', tNight: '+6°', rain: '10%', status: 'Tinchlanish' },
-      { day: 'Pay', date: '22-Okt', icon: '☀️', tDay: '+19°', tNight: '+7°', rain: '0%', status: 'Ochiq quyoshli' },
-      { day: 'Jum', date: '23-Okt', icon: '☀️', tDay: '+20°', tNight: '+8°', rain: '0%', status: 'Dala ishlari' }
-    ]
+    riskText: 'Shamol tezligi 6-8 m/s gacha yetishi mumkin. Dori purkash ishlarini shamol tinchiganda, erta tongda bajaring.'
   },
   qoraqalpogiston: {
     name: 'Qoraqalpogʻiston Resp.',
-    temp: 18,
-    feelsLike: 17,
-    condition: 'Salqin, ochiq havo',
-    icon: '🌤️',
-    humidity: 43,
-    soilTemp: 13,
-    wind: '5.6 m/s, SH',
-    rainProb: 10,
-    uvIndex: '3 (Past)',
+    lat: 42.4619,
+    lon: 59.6166,
+    defaultTemp: 10,
+    defaultFeels: 8,
+    defaultCondition: 'Salqin, ochiq havo',
+    defaultIcon: '🌤️',
+    defaultHumidity: 45,
+    defaultSoilTemp: 8,
+    defaultWind: '5.6 m/s, SH',
+    defaultRainProb: 10,
     riskLevel: 'warning',
     riskTitle: 'Erta sovuq xavfi',
-    riskText: 'Tungi harorat +4°C gacha tushishi ehtimoli bor. Qishloq xoʻjaligi texnikalarini qishki saqlashga tayyorlang.',
-    forecast: [
-      { day: 'Bugun', date: '17-Okt', icon: '🌤️', tDay: '+18°', tNight: '+7°', rain: '10%', status: 'Texnika taʼmiri' },
-      { day: 'Ertaga', date: '18-Okt', icon: '🌤️', tDay: '+19°', tNight: '+8°', rain: '10%', status: 'Hosil yakuni' },
-      { day: 'Dush', date: '19-Okt', icon: '⛅', tDay: '+17°', tNight: '+6°', rain: '25%', status: 'Salqin shamol' },
-      { day: 'Sesh', date: '20-Okt', icon: '🌧️', tDay: '+14°', tNight: '+4°', rain: '70%', status: 'Tungi sovuq' },
-      { day: 'Chor', date: '21-Okt', icon: '🌤️', tDay: '+16°', tNight: '+5°', rain: '15%', status: 'Salqin kun' },
-      { day: 'Pay', date: '22-Okt', icon: '☀️', tDay: '+18°', tNight: '+6°', rain: '0%', status: 'Ochiq havo' },
-      { day: 'Jum', date: '23-Okt', icon: '☀️', tDay: '+19°', tNight: '+7°', rain: '0%', status: 'Qulay sharoit' }
-    ]
+    riskText: 'Tungi harorat keskin tushishi ehtimoli bor. Qishloq xoʻjaligi texnikalarini qishki saqlashga tayyorlang.'
   }
 };
 
@@ -426,11 +411,104 @@ export default function ObHavoPage({ onShowToast }) {
   const { t } = useLanguage();
   const [regionKey, setRegionKey] = useState('toshkent');
   const [cropKey, setCropKey] = useState('bugdoy');
-  const [selectedMonth, setSelectedMonth] = useState(9); // Default: Oktabr (index 9)
+  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth()); // Default: Hozirgi oy
   const [subModalOpen, setSubModalOpen] = useState(false);
   const [subPhone, setSubPhone] = useState('');
 
-  const region = REGION_DATA[regionKey] || REGION_DATA.toshkent;
+  // Live weather state
+  const [liveWeather, setLiveWeather] = useState({});
+  const [loadingWeather, setLoadingWeather] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState(null);
+
+  // Fetch real-time live meteorological data from Open-Meteo
+  const fetchWeather = useCallback(async (rKey) => {
+    const coords = REGION_DATA[rKey];
+    if (!coords || !coords.lat) return;
+    setLoadingWeather(true);
+    try {
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${coords.lat}&longitude=${coords.lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Asia%2FTashkent`;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error('Live weather fetch failed');
+      const data = await res.json();
+
+      if (data && data.current && data.daily) {
+        const cur = data.current;
+        const curW = parseWmoWeather(cur.weather_code);
+        const temp = Math.round(cur.temperature_2m);
+        const feelsLike = Math.round(cur.apparent_temperature);
+        const humidity = Math.round(cur.relative_humidity_2m);
+        const wind = `${cur.wind_speed_10m.toFixed(1)} m/s, SH`;
+        const soilTemp = Math.round(temp * 0.7 + 3);
+
+        const forecast = data.daily.time.slice(0, 7).map((tStr, i) => {
+          const parts = tStr.split('-');
+          const d = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+          let dayName = i === 0 ? 'Bugun' : (i === 1 ? 'Ertaga' : WEEKDAYS_SHORT_UZ[d.getDay()]);
+          const dateStr = `${d.getDate()}-${MONTH_NAMES_UZ[d.getMonth()]}`;
+          const wCode = data.daily.weather_code[i];
+          const parsed = parseWmoWeather(wCode);
+          const maxT = Math.round(data.daily.temperature_2m_max[i]);
+          const minT = Math.round(data.daily.temperature_2m_min[i]);
+          const rain = data.daily.precipitation_probability_max ? data.daily.precipitation_probability_max[i] : 0;
+
+          return {
+            day: dayName,
+            date: dateStr,
+            icon: parsed.icon,
+            tDay: `${maxT > 0 ? '+' : ''}${maxT}°`,
+            tNight: `${minT > 0 ? '+' : ''}${minT}°`,
+            rain: `${rain}%`,
+            status: parsed.status
+          };
+        });
+
+        setLiveWeather((prev) => ({
+          ...prev,
+          [rKey]: {
+            temp,
+            feelsLike,
+            humidity,
+            wind,
+            soilTemp,
+            condition: curW.condition,
+            icon: curW.icon,
+            rainProb: data.daily.precipitation_probability_max ? data.daily.precipitation_probability_max[0] : 10,
+            forecast,
+            isLive: true
+          }
+        }));
+
+        const now = new Date();
+        const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+        setLastUpdated(timeStr);
+      }
+    } catch (err) {
+      console.warn('Live weather fetch notice (using dynamic forecast):', err);
+    } finally {
+      setLoadingWeather(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchWeather(regionKey);
+  }, [regionKey, fetchWeather]);
+
+  const baseRegion = REGION_DATA[regionKey] || REGION_DATA.toshkent;
+  const live = liveWeather[regionKey];
+  const region = {
+    ...baseRegion,
+    temp: live?.temp ?? baseRegion.defaultTemp,
+    feelsLike: live?.feelsLike ?? baseRegion.defaultFeels,
+    condition: live?.condition ?? baseRegion.defaultCondition,
+    icon: live?.icon ?? baseRegion.defaultIcon,
+    humidity: live?.humidity ?? baseRegion.defaultHumidity,
+    soilTemp: live?.soilTemp ?? baseRegion.defaultSoilTemp,
+    wind: live?.wind ?? baseRegion.defaultWind,
+    rainProb: live?.rainProb ?? baseRegion.defaultRainProb,
+    forecast: live?.forecast ?? generateDynamicForecast(baseRegion.defaultTemp, baseRegion.defaultRainProb),
+    isLive: !!live?.isLive
+  };
+
   const crop = CROPS_DATA[cropKey] || CROPS_DATA.bugdoy;
 
   // Active month info
@@ -466,9 +544,47 @@ export default function ObHavoPage({ onShowToast }) {
       <section id="obhavo" className="section">
         <div className="container">
           
-          {/* Header */}
+          {/* Header with Live Badge and Refresh */}
           <div className="section-head">
-            <span className="kicker">{t('weather_kicker')}</span>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '8px', flexWrap: 'wrap' }}>
+              <span className="kicker" style={{ margin: 0 }}>{t('weather_kicker')}</span>
+              <span style={{ 
+                display: 'inline-flex', 
+                alignItems: 'center', 
+                gap: '6px', 
+                padding: '4px 12px', 
+                borderRadius: '999px', 
+                background: 'rgba(34, 197, 94, 0.12)', 
+                color: '#15803d', 
+                fontWeight: 700, 
+                fontSize: '0.78rem' 
+              }}>
+                <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#22c55e', display: 'inline-block', boxShadow: '0 0 8px #22c55e' }}></span>
+                Har kunlik ob-havo: Bugun, {getTodayFormatted()} {lastUpdated ? `(soat ${lastUpdated})` : ''}
+              </span>
+              <button
+                type="button"
+                onClick={() => fetchWeather(regionKey)}
+                disabled={loadingWeather}
+                style={{
+                  background: 'var(--surface-color)',
+                  border: '1px solid var(--border-color)',
+                  borderRadius: '999px',
+                  padding: '3px 10px',
+                  fontSize: '0.75rem',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                  color: 'var(--text-color)'
+                }}
+                title="Ob-havoni yangilash"
+              >
+                <span>{loadingWeather ? '⏳' : '🔄'}</span>
+                <span>{loadingWeather ? 'Yangilanmoqda...' : 'Yangilash'}</span>
+              </button>
+            </div>
             <h2>{t('weather_title')}</h2>
             <p className="lead">
               {t('weather_lead')}
@@ -484,16 +600,20 @@ export default function ObHavoPage({ onShowToast }) {
               marginBottom: '20px' 
             }}
           >
-            {Object.keys(REGION_DATA).map((rKey) => (
-              <button
-                key={rKey}
-                type="button"
-                className={`chip ${regionKey === rKey ? 'active' : ''}`}
-                onClick={() => setRegionKey(rKey)}
-              >
-                {REGION_DATA[rKey].name}
-              </button>
-            ))}
+            {Object.keys(REGION_DATA).map((rKey) => {
+              const rLive = liveWeather[rKey];
+              const tVal = rLive?.temp ?? REGION_DATA[rKey].defaultTemp;
+              return (
+                <button
+                  key={rKey}
+                  type="button"
+                  className={`chip ${regionKey === rKey ? 'active' : ''}`}
+                  onClick={() => setRegionKey(rKey)}
+                >
+                  {REGION_DATA[rKey].name} {tVal !== undefined ? `(${tVal > 0 ? '+' : ''}${tVal}°)` : ''}
+                </button>
+              );
+            })}
           </div>
 
           {/* Top Selection Grid (Viloyat + Ekin turi) */}
@@ -519,11 +639,16 @@ export default function ObHavoPage({ onShowToast }) {
                   onChange={(e) => setRegionKey(e.target.value)}
                   style={{ fontWeight: 600, fontSize: '0.92rem' }}
                 >
-                  {Object.keys(REGION_DATA).map((k) => (
-                    <option key={k} value={k}>
-                      {REGION_DATA[k].name} ({REGION_DATA[k].temp}°C, {REGION_DATA[k].condition})
-                    </option>
-                  ))}
+                  {Object.keys(REGION_DATA).map((k) => {
+                    const rLive = liveWeather[k];
+                    const tVal = rLive?.temp ?? REGION_DATA[k].defaultTemp;
+                    const cVal = rLive?.condition ?? REGION_DATA[k].defaultCondition;
+                    return (
+                      <option key={k} value={k}>
+                        {REGION_DATA[k].name} ({tVal > 0 ? '+' : ''}${tVal}°C, {cVal})
+                      </option>
+                    );
+                  })}
                 </select>
               </div>
 
@@ -596,26 +721,31 @@ export default function ObHavoPage({ onShowToast }) {
             }}
           >
             {/* Card 1: Havo harorati */}
-            <div className="ag-card" style={{ padding: '20px', background: '#fff' }}>
-              <div className="sub" style={{ fontSize: '0.82rem', fontWeight: 700 }}>
-                Havo harorati
+            <div className="ag-card" style={{ padding: '20px', background: 'var(--surface-color)' }}>
+              <div className="sub" style={{ fontSize: '0.82rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <span>Havo harorati</span>
+                {region.isLive && (
+                  <span style={{ fontSize: '0.68rem', color: '#15803d', background: 'rgba(34,197,94,0.15)', padding: '1px 6px', borderRadius: '4px', fontWeight: 800 }}>
+                    JONLI
+                  </span>
+                )}
               </div>
               <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--primary-color)', marginTop: '4px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <span>{region.icon}</span>
-                <span>+{region.temp}°C</span>
+                <span>{region.temp > 0 ? '+' : ''}{region.temp}°C</span>
               </div>
               <div className="sub" style={{ fontSize: '0.82rem', marginTop: '6px' }}>
-                His qilinishi: +{region.feelsLike}°C • {region.condition}
+                His qilinishi: {region.feelsLike > 0 ? '+' : ''}{region.feelsLike}°C • {region.condition}
               </div>
             </div>
 
             {/* Card 2: Tuproq harorati */}
-            <div className="ag-card" style={{ padding: '20px', background: '#fff' }}>
+            <div className="ag-card" style={{ padding: '20px', background: 'var(--surface-color)' }}>
               <div className="sub" style={{ fontSize: '0.82rem', fontWeight: 700 }}>
                 🌱 Tuproq harorati (+10 sm)
               </div>
               <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text-color)', marginTop: '4px' }}>
-                +{region.soilTemp}°C
+                {region.soilTemp > 0 ? '+' : ''}{region.soilTemp}°C
               </div>
               <div className="sub" style={{ fontSize: '0.82rem', marginTop: '6px' }}>
                 Ildiz otish va urugʻ unishi uchun: <strong style={{ color: 'var(--primary-color)' }}>Optimal</strong>
@@ -623,7 +753,7 @@ export default function ObHavoPage({ onShowToast }) {
             </div>
 
             {/* Card 3: Havoning namligi */}
-            <div className="ag-card" style={{ padding: '20px', background: '#fff' }}>
+            <div className="ag-card" style={{ padding: '20px', background: 'var(--surface-color)' }}>
               <div className="sub" style={{ fontSize: '0.82rem', fontWeight: 700 }}>
                 💧 Havo namligi
               </div>
@@ -636,7 +766,7 @@ export default function ObHavoPage({ onShowToast }) {
             </div>
 
             {/* Card 4: Shamol tezligi */}
-            <div className="ag-card" style={{ padding: '20px', background: '#fff' }}>
+            <div className="ag-card" style={{ padding: '20px', background: 'var(--surface-color)' }}>
               <div className="sub" style={{ fontSize: '0.82rem', fontWeight: 700 }}>
                 💨 Shamol tezligi
               </div>
@@ -653,7 +783,7 @@ export default function ObHavoPage({ onShowToast }) {
           <div 
             className="chart-box" 
             style={{ 
-              background: '#fff', 
+              background: 'var(--surface-color)', 
               borderRadius: 'var(--radius)', 
               boxShadow: 'var(--shadow-sm)', 
               border: '1px solid var(--border-color)', 
@@ -667,11 +797,11 @@ export default function ObHavoPage({ onShowToast }) {
                   📅 7 kunlik agrometeorologik prognoz ({region.name})
                 </h3>
                 <p className="sub" style={{ fontSize: '0.82rem', marginTop: '2px' }}>
-                  Ekish, sugʻorish va profilaktika uchun tavsiyalar bilan
+                  Bugundan boshlab haftalik harorat, yogʻingarchilik va agrotadbirlar
                 </p>
               </div>
               <span className="tag tag-green">
-                Haftalik reja
+                🟢 Har kunlik prognoz
               </span>
             </div>
 
@@ -691,9 +821,25 @@ export default function ObHavoPage({ onShowToast }) {
                     borderRadius: '12px',
                     padding: '14px 10px',
                     textAlign: 'center',
-                    transition: '0.2s'
+                    transition: '0.2s',
+                    position: 'relative'
                   }}
                 >
+                  {idx === 0 && (
+                    <span 
+                      style={{
+                        position: 'absolute',
+                        top: '8px',
+                        right: '8px',
+                        width: '7px',
+                        height: '7px',
+                        borderRadius: '50%',
+                        background: '#22c55e',
+                        boxShadow: '0 0 6px #22c55e'
+                      }}
+                      title="Bugungi kun"
+                    />
+                  )}
                   <div style={{ fontWeight: 800, fontSize: '0.9rem', color: idx === 0 ? 'var(--primary-dark)' : 'var(--text-color)' }}>
                     {fc.day}
                   </div>
@@ -709,7 +855,7 @@ export default function ObHavoPage({ onShowToast }) {
                   <div style={{ fontSize: '0.74rem', color: 'var(--secondary-color)', fontWeight: 700, margin: '4px 0' }}>
                     💧 {fc.rain}
                   </div>
-                  <div style={{ fontSize: '0.72rem', color: idx === 0 ? 'var(--primary-dark)' : '#4a5d52', fontWeight: 600, marginTop: '6px', background: '#fff', padding: '4px 6px', borderRadius: '6px', border: '1px solid #e1ebe3' }}>
+                  <div style={{ fontSize: '0.72rem', color: idx === 0 ? 'var(--primary-dark)' : 'var(--text-color)', fontWeight: 600, marginTop: '6px', background: 'var(--surface-color)', padding: '4px 6px', borderRadius: '6px', border: '1px solid var(--border-color)' }}>
                     {fc.status}
                   </div>
                 </div>

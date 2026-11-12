@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { AGRO_DATA } from '../data/agroData';
 import { useLanguage } from '../context/LanguageContext';
-import { fmt, money, getProductMarketPrice, MARKET_FACTORS, generatePriceSeries } from '../utils/helpers';
+import { fmt, money, getProductMarketPrice, MARKET_FACTORS, generatePriceSeries, getTodayFormatted, getTodayShortDate } from '../utils/helpers';
 
 // Helper to compute clean, financial Y-axis scale with round ticks
 function getNiceYScale(minVal, maxVal) {
@@ -54,8 +54,12 @@ export default function NarxlarPage({ onShowToast }) {
   const marketIndex = parseInt(selectedMarketIndex, 10) || 0;
   const currentMarket = MARKET_FACTORS[marketIndex] || MARKET_FACTORS[0];
 
-  // Guaranteed stable current price for chosen market
-  const todayPrice = getProductMarketPrice(activeProduct.price, marketIndex);
+  // Guaranteed stable daily current price and yesterday's comparison
+  const todayPrice = getProductMarketPrice(activeProduct.price, marketIndex, 0);
+  const yesterdayPrice = getProductMarketPrice(activeProduct.price, marketIndex, 1);
+  const dailyChange = todayPrice - yesterdayPrice;
+  const dailyPct = yesterdayPrice > 0 ? ((dailyChange / yesterdayPrice) * 100).toFixed(1) : '0.0';
+
   const seed = activeProduct.id.length + marketIndex * 5 + activeProduct.name.charCodeAt(0);
 
   // Generate stable price series going backwards from today
@@ -106,12 +110,11 @@ export default function NarxlarPage({ onShowToast }) {
     return { y: gy, val };
   });
 
-  // Calculate market comparison rows (100% stable & deterministic)
+  // Calculate market comparison rows (today's price and daily change vs yesterday)
   const marketRows = MARKET_FACTORS.map((mf, i) => {
-    const mPrice = getProductMarketPrice(activeProduct.price, i);
-    const mSeed = activeProduct.id.length + i * 5 + activeProduct.name.charCodeAt(0);
-    const mSeries = generatePriceSeries(mPrice, mSeed, timeframe);
-    const mChange = mPrice - mSeries[0].val;
+    const mPrice = getProductMarketPrice(activeProduct.price, i, 0);
+    const mYesterday = getProductMarketPrice(activeProduct.price, i, 1);
+    const mChange = mPrice - mYesterday;
     return {
       index: i,
       name: mf.name,
@@ -186,7 +189,23 @@ export default function NarxlarPage({ onShowToast }) {
           
           {/* Header */}
           <div className="section-head">
-            <span className="kicker">{t('prices_kicker')}</span>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '8px', flexWrap: 'wrap' }}>
+              <span className="kicker" style={{ margin: 0 }}>{t('prices_kicker')}</span>
+              <span style={{ 
+                display: 'inline-flex', 
+                alignItems: 'center', 
+                gap: '6px', 
+                padding: '4px 12px', 
+                borderRadius: '999px', 
+                background: 'rgba(34, 197, 94, 0.12)', 
+                color: '#15803d', 
+                fontWeight: 700, 
+                fontSize: '0.78rem' 
+              }}>
+                <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#22c55e', display: 'inline-block', boxShadow: '0 0 8px #22c55e' }}></span>
+                Har kunlik yangilanish: Bugun, {getTodayFormatted()}
+              </span>
+            </div>
             <h2>{t('prices_title')}</h2>
             <p className="lead">{t('prices_lead')}</p>
           </div>
@@ -223,20 +242,25 @@ export default function NarxlarPage({ onShowToast }) {
             }}
           >
             {/* Card 1: Today */}
-            <div className="ag-card" style={{ padding: '20px', background: '#fff' }}>
-              <div className="sub" style={{ fontSize: '0.82rem', fontWeight: 700 }}>
-                Bugungi narx ({activeProduct.unit})
+            <div className="ag-card" style={{ padding: '20px', background: 'var(--surface-color)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div className="sub" style={{ fontSize: '0.82rem', fontWeight: 700 }}>
+                  Bugungi narx ({activeProduct.unit})
+                </div>
+                <span style={{ fontSize: '0.72rem', color: 'var(--primary-color)', fontWeight: 700, background: 'var(--green-soft)', padding: '2px 8px', borderRadius: '6px' }}>
+                  {getTodayShortDate()}
+                </span>
               </div>
               <div style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--primary-color)', marginTop: '4px' }}>
                 {fmt(todayPrice)} soʻm
               </div>
               <div style={{ 
-                fontSize: '0.85rem', 
+                fontSize: '0.84rem', 
                 fontWeight: 700, 
-                color: change >= 0 ? 'var(--primary-color)' : '#b4482f', 
+                color: dailyChange >= 0 ? 'var(--primary-color)' : '#b4482f', 
                 marginTop: '6px' 
               }}>
-                {change >= 0 ? '▲ +' : '▼ '}{fmt(change)} ({change >= 0 ? '+' : ''}{pct}%) {timeframe} kun ichida
+                {dailyChange >= 0 ? '▲ +' : '▼ '}{fmt(Math.abs(dailyChange))} soʻm ({dailyChange >= 0 ? '+' : ''}{dailyPct}%) kechagiga nisbatan
               </div>
             </div>
 

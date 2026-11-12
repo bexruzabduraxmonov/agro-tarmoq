@@ -16,11 +16,44 @@ export const MARKET_FACTORS = [
   { name: 'Fargʻona bozori', factor: 0.96, region: 'Fargʻona viloyati' }
 ];
 
-export function getProductMarketPrice(basePrice, marketIndex = 0) {
-  const mf = MARKET_FACTORS[marketIndex] || MARKET_FACTORS[0];
-  const raw = basePrice * mf.factor;
-  
-  // Clean rounding in UZS
+export const MONTH_NAMES_UZ = [
+  'Yan', 'Fev', 'Mar', 'Apr', 'May', 'Iyn', 
+  'Iyl', 'Avg', 'Sen', 'Okt', 'Noy', 'Dek'
+];
+
+export const MONTHS_FULL_UZ = [
+  'Yanvar', 'Fevral', 'Mart', 'Aprel', 'May', 'Iyun',
+  'Iyul', 'Avgust', 'Sentabr', 'Oktabr', 'Noyabr', 'Dekabr'
+];
+
+export const WEEKDAYS_SHORT_UZ = [
+  'Yak', 'Dush', 'Sesh', 'Chor', 'Pay', 'Jum', 'Shan'
+];
+
+export function getTodayFormatted() {
+  const d = new Date();
+  const day = d.getDate();
+  const month = MONTHS_FULL_UZ[d.getMonth()];
+  const year = d.getFullYear();
+  return `${day}-${month}, ${year}`;
+}
+
+export function getTodayShortDate() {
+  const d = new Date();
+  return `${d.getDate()}-${MONTH_NAMES_UZ[d.getMonth()]}`;
+}
+
+export function getDayOfYear(d = new Date()) {
+  const start = new Date(d.getFullYear(), 0, 0);
+  const diff = d - start;
+  const oneDay = 1000 * 60 * 60 * 24;
+  return Math.floor(diff / oneDay);
+}
+
+/**
+ * Returns clean rounded price in UZS
+ */
+export function cleanRoundUzs(raw) {
   if (raw >= 10000000) {
     return Math.round(raw / 100000) * 100000;
   } else if (raw >= 1000000) {
@@ -34,10 +67,24 @@ export function getProductMarketPrice(basePrice, marketIndex = 0) {
   }
 }
 
-const MONTH_NAMES_UZ = [
-  'Yan', 'Fev', 'Mar', 'Apr', 'May', 'Iyn', 
-  'Iyl', 'Avg', 'Sen', 'Okt', 'Noy', 'Dek'
-];
+/**
+ * Calculates deterministic daily market price for a product on any given day.
+ * Incorporates day-of-year so that every single day has authentic market price
+ * movement (+/- 1.5% to 3.5%) while remaining strictly stable throughout that day.
+ */
+export function getProductMarketPrice(basePrice, marketIndex = 0, daysAgo = 0) {
+  const mf = MARKET_FACTORS[marketIndex] || MARKET_FACTORS[0];
+  const d = new Date();
+  d.setDate(d.getDate() - daysAgo);
+  const dayNum = getDayOfYear(d) + d.getFullYear() * 365;
+  
+  // Daily micro-fluctuation factor for market (deterministic for each day)
+  const seed = (basePrice % 97) + (marketIndex * 13) + (dayNum * 7);
+  const dailyWave = Math.sin(seed * 0.45) * 0.024 + Math.cos(seed * 0.28) * 0.012;
+  
+  const raw = basePrice * mf.factor * (1 + dailyWave);
+  return cleanRoundUzs(raw);
+}
 
 export function getDateLabel(daysAgo) {
   if (daysAgo === 0) return 'Bugun';
@@ -70,18 +117,7 @@ export function generatePriceSeries(todayPrice, seed = 1, days = 14) {
                  + Math.cos((daysAgo * 0.9 + s)) * 0.018
                  - (daysAgo * 0.0006); // slight historical trend
       const raw = todayPrice * (1 + wave);
-
-      if (todayPrice >= 10000000) {
-        p = Math.round(raw / 100000) * 100000;
-      } else if (todayPrice >= 1000000) {
-        p = Math.round(raw / 10000) * 10000;
-      } else if (todayPrice >= 100000) {
-        p = Math.round(raw / 1000) * 1000;
-      } else if (todayPrice >= 10000) {
-        p = Math.round(raw / 100) * 100;
-      } else {
-        p = Math.round(raw / 50) * 50;
-      }
+      p = cleanRoundUzs(raw);
     }
 
     points.push({

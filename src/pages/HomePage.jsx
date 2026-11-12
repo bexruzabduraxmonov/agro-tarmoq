@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { AGRO_DATA } from '../data/agroData';
 import { useLanguage } from '../context/LanguageContext';
-import { fmt } from '../utils/helpers';
+import { fmt, getProductMarketPrice, getTodayFormatted } from '../utils/helpers';
 
 // ─── Slider ma'lumotlari ───────────────────────────────────────────────────
 const SLIDES = [
@@ -351,29 +351,58 @@ export default function HomePage({ onNavigate }) {
             </div>
           </div>
 
+          {/* Daily Price Ticker Header */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '24px', marginBottom: '-14px' }}>
+            <span style={{ 
+              display: 'inline-flex', 
+              alignItems: 'center', 
+              gap: '6px', 
+              fontSize: '0.8rem', 
+              fontWeight: 700, 
+              color: 'var(--primary-dark)', 
+              background: 'var(--green-soft)', 
+              padding: '4px 14px', 
+              borderRadius: '999px', 
+              border: '1px solid var(--green-soft-border)',
+              boxShadow: '0 2px 6px rgba(0,0,0,0.04)'
+            }}>
+              <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#22c55e', boxShadow: '0 0 6px #22c55e' }}></span>
+              Bugungi bozor narxlari: {getTodayFormatted()}
+            </span>
+          </div>
+
           {/* Price Ticker */}
           <div className="ticker" id="priceTicker">
-            {tickerProducts.map((p) => (
-              <div 
-                key={p.id} 
-                className="ticker-card"
-                onClick={() => onNavigate('narxlar')}
-                style={{ cursor: 'pointer' }}
-              >
-                <span className="t-thumb">
-                  <img src={p.img} alt={p.name} loading="lazy" />
-                </span>
-                <div>
-                  <div className="t-name">{p.name}</div>
-                  <div className="t-price">
-                    {fmt(p.price)} {t('price_unit')}{' '}
-                    <span className={AGRO_DATA.trendClass[p.trend]}>
-                      {AGRO_DATA.trendIcon[p.trend]}
-                    </span>
+            {tickerProducts.map((p) => {
+              const curPrice = getProductMarketPrice(p.price, 0, 0);
+              const prevPrice = getProductMarketPrice(p.price, 0, 1);
+              const diff = curPrice - prevPrice;
+              const trendIcon = diff > 0 ? '▲' : (diff < 0 ? '▼' : '▬');
+              const trendClass = diff > 0 ? 'up' : (diff < 0 ? 'down' : 'stable');
+
+              return (
+                <div 
+                  key={p.id} 
+                  className="ticker-card"
+                  onClick={() => onNavigate('narxlar')}
+                  style={{ cursor: 'pointer' }}
+                  title={`${p.name}: Bugungi narx ${fmt(curPrice)} soʻm`}
+                >
+                  <span className="t-thumb">
+                    <img src={p.img} alt={p.name} loading="lazy" />
+                  </span>
+                  <div>
+                    <div className="t-name">{p.name}</div>
+                    <div className="t-price">
+                      {fmt(curPrice)} {t('price_unit')}{' '}
+                      <span className={trendClass}>
+                        {trendIcon}
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
         </div>
