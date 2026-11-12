@@ -298,6 +298,38 @@ export default function Header({ currentPage, setCurrentPage, cartCount, onOpenC
             </button>
           ))}
         </nav>
+
+        {/* Mobile Install App Button */}
+        <div style={{ padding: '16px 22px 28px' }}>
+          <button
+            type="button"
+            className="ag-btn ag-btn-green"
+            onClick={() => {
+              const promptEvent = window.__pwaDeferredPrompt;
+              if (promptEvent) {
+                promptEvent.prompt();
+              } else {
+                window.dispatchEvent(new Event('open-pwa-modal'));
+              }
+              setMobileMenuOpen(false);
+            }}
+            style={{
+              width: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '10px',
+              padding: '14px',
+              borderRadius: '14px',
+              fontWeight: 800,
+              fontSize: '0.95rem',
+              boxShadow: '0 6px 20px rgba(21, 128, 61, 0.35)',
+            }}
+          >
+            <i className="fa-solid fa-mobile-screen-button"></i>
+            <span>Ilovani telefonga oʻrnatish</span>
+          </button>
+        </div>
       </div>
     </>
   );
