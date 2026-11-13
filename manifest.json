@@ -1,0 +1,41 @@
+﻿{
+  "id": "/",
+  "name": "Agro Tarmoq — Qishloq xoʻjaligi platformasi",
+  "short_name": "Agro Tarmoq",
+  "description": "Fermer, xaridor, texnika egasi va agronomni bitta tarmoqda bogʻlovchi platforma",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#064e3b",
+  "theme_color": "#064e3b",
+  "lang": "uz",
+  "prefer_related_applications": false,
+  "categories": ["business", "shopping", "productivity"],
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
