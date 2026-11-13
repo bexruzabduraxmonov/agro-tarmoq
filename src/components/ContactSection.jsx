@@ -61,22 +61,6 @@ export default function ContactSection({ selectedService }) {
 
               <div className="space-y-5">
                 <a 
-                  href="tel:+998712004488" 
-                  className="flex items-start gap-4 p-3 rounded-xl hover:bg-emerald-50/60 transition-colors group"
-                >
-                  <div className="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
-                    <Phone className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <div className="text-xs text-slate-400 font-medium">Yagona aloqa markazi</div>
-                    <div className="text-base font-bold text-slate-900 group-hover:text-emerald-700 transition-colors">
-                      +998 (71) 200-44-88
-                    </div>
-                    <div className="text-xs text-emerald-700 font-medium">+998 (90) 123-45-67</div>
-                  </div>
-                </a>
-
-                <a 
                   href="mailto:info@agrotarmoq.uz" 
                   className="flex items-start gap-4 p-3 rounded-xl hover:bg-emerald-50/60 transition-colors group"
                 >
@@ -94,19 +78,6 @@ export default function ContactSection({ selectedService }) {
 
                 <div className="flex items-start gap-4 p-3 rounded-xl">
                   <div className="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
-                    <MapPin className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <div className="text-xs text-slate-400 font-medium">Bosh ofis manzili</div>
-                    <div className="text-sm font-bold text-slate-900">
-                      Toshkent shahri, Bobur ko'chasi, 45-uy
-                    </div>
-                    <div className="text-xs text-slate-500">"Agro Biznes Markazi", 4-qavat</div>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4 p-3 rounded-xl">
-                  <div className="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
                     <Clock className="w-5 h-5" />
                   </div>
                   <div>
@@ -117,18 +88,19 @@ export default function ContactSection({ selectedService }) {
                     <div className="text-xs text-emerald-700 font-medium">Yakshanba: Navbatchi agronom onlayn</div>
                   </div>
                 </div>
-              </div>
-            </div>
 
-            {/* Map visual card */}
-            <div className="bg-white rounded-2xl p-4 border border-slate-200/90 shadow-sm overflow-hidden">
-              <div className="relative rounded-xl overflow-hidden aspect-[16/9] bg-slate-200">
-                <iframe
-                  title="Agro Tarmoq Manzili"
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2998.4230000000003!2d69.250000!3d41.300000!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDHCsDE4JzAwLjAiTiA2OcKwMTUnMDAuMCJF!5e0!3m2!1sen!2suz!4v1620000000000!5m2!1sen!2suz"
-                  className="w-full h-full border-0"
-                  loading="lazy"
-                />
+                <div className="flex items-start gap-4 p-4 rounded-xl bg-emerald-50/80 border border-emerald-100">
+                  <div className="w-12 h-12 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0">
+                    <MessageSquare className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <div className="text-xs text-emerald-800 font-medium">Onlayn murojaat</div>
+                    <div className="text-sm font-bold text-emerald-950">
+                      24/7 Agro-Konsultatsiya
+                    </div>
+                    <div className="text-xs text-emerald-700 mt-1">Formani toʻldiring, mutaxassislarimiz sizga javob beradi.</div>
+                  </div>
+                </div>
               </div>
             </div>
 

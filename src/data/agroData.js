@@ -360,34 +360,117 @@
         img: 'https://images.unsplash.com/photo-1530595467537-0b5996c41f2d?auto=format&fit=crop&w=600&q=80' 
       },
       { 
-        id: 'parvarish_mikro', name: 'Kompleks mikroelementlar (Bor, Sink, Xelat Temir)', cat: 'parvarish', emoji: '🧪', price: 48000, unit: 'paket (1 kg)', 
+        id: 'parvarish_mikro', name: 'Kompleks mikroelementlar (Bor, Sink, Xelat Temir)', cat: 'ogit', subcat: 'parvarish', emoji: '🧪', price: 48000, unit: 'paket (1 kg)', 
         farmer: 'Agro Element Laboratoriyasi', region: 'Samarqand viloyati', trend: 1, rating: 4.9, reviewsCount: 140,
         desc: 'Gul toʻkilishining oldini oluvchi, mevalarning toʻliq shakllanishini taʼminlovchi xelatlangan mikroelementlar.',
         specs: ['Shakli: 100% suvda eruvchan xelat (EDTA)', 'Tarkibi: B, Zn, Fe, Mn, Cu, Mo', 'Hosildorlik qoʻshilishi: +20-25%', 'Qadoq: 1 kg folgali paket'],
         img: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=600&q=80' 
+      },
+
+      // === FERMERLAR UCHUN XIZMATLAR ===
+      {
+        id: 'xizmat_dron', name: 'Agrodron orqali ekin maydonlarini purkash xizmati', cat: 'xizmatlar', emoji: '🛸', price: 55000, unit: 'ga',
+        farmer: 'AeroAgro Monitoring MCHJ', region: 'Toshkent viloyati', trend: 1, rating: 5.0, reviewsCount: 89,
+        desc: 'DJI Agras T40 dronlari yordamida oʻgʻit va himoya vositalarini teng taqsimotda, gʻildirak izisiz 10 barobar tez purkash.',
+        specs: ['Unumdorlik: Soatiga 15-20 gektar', 'Dori tejalishi: 30% gacha kamroq suv va preparat', 'Kechki purkash: Mavjud (termovizor bilan)', 'Buyurtma: 24 soat oldin'],
+        img: 'https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&w=600&q=80'
+      },
+      {
+        id: 'xizmat_laboratoriya', name: 'Tuproq agrokimyoviy laboratoriya tahlili', cat: 'xizmatlar', emoji: '🔬', price: 280000, unit: 'tahlil',
+        farmer: 'Respublika Tuproqshunoslik Markazi', region: 'Samarqand viloyati', trend: 0, rating: 4.9, reviewsCount: 112,
+        desc: 'Tuproq tarkibidagi NPK, gumus miqdori, pH kislotalilik va shoʻrlanish darajasini aniqlash va ilmiy tavsiyanoma berish.',
+        specs: ['Koʻrsatkichlar: 12 ta parametr', 'Xulosa muddati: 3 ish kuni', 'Tavsiya: Gektariga oʻgʻit meʼyori xaritasi', 'Format: Elektron va muhrlangan qogʻoz'],
+        img: 'https://images.unsplash.com/photo-1581093588401-fbb62a02f120?auto=format&fit=crop&w=600&q=80'
+      },
+      {
+        id: 'xizmat_ombor', name: 'Sovutgichli CA omborxona ijarasi (Meva va sabzavot)', cat: 'xizmatlar', emoji: '❄️', price: 120000, unit: 'tonna / oy',
+        farmer: 'AgroLogistika Fresh Terminal', region: 'Fargʻona viloyati', trend: 1, rating: 4.8, reviewsCount: 76,
+        desc: 'Gaz muhiti nazorat qilinadigan (Controlled Atmosphere) zamonaviy muzlatkich omborxonada hosilni 6 oygacha yangidek saqlash.',
+        specs: ['Harorat: -1°C dan +4°C gacha', 'Namlik: 90-95% doimiy nazorat', 'Yuklash-tushirish: Avtokarlar bilan bepul', 'Sigʻim: 5,000 tonna'],
+        img: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=600&q=80'
+      },
+      {
+        id: 'xizmat_sugorish', name: 'Intellektual tomchilatib sugʻorish tizimlarini oʻrnatish', cat: 'xizmatlar', emoji: '💧', price: 9500000, unit: 'ga (tayyor kalit)',
+        farmer: 'EcoDrip Systems', region: 'Namangan viloyati', trend: 1, rating: 4.9, reviewsCount: 64,
+        desc: 'Barcha filtr stansiyalari, quvurlar, tomizgichlar va avtomatlashtirilgan klapanlar bilan birga toʻliq montaj va kafolat.',
+        specs: ['Suv tejalishi: 45-50%', 'Kafolat: 3 yil toʻliq kafolat', 'Davlat subsidiyasi: Hujjatlarni rasmiylashtirishda yordam', 'Oʻrnatish muddati: 10 ga uchun 5 kun'],
+        img: 'https://images.unsplash.com/photo-1563514227147-6d2ff665a6a0?auto=format&fit=crop&w=600&q=80'
+      },
+
+      // === AGRONOM MASLAHATLARI ===
+      {
+        id: 'agronom_bog', name: 'Intensiv bogʻ va tokzorlar uchun mavsumiy agronomik xizmat', cat: 'agronom', emoji: '👨‍🌾', price: 1500000, unit: 'oyiga / xoʻjalik',
+        farmer: 'Bosh Agronom Mahmud Ergashev', region: 'Toshkent viloyati', trend: 1, rating: 5.0, reviewsCount: 94,
+        desc: '20 yillik tajribaga ega yetakchi agronomdan haftalik monitoring, butash sxemalari, oziqlantirish va kasalliklar profilaktikasi.',
+        specs: ['Format: Dalaga chiqish + onlayn konsultatsiya', 'Bogʻ turlari: Olma, nok, gilos, bodom, uzum', 'Agro-xarita: Mavsumiy toʻliq reja', 'Aloqa: Haftada 6 kun'],
+        img: 'https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?auto=format&fit=crop&w=600&q=80'
+      },
+      {
+        id: 'agronom_diagnostika', name: 'Ekin kasalliklari va zararkunandalarining onlayn diagnostikasi', cat: 'agronom', emoji: '📱', price: 35000, unit: 'tahlil',
+        farmer: 'AgroDoktor Ekspert Guruhi', region: 'Buxoro viloyati', trend: 0, rating: 4.8, reviewsCount: 180,
+        desc: 'Barg yoki mevani rasmga olib yuborasiz, 30 daqiqa ichida kasallik aniqlanib, eng samarali preparat va dozasi tavsiya qilinadi.',
+        specs: ['Tezlik: 30-60 daqiqa', 'Aniqlik: 98% gacha kafolatlangan', 'Tavsiya: Aniq oʻgʻit va dori dozalari', 'Rejim: 08:00 - 20:00 har kuni'],
+        img: 'https://images.unsplash.com/photo-1530595467537-0b5996c41f2d?auto=format&fit=crop&w=600&q=80'
+      },
+
+      // === E'LONLAR VA ERKIN SAVDO ===
+      {
+        id: 'elon_gilos', name: 'Eksportbop saralangan qizil gilos (28+ kalibr, ulgurji)', cat: 'elonlar', emoji: '🍒', price: 38000, unit: 'kg',
+        farmer: 'Qashqadaryo Meva Klasteri', region: 'Qashqadaryo viloyati', trend: 1, rating: 4.9, reviewsCount: 42,
+        desc: 'Yangi uzilgan, bir xil kalibrlangan, sovutilgan eksportbop gilos. Minimal buyurtma hajmi: 2 tonna.',
+        specs: ['Kalibr: 28-32 mm', 'Qadoq: 5 kg maxsus plastik meva yashigi', 'Sertifikat: GlobalG.A.P. bor', 'Yuklash: Furgonlarga tezkor yuklash'],
+        img: 'https://images.unsplash.com/photo-1528825871115-3581a5387919?auto=format&fit=crop&w=600&q=80'
+      },
+      {
+        id: 'elon_somon', name: 'Bugʻdoy somoni zich presslangan (Chorva mollari uchun)', cat: 'elonlar', emoji: '🌾', price: 16000, unit: 'dona (pres)',
+        farmer: 'Olimjon Dehqon xoʻjaligi', region: 'Jizzax viloyati', trend: -1, rating: 4.7, reviewsCount: 56,
+        desc: 'Yomgʻirda qolmagan, toza, quruq va ogʻir presslangan bugʻdoy somonlari. 500 dona va undan ortiq xaridga chegirma.',
+        specs: ['Ogʻirligi: 18-22 kg/pres', 'Sifati: Birinchi nav, toza quruq', 'Hajmi: 3,000 dona mavjud', 'Yuklab berish: Fermer hisobidan'],
+        img: 'https://images.unsplash.com/photo-1500595046743-cd271d694d30?auto=format&fit=crop&w=600&q=80'
+      },
+      {
+        id: 'elon_makkajoxori', name: 'Makkajoʻxori doni (Silos va yemlik, quritilgan)', cat: 'elonlar', emoji: '🌽', price: 3200, unit: 'kg',
+        farmer: 'Sirdaryo Don Agro', region: 'Sirdaryo viloyati', trend: 1, rating: 4.8, reviewsCount: 67,
+        desc: 'Namligi meʼyorda quritilgan, begona oʻt urugʻlaridan tozalangan yemlik makkajoʻxori doni.',
+        specs: ['Namligi: 13.5%', 'Tozaligi: 98.2%', 'Qadoqlanishi: 50 kg qoplarda yoki ochiq yuk mashinasida', 'Minimal hajm: 5 tonna'],
+        img: 'https://images.unsplash.com/photo-1551754655-cd27e38d2076?auto=format&fit=crop&w=600&q=80'
       }
+    ],
+    marketplaceSections: [
+      { id: 'texnika', name: 'Agro texnikalar', emoji: '🚜', count: '120+', desc: 'Traktorlar, kombaynlar, ekin sevalkalari va agrodronlar', img: 'https://images.unsplash.com/photo-1592982537447-7440770cbfc9?auto=format&fit=crop&w=600&q=80' },
+      { id: 'urug', name: 'Urugʻ va koʻchatlar', emoji: '🌱', count: '350+', desc: 'Gibrid don urugʻlari, serhosil mevali daraxt koʻchatlari', img: 'https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&w=600&q=80' },
+      { id: 'ogit', name: 'Mineral oʻgʻitlar', emoji: '🧪', count: '180+', desc: 'Azotli, fosforli, kaliyli va tabiiy bio-gumus oʻgʻitlar', img: 'https://images.unsplash.com/photo-1628352081506-83c43123ed6d?auto=format&fit=crop&w=600&q=80' },
+      { id: 'hosil', name: 'Qishloq xoʻjaligi mahsulotlari', emoji: '🍎', count: '540+', desc: 'Yangi meva-sabzavotlar, poliz, gʻalla va dukkakli ekinlar', img: 'https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&w=600&q=80' },
+      { id: 'xizmatlar', name: 'Fermerlar uchun xizmatlar', emoji: '🛠️', count: '90+', desc: 'Dron purkash, tuproq agro-tahlili, CA sovuq omborlar', img: 'https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&w=600&q=80' },
+      { id: 'agronom', name: 'Agronom maslahatlari', emoji: '🌿', count: '65+', desc: 'Ekin kasalliklari diagnostikasi va agro-texnologiya xaritalari', img: 'https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?auto=format&fit=crop&w=600&q=80' },
+      { id: 'elonlar', name: 'Eʼlonlar va savdo', emoji: '📢', count: '430+', desc: 'Fermerlarning erkin savdo eʼlonlari va xarid talablari', img: 'https://images.unsplash.com/photo-1586771107445-d3ca888129ff?auto=format&fit=crop&w=600&q=80' }
     ],
     cats: [
       ['all', 'Barchasi'],
+      ['texnika', 'Agro texnikalar'],
+      ['urug', 'Urugʻ va koʻchatlar'],
+      ['ogit', 'Mineral oʻgʻitlar'],
+      ['hosil', 'Qishloq xoʻjaligi mahsulotlari'],
+      ['xizmatlar', 'Fermer xizmatlari'],
+      ['agronom', 'Agronom maslahatlari'],
+      ['elonlar', 'Eʼlonlar va savdo'],
       ['sabzavot', 'Sabzavot'],
       ['meva', 'Meva'],
       ['gosh', 'Goʻsht'],
-      ['sut', 'Sut'],
-      ['urug', 'Urugʻlar'],
-      ['mineral_ogit', 'Mineral oʻgʻitlar'],
-      ['organik_ogit', 'Organik oʻgʻitlar'],
-      ['himoya', 'Himoya vositalari'],
-      ['yoqilgi', 'Yoqilgʻi mahsulotlari'],
-      ['sugorish', 'Sugʻorish vositalari'],
-      ['texnika_savdo', 'Agrotexnika'],
-      ['parvarish', 'Parvarishlash vositalari']
+      ['sut', 'Sut']
     ],
     catLabel: {
+      texnika: 'Agro texnikalar',
+      urug: 'Urugʻ va koʻchatlar',
+      ogit: 'Mineral oʻgʻitlar',
+      hosil: 'Qishloq xoʻjaligi mahsulotlari',
+      xizmatlar: 'Fermer xizmatlari',
+      agronom: 'Agronom maslahatlari',
+      elonlar: 'Eʼlonlar va savdo',
       sabzavot: 'Sabzavot',
       meva: 'Meva',
       gosh: 'Goʻsht',
       sut: 'Sut',
-      urug: 'Urugʻlar',
       mineral_ogit: 'Mineral oʻgʻitlar',
       organik_ogit: 'Organik oʻgʻitlar',
       himoya: 'Himoya vositalari',
@@ -396,6 +479,22 @@
       texnika_savdo: 'Agrotexnika',
       parvarish: 'Parvarishlash vositalari'
     },
+    regionsList: [
+      'Barcha viloyatlar',
+      'Toshkent viloyati',
+      'Samarqand viloyati',
+      'Fargʻona viloyati',
+      'Andijon viloyati',
+      'Namangan viloyati',
+      'Buxoro viloyati',
+      'Qashqadaryo viloyati',
+      'Surxondaryo viloyati',
+      'Xorazm viloyati',
+      'Jizzax viloyati',
+      'Sirdaryo viloyati',
+      'Navoiy viloyati',
+      'Qoraqalpogʻiston Respublikasi'
+    ],
     trendIcon: { 1: '▲', '-1': '▼', 0: '■' },
     trendClass: { 1: 'trend-up', '-1': 'trend-down', 0: '' },
     markets: ['Chorsu bozori', 'Oloy bozori', 'Qoʻqon bozori', 'Samarqand bozori', 'Fargʻona bozori'],

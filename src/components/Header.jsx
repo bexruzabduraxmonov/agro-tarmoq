@@ -189,6 +189,32 @@ export default function Header({ currentPage, setCurrentPage, cartCount, onOpenC
               )}
             </button>
 
+            {/* Taqdimot / Presentation Button */}
+            <a
+              href="/prezentatsiya.html"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="presentation-top-btn"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '6px 14px',
+                borderRadius: '20px',
+                background: 'linear-gradient(135deg, #15803d, #22c55e)',
+                color: '#ffffff',
+                fontSize: '0.82rem',
+                fontWeight: 700,
+                textDecoration: 'none',
+                boxShadow: '0 2px 10px rgba(34, 197, 94, 0.3)',
+                transition: 'all 0.2s ease'
+              }}
+              title="Loyiha taqdimotini to'liq ekranda ochish"
+            >
+              <i className="fa-solid fa-chalkboard-user"></i>
+              <span>Taqdimot</span>
+            </a>
+
             <button 
               type="button" 
               className={`account-btn ${currentPage === 'royxatdan-otish' ? 'active' : ''}`}
@@ -297,6 +323,27 @@ export default function Header({ currentPage, setCurrentPage, cartCount, onOpenC
               {t(navMap[item[0]], item[1])}
             </button>
           ))}
+          <a
+            href="/prezentatsiya.html"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+              padding: '12px 16px',
+              margin: '8px 12px',
+              borderRadius: '10px',
+              background: 'rgba(34, 197, 94, 0.12)',
+              color: 'var(--primary-color, #16a34a)',
+              fontWeight: 700,
+              textDecoration: 'none',
+              fontSize: '0.95rem'
+            }}
+          >
+            <i className="fa-solid fa-chalkboard-user"></i>
+            <span>📊 Loyiha Taqdimoti (Prezentatsiya)</span>
+          </a>
         </nav>
 
         {/* Mobile Install App Button */}

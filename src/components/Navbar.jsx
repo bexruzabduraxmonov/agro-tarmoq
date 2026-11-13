@@ -53,18 +53,10 @@ export default function Navbar({
       <div className="bg-emerald-950 text-emerald-100 text-xs py-1.5 border-b border-emerald-900/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-2">
           <div className="flex flex-wrap items-center gap-4 sm:gap-6">
-            <a href="tel:+998712004488" className="flex items-center gap-1.5 hover:text-emerald-300 transition-colors">
-              <Phone className="w-3.5 h-3.5 text-emerald-400" />
-              <span>+998 (71) 200-44-88</span>
-            </a>
-            <a href="mailto:info@agrotarmoq.uz" className="hidden sm:flex items-center gap-1.5 hover:text-emerald-300 transition-colors">
+            <a href="mailto:info@agrotarmoq.uz" className="flex items-center gap-1.5 hover:text-emerald-300 transition-colors">
               <Mail className="w-3.5 h-3.5 text-emerald-400" />
               <span>info@agrotarmoq.uz</span>
             </a>
-            <div className="hidden md:flex items-center gap-1.5 text-emerald-300/80">
-              <MapPin className="w-3.5 h-3.5 text-emerald-400" />
-              <span>Toshkent sh., Bobur ko'chasi 45</span>
-            </div>
           </div>
           <div className="flex items-center gap-4 text-emerald-300/90 text-[11px]">
             <span>Dush-Shan: 08:30 - 18:30</span>
