@@ -5,7 +5,17 @@ import { useTheme } from '../context/ThemeContext';
 import Logo from './Logo';
 import LanguageSwitcher from './LanguageSwitcher';
 
-export default function Header({ currentPage, setCurrentPage, cartCount, onOpenCart, onSearch, onShowToast }) {
+export default function Header({
+  currentPage,
+  setCurrentPage,
+  cartCount,
+  onOpenCart,
+  favoritesCount = 0,
+  onOpenFavorites,
+  onOpenAddProduct,
+  onSearch,
+  onShowToast
+}) {
   const { t } = useLanguage();
   const { isDark, toggleTheme } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -215,10 +225,50 @@ export default function Header({ currentPage, setCurrentPage, cartCount, onOpenC
               <span>Taqdimot</span>
             </a>
 
+            {/* Sevimlilar / Wishlist */}
+            <button
+              type="button"
+              className="account-btn"
+              onClick={onOpenFavorites}
+              aria-label="Sevimlilar"
+              title="Sevimlilar"
+              style={{ position: 'relative' }}
+            >
+              <i className="fa-solid fa-heart" style={{ color: favoritesCount > 0 ? '#ef4444' : 'inherit' }}></i>
+              {favoritesCount > 0 && (
+                <span className="cart-count" style={{ background: '#ef4444' }}>{favoritesCount}</span>
+              )}
+            </button>
+
+            {/* + E'lon berish */}
+            <button
+              type="button"
+              onClick={onOpenAddProduct}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '6px 14px',
+                borderRadius: '20px',
+                background: 'linear-gradient(135deg, #15803d, #22c55e)',
+                color: '#ffffff',
+                border: 'none',
+                fontSize: '0.82rem',
+                fontWeight: 700,
+                cursor: 'pointer',
+                boxShadow: '0 2px 8px rgba(34, 197, 94, 0.3)',
+                transition: 'all 0.2s'
+              }}
+              title="Yangi e'lon joylashtirish"
+            >
+              <i className="fa-solid fa-plus"></i>
+              <span>E'lon</span>
+            </button>
+
             <button 
               type="button" 
-              className={`account-btn ${currentPage === 'royxatdan-otish' ? 'active' : ''}`}
-              onClick={() => handleNav('royxatdan-otish.html')}
+              className={`account-btn ${currentPage === 'farmer-dashboard' || currentPage === 'royxatdan-otish' ? 'active' : ''}`}
+              onClick={() => handleNav('farmer-dashboard')}
               aria-label={t('account')} 
               title={t('account')}
             >
