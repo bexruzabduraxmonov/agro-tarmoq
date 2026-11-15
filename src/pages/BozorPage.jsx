@@ -1,14 +1,8 @@
-﻿import React, { useState } from "react";
+import React, { useState } from "react";
 import { AGRO_DATA } from "../data/agroData";
 import { useLanguage } from "../context/LanguageContext";
 import { fmt } from "../utils/helpers";
 import ProductDetailModal from "../components/ProductDetailModal";
-
-const trendInfo = {
-  "1":  { icon: "▲", cls: "trend-up",   label: "Oshmoqda" },
-  "-1": { icon: "▼", cls: "trend-down", label: "Tushmoqda" },
-  "0":  { icon: "■", cls: "",           label: "Barqaror" },
-};
 
 export default function BozorPage({ onAddToCart }) {
   const { t } = useLanguage();
@@ -16,6 +10,12 @@ export default function BozorPage({ onAddToCart }) {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [addedIds, setAddedIds] = useState({});
   const [favorites, setFavorites] = useState({});
+
+  const trendMap = {
+    "1":  { icon: "▲", cls: "trend-up",   label: t('trend_label_up') || "Oshmoqda" },
+    "-1": { icon: "▼", cls: "trend-down", label: t('trend_label_down') || "Tushmoqda" },
+    "0":  { icon: "■", cls: "",           label: t('trend_label_stable') || "Barqaror" },
+  };
 
   const filteredProducts = AGRO_DATA.products.filter(
     (p) => activeCat === "all" || p.cat === activeCat
@@ -66,13 +66,13 @@ export default function BozorPage({ onAddToCart }) {
 
           {/* Products Count Indicator */}
           <div style={{ marginBottom: "16px", color: "var(--muted-color)", fontSize: "0.88rem", fontWeight: 600 }}>
-            Jami: <strong style={{ color: "var(--text-color)" }}>{filteredProducts.length}</strong> ta saralangan mahsulot
+            {t('cat_all')}: <strong style={{ color: "var(--text-color)" }}>{filteredProducts.length}</strong> {t('total_selected_products')}
           </div>
 
           {/* Products Grid — Uzum Market Authentic Card Layout */}
           <div className="uzum-grid">
             {filteredProducts.map((p) => {
-              const trend = trendInfo[String(p.trend)];
+              const trend = trendMap[String(p.trend)];
               const catLabel = AGRO_DATA.catLabel[p.cat] || p.cat;
               const isAdded = addedIds[p.id];
               const isFav = favorites[p.id];
@@ -102,21 +102,21 @@ export default function BozorPage({ onAddToCart }) {
                       type="button"
                       className={`uzum-card-fav ${isFav ? "active" : ""}`}
                       onClick={(e) => toggleFavorite(e, p.id)}
-                      aria-label="Sevimlilarga qoʻshish"
+                      aria-label="Wishlist"
                     >
                       <i className={isFav ? "fa-solid fa-heart" : "fa-regular fa-heart"}></i>
                     </button>
 
                     {/* Quick Preview Hover Overlay */}
                     <div className="uzum-card-overlay">
-                      <span>Batafsil maʼlumot</span>
+                      <span>{t('read_more')}</span>
                     </div>
                   </div>
 
                   {/* Card Content Body */}
                   <div className="uzum-card-body">
                     {/* Category Label */}
-                    <div className="uzum-card-cat">{catLabel}</div>
+                    <div className="uzum-card-cat">{t(`cat_${p.cat}`, catLabel)}</div>
 
                     {/* Title */}
                     <h3 className="uzum-card-name" title={p.name}>
@@ -132,7 +132,7 @@ export default function BozorPage({ onAddToCart }) {
 
                     {/* Installment Badge (Uzum Nasiya style) */}
                     <div className="uzum-card-monthly">
-                      {fmt(monthly)} soʻm/oyiga
+                      {fmt(monthly)} {t('per_month_unit')}
                     </div>
 
                     {/* Origin / Farmer Tag */}
@@ -145,9 +145,9 @@ export default function BozorPage({ onAddToCart }) {
                     <div className="uzum-card-footer">
                       <div>
                         <div className="uzum-card-price">
-                          {fmt(p.price)} <span className="uzum-card-cur">soʻm</span>
+                          {fmt(p.price)} <span className="uzum-card-cur">{t('price_unit')}</span>
                         </div>
-                        <div className="uzum-card-unit">1 {p.unit} narxi</div>
+                        <div className="uzum-card-unit">1 {p.unit}</div>
                       </div>
 
                       <button

@@ -20,6 +20,7 @@ import AuthPage from './pages/AuthPage';
 import SearchPage from './pages/SearchPage';
 import PwaInstallBanner from './components/PwaInstallBanner';
 import BottomNav from './components/BottomNav';
+import AiAgronomBot from './components/AiAgronomBot';
 
 export default function App() {
   const getInitialPage = () => {
@@ -150,7 +151,7 @@ export default function App() {
       )}
 
       {currentPage === 'agronom' && (
-        <AgronomPage />
+        <AgronomPage onNavigate={handleNavigate} onShowToast={showToast} />
       )}
 
       {currentPage === 'dokon' && (
@@ -211,6 +212,12 @@ export default function App() {
         onNavigate={handleNavigate}
         cartCount={totalCartCount}
         onOpenCart={() => setIsCartOpen(true)}
+      />
+
+      {/* Interactive AI Agronom Assistant Bot */}
+      <AiAgronomBot 
+        onNavigate={handleNavigate}
+        onShowToast={showToast}
       />
 
       {/* Toast Notification */}

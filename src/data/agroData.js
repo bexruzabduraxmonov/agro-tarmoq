@@ -3,7 +3,7 @@
   export const AGRO_DATA = {
     navPrimary: [
       ['', 'Bosh sahifa'], ['bozor.html', 'Bozor'], ['narxlar.html', 'Narxlar'],
-      ['obhavo.html', 'Ob-havo'], ['texnika.html', 'Texnika'], ['agronom.html', 'Agronom'], ['dokon.html', 'Doʻkon']
+      ['obhavo.html', 'Ob-havo'], ['texnika.html', 'Texnika'], ['agronom.html', 'AI Agronom'], ['dokon.html', 'Doʻkon']
     ],
     navMore: [
       ['xojalik.html', 'Xoʻjaligim'], ['royxatdan-otish.html', 'Roʻyxatdan oʻtish'], ['ishlar.html', 'Ishlar'], ['yangiliklar.html', 'Yangiliklar'], ['chorvachilik.html', 'Chorvachilik']
@@ -13,7 +13,7 @@
       { id: 'narxlar', href: 'narxlar.html', e: '📊', t: 'Narxlar', d: '14 kunlik grafik va bozor solishtirmasi', img: 'https://files.cdn-files-a.com/uploads/12463689/normal_gi-6ad09c1a2746d.jpg?format=avif' },
       { id: 'obhavo', href: 'obhavo.html', e: '📅', t: 'Ob-havo va kalendar', d: 'Ekish, sugʻorish va hosil oylari', img: 'https://files.cdn-files-a.com/uploads/12463689/normal_gi-6ad09c1a27477.jpg?format=avif' },
       { id: 'texnika', href: 'texnika.html', e: '🚜', t: 'Texnika ijarasi', d: 'Traktor, kombayn va dron', img: 'https://files.cdn-files-a.com/uploads/12463689/normal_gi-6ad09c1a274aa.jpg?format=avif' },
-      { id: 'agronom', href: 'agronom.html', e: '🌿', t: 'Agronom', d: 'Kasalliklar kutubxonasi va chorasi', img: 'https://files.cdn-files-a.com/uploads/12463689/normal_gi-6ad09c1a274b2.jpg?format=avif' },
+      { id: 'agronom', href: 'agronom.html', e: '🤖', t: 'AI Agronom', d: 'Sunʼiy intellekt asosida kasallik tashxisi', img: 'https://files.cdn-files-a.com/uploads/12463689/normal_gi-6ad09c1a274b2.jpg?format=avif' },
       { id: 'xojalik', href: 'xojalik.html', e: '💰', t: 'Mening xoʻjaligim', d: 'Daromad, xarajat va foyda hisobi', img: 'https://files.cdn-files-a.com/uploads/12463689/normal_gi-6ad09c1a274b8.jpg?format=avif' },
       { id: 'dokon', href: 'dokon.html', e: '🌱', t: 'Doʻkon', d: 'Urugʻ, oʻgʻit va dori narxlari', img: 'https://files.cdn-files-a.com/uploads/12463689/normal_gi-6ad09c1a274bf.jpg?format=avif' },
       { id: 'ishlar', href: 'ishlar.html', e: '🧑‍🌾', t: 'Ishlar', d: 'Mavsumiy va doimiy ish eʼlonlari', img: 'https://files.cdn-files-a.com/uploads/12463689/normal_gi-6ad09c1a274c6.jpg?format=avif' },

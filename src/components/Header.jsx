@@ -15,7 +15,7 @@ export default function Header({ currentPage, setCurrentPage, cartCount, onOpenC
   const handleThemeToggle = () => {
     toggleTheme();
     if (onShowToast) {
-      onShowToast(isDark ? "Kunduzgi yorugʻ rejim yoqildi ☀️" : "Tungi qorongʻu rejim yoqildi 🌙");
+      onShowToast(isDark ? t('theme_light_toast') : t('theme_dark_toast'));
     }
   };
 
@@ -98,7 +98,25 @@ export default function Header({ currentPage, setCurrentPage, cartCount, onOpenC
                 className={`nav-pill ${isCurrentActive(item[0]) ? 'active' : ''}`}
                 onClick={() => handleNav(item[0])}
               >
-                {t(navMap[item[0]], item[1])}
+                {item[0] === 'agronom.html' ? (
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                    <span style={{ 
+                      background: 'linear-gradient(135deg, #16a34a, #22c55e)', 
+                      color: '#fff', 
+                      fontSize: '10px', 
+                      fontWeight: 900, 
+                      padding: '1px 6px', 
+                      borderRadius: '6px', 
+                      letterSpacing: '0.4px',
+                      boxShadow: '0 2px 6px rgba(34, 197, 94, 0.4)'
+                    }}>
+                      AI
+                    </span>
+                    <span>{t(navMap[item[0]], item[1])}</span>
+                  </span>
+                ) : (
+                  t(navMap[item[0]], item[1])
+                )}
               </button>
             ))}
 
@@ -260,12 +278,12 @@ export default function Header({ currentPage, setCurrentPage, cartCount, onOpenC
             {isDark ? (
               <>
                 <i className="fa-solid fa-sun" style={{ color: '#f59e0b' }}></i>
-                <span>Kunduzgi</span>
+                <span>{t('theme_light')}</span>
               </>
             ) : (
               <>
                 <i className="fa-solid fa-moon" style={{ color: '#334155' }}></i>
-                <span>Tungi</span>
+                <span>{t('theme_dark')}</span>
               </>
             )}
           </button>
@@ -294,7 +312,19 @@ export default function Header({ currentPage, setCurrentPage, cartCount, onOpenC
               className={isCurrentActive(item[0]) ? 'active' : ''}
               onClick={() => handleNav(item[0])}
             >
-              {t(navMap[item[0]], item[1])}
+              {item[0] === 'agronom.html' ? (
+                <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span>🤖</span>
+                    <span>{t(navMap[item[0]], item[1])}</span>
+                  </span>
+                  <span style={{ background: '#dcfce7', color: '#15803d', fontSize: '10px', padding: '2px 7px', borderRadius: '6px', fontWeight: 800 }}>
+                    AI
+                  </span>
+                </span>
+              ) : (
+                t(navMap[item[0]], item[1])
+              )}
             </button>
           ))}
         </nav>
@@ -327,7 +357,7 @@ export default function Header({ currentPage, setCurrentPage, cartCount, onOpenC
             }}
           >
             <i className="fa-solid fa-mobile-screen-button"></i>
-            <span>Ilovani telefonga oʻrnatish</span>
+            <span>{t('install_app_btn')}</span>
           </button>
         </div>
       </div>

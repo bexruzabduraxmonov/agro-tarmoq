@@ -889,28 +889,49 @@ export default function ObHavoPage({ onShowToast }) {
             </div>
 
             {/* Month grid with interactive click */}
-            <div className="month-grid" id="monthGrid">
+            <div 
+              className="month-grid" 
+              id="monthGrid"
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 72px), 1fr))',
+                gap: '8px',
+                width: '100%',
+                margin: '18px 0',
+                boxSizing: 'border-box'
+              }}
+            >
               {AGRO_DATA.months.map((mn, idx) => {
                 let cls = '';
                 let ico = '❄️';
                 let actionLabel = 'Tinchlik';
+                let cellBg = '#f8fafc';
+                let cellBorder = 'var(--border-color)';
 
                 if (crop.harvestMonths.includes(idx)) {
                   cls = 'm-harvest';
                   ico = '🌾';
                   actionLabel = 'Yigʻim-terim';
+                  cellBg = '#fefce8';
+                  cellBorder = '#fde047';
                 } else if (crop.plantMonths.includes(idx)) {
                   cls = 'm-plant';
                   ico = '🌱';
                   actionLabel = 'Ekish davri';
+                  cellBg = '#ecfdf5';
+                  cellBorder = '#86efac';
                 } else if (crop.waterMonths.includes(idx)) {
                   cls = 'm-water';
                   ico = '💧';
                   actionLabel = 'Faol sugʻorish';
+                  cellBg = '#f0f9ff';
+                  cellBorder = '#7dd3fc';
                 } else if (crop.fertilizeMonths && crop.fertilizeMonths.includes(idx)) {
                   cls = 'm-water';
                   ico = '🧪';
                   actionLabel = 'Oziqlantirish';
+                  cellBg = '#f0f9ff';
+                  cellBorder = '#7dd3fc';
                 }
 
                 const isSelected = selectedMonth === idx;
@@ -919,14 +940,32 @@ export default function ObHavoPage({ onShowToast }) {
                   <div 
                     key={idx} 
                     className="month-col"
-                    style={{ cursor: 'pointer' }}
+                    style={{ 
+                      cursor: 'pointer',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      gap: '6px',
+                      padding: '6px 4px',
+                      borderRadius: '12px',
+                      transition: 'all 0.2s ease',
+                      minWidth: 0,
+                      boxSizing: 'border-box',
+                      background: isSelected ? 'rgba(22, 101, 52, 0.06)' : 'transparent'
+                    }}
                     onClick={() => setSelectedMonth(idx)}
                   >
                     <div 
                       className="month-name" 
                       style={{ 
-                        fontWeight: isSelected ? 800 : 600,
-                        color: isSelected ? 'var(--primary-color)' : 'var(--muted-color)'
+                        fontWeight: isSelected ? 800 : 700,
+                        color: isSelected ? 'var(--primary-color)' : 'var(--muted-color)',
+                        fontSize: '0.82rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '3px',
+                        whiteSpace: 'nowrap'
                       }}
                     >
                       {mn} {isSelected ? '●' : ''}
@@ -935,9 +974,21 @@ export default function ObHavoPage({ onShowToast }) {
                       className={`month-cell ${cls}`} 
                       title={`${AGRO_DATA.monthsFull[idx]}: ${actionLabel}`}
                       style={{
+                        width: '100%',
+                        maxWidth: '56px',
+                        aspectRatio: '1',
+                        minHeight: '44px',
+                        borderRadius: '12px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '1.35rem',
+                        background: cellBg,
+                        border: isSelected ? '2.5px solid var(--primary-color)' : `1.5px solid ${cellBorder}`,
                         transform: isSelected ? 'scale(1.08)' : 'scale(1)',
-                        boxShadow: isSelected ? '0 0 0 3px var(--primary-color)' : 'none',
-                        transition: '0.2s'
+                        boxShadow: isSelected ? '0 4px 14px rgba(22, 101, 52, 0.25)' : '0 1px 3px rgba(0,0,0,0.04)',
+                        transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                        boxSizing: 'border-box'
                       }}
                     >
                       {ico}
@@ -948,21 +999,21 @@ export default function ObHavoPage({ onShowToast }) {
             </div>
 
             {/* Calendar Legend */}
-            <div className="row" style={{ marginTop: '20px', gap: '16px', flexWrap: 'wrap', fontSize: '0.85rem', borderBottom: '1px solid var(--border-color)', paddingBottom: '18px' }}>
+            <div className="row" style={{ marginTop: '18px', gap: '14px', flexWrap: 'wrap', fontSize: '0.84rem', borderBottom: '1px solid var(--border-color)', paddingBottom: '16px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span className="month-cell m-plant" style={{ width: '22px', height: '22px', fontSize: '11px' }}>🌱</span>
+                <span className="month-cell m-plant" style={{ width: '22px', height: '22px', fontSize: '11px', borderRadius: '6px', minHeight: 'unset' }}>🌱</span>
                 <span>Ekish mavsumi</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span className="month-cell m-water" style={{ width: '22px', height: '22px', fontSize: '11px' }}>💧</span>
+                <span className="month-cell m-water" style={{ width: '22px', height: '22px', fontSize: '11px', borderRadius: '6px', minHeight: 'unset' }}>💧</span>
                 <span>Sugʻorish va oʻgʻitlash</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span className="month-cell m-harvest" style={{ width: '22px', height: '22px', fontSize: '11px' }}>🌾</span>
+                <span className="month-cell m-harvest" style={{ width: '22px', height: '22px', fontSize: '11px', borderRadius: '6px', minHeight: 'unset' }}>🌾</span>
                 <span>Yigʻim-terim (hosil)</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span className="month-cell" style={{ width: '22px', height: '22px', fontSize: '11px', background: '#eef3ee' }}>❄️</span>
+                <span className="month-cell" style={{ width: '22px', height: '22px', fontSize: '11px', background: '#eef3ee', borderRadius: '6px', minHeight: 'unset' }}>❄️</span>
                 <span>Tinchlik / Yer tayyorlash</span>
               </div>
             </div>
@@ -970,11 +1021,12 @@ export default function ObHavoPage({ onShowToast }) {
             {/* Selected Month Detailed Agronomic Action Checklist */}
             <div 
               style={{ 
-                marginTop: '22px', 
+                marginTop: '20px', 
                 background: 'var(--background-color)', 
                 border: '1px solid var(--border-color)', 
                 borderRadius: 'var(--radius)', 
-                padding: '20px' 
+                padding: 'clamp(14px, 3vw, 20px)',
+                boxSizing: 'border-box'
               }}
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px', marginBottom: '14px' }}>
@@ -986,7 +1038,7 @@ export default function ObHavoPage({ onShowToast }) {
                 </span>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px', marginTop: '12px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))', gap: '14px', marginTop: '12px' }}>
                 {/* Left: Tasks */}
                 <div style={{ background: '#fff', padding: '16px', borderRadius: '10px', border: '1px solid var(--border-color)' }}>
                   <div style={{ fontWeight: 700, fontSize: '0.9rem', marginBottom: '10px', color: 'var(--text-color)' }}>

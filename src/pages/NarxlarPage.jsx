@@ -183,12 +183,12 @@ export default function NarxlarPage({ onShowToast }) {
   ];
 
   return (
-    <main id="top">
-      <section id="narxlar" className="section">
-        <div className="container">
+    <main id="top" style={{ paddingBottom: '96px' }}>
+      <section id="narxlar" className="section" style={{ paddingBottom: '32px' }}>
+        <div className="container" style={{ maxWidth: '1200px' }}>
           
           {/* Header */}
-          <div className="section-head">
+          <div className="section-head" style={{ marginTop: '4px', marginBottom: '22px' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '8px', flexWrap: 'wrap' }}>
               <span className="kicker" style={{ margin: 0 }}>{t('prices_kicker')}</span>
               <span style={{ 
@@ -200,10 +200,12 @@ export default function NarxlarPage({ onShowToast }) {
                 background: 'rgba(34, 197, 94, 0.12)', 
                 color: '#15803d', 
                 fontWeight: 700, 
-                fontSize: '0.78rem' 
+                fontSize: '0.78rem',
+                textAlign: 'center',
+                maxWidth: '100%'
               }}>
-                <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#22c55e', display: 'inline-block', boxShadow: '0 0 8px #22c55e' }}></span>
-                Har kunlik yangilanish: Bugun, {getTodayFormatted()}
+                <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#22c55e', display: 'inline-block', boxShadow: '0 0 8px #22c55e', flexShrink: 0 }}></span>
+                <span>Har kunlik yangilanish: Bugun, {getTodayFormatted()}</span>
               </span>
             </div>
             <h2>{t('prices_title')}</h2>
@@ -308,11 +310,11 @@ export default function NarxlarPage({ onShowToast }) {
           <div className="price-layout">
             
             {/* Left Card: Chart Box */}
-            <div className="chart-box" style={{ background: '#fff', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow-sm)', border: '1px solid var(--border-color)', padding: '24px' }}>
+            <div className="chart-box" style={{ background: '#fff', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow-sm)', border: '1px solid var(--border-color)', padding: 'clamp(14px, 3vw, 24px)', width: '100%', maxWidth: '100%', boxSizing: 'border-box' }}>
               
               {/* Product and Market selectors */}
               <div className="form-grid" style={{ marginBottom: '16px' }}>
-                <div className="field">
+                <div className="field" style={{ minWidth: 0, maxWidth: '100%' }}>
                   <label htmlFor="priceProduct" style={{ fontWeight: 700, fontSize: '0.85rem' }}>
                     Mahsulot yoki resurs
                   </label>
@@ -320,7 +322,7 @@ export default function NarxlarPage({ onShowToast }) {
                     id="priceProduct"
                     value={activeProduct.id}
                     onChange={(e) => handleProductChange(e.target.value)}
-                    style={{ fontWeight: 600, fontSize: '0.92rem' }}
+                    style={{ fontWeight: 600, fontSize: '0.88rem', width: '100%', maxWidth: '100%', textOverflow: 'ellipsis', boxSizing: 'border-box' }}
                   >
                     {Object.entries(catNames).map(([catKey, catTitle]) => {
                       const prods = AGRO_DATA.products.filter((p) => p.cat === catKey);
@@ -338,7 +340,7 @@ export default function NarxlarPage({ onShowToast }) {
                   </select>
                 </div>
 
-                <div className="field">
+                <div className="field" style={{ minWidth: 0, maxWidth: '100%' }}>
                   <label htmlFor="priceMarket" style={{ fontWeight: 700, fontSize: '0.85rem' }}>
                     Asosiy bozor
                   </label>
@@ -346,7 +348,7 @@ export default function NarxlarPage({ onShowToast }) {
                     id="priceMarket"
                     value={selectedMarketIndex}
                     onChange={(e) => setSelectedMarketIndex(e.target.value)}
-                    style={{ fontWeight: 600, fontSize: '0.92rem' }}
+                    style={{ fontWeight: 600, fontSize: '0.88rem', width: '100%', maxWidth: '100%', textOverflow: 'ellipsis', boxSizing: 'border-box' }}
                   >
                     {MARKET_FACTORS.map((mf, idx) => (
                       <option key={idx} value={idx}>
@@ -357,9 +359,23 @@ export default function NarxlarPage({ onShowToast }) {
                 </div>
               </div>
 
-              {/* Quick Pick Pills */}
-              <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '6px', marginBottom: '18px' }}>
-                <span style={{ fontSize: '0.78rem', color: 'var(--muted-color)', fontWeight: 600, marginRight: '4px' }}>
+              {/* Quick Pick Pills (Horizontal scrollable on mobile without pushing container) */}
+              <div 
+                style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: '6px', 
+                  marginBottom: '18px',
+                  overflowX: 'auto',
+                  WebkitOverflowScrolling: 'touch',
+                  scrollbarWidth: 'none',
+                  msOverflowStyle: 'none',
+                  paddingBottom: '4px',
+                  width: '100%',
+                  maxWidth: '100%'
+                }}
+              >
+                <span style={{ fontSize: '0.78rem', color: 'var(--muted-color)', fontWeight: 600, marginRight: '4px', flexShrink: 0 }}>
                   Tezkor tanlov:
                 </span>
                 {quickPicks.map((qp) => (
@@ -372,11 +388,13 @@ export default function NarxlarPage({ onShowToast }) {
                       background: activeProduct.id === qp.id ? 'var(--green-soft)' : '#fff',
                       color: activeProduct.id === qp.id ? 'var(--primary-dark)' : 'var(--text-color)',
                       borderColor: activeProduct.id === qp.id ? 'var(--primary-color)' : 'var(--border-color)',
-                      padding: '4px 10px',
-                      borderRadius: '6px',
+                      padding: '5px 12px',
+                      borderRadius: '8px',
                       fontSize: '0.78rem',
                       fontWeight: 600,
-                      cursor: 'pointer'
+                      cursor: 'pointer',
+                      whiteSpace: 'nowrap',
+                      flexShrink: 0
                     }}
                   >
                     {qp.label}
@@ -385,11 +403,24 @@ export default function NarxlarPage({ onShowToast }) {
               </div>
 
               {/* Timeframe selector tabs */}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px', marginBottom: '16px', borderTop: '1px solid var(--border-color)', paddingTop: '16px' }}>
+              <div 
+                style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'space-between', 
+                  flexWrap: 'wrap', 
+                  gap: '10px', 
+                  marginBottom: '16px', 
+                  borderTop: '1px solid var(--border-color)', 
+                  paddingTop: '16px',
+                  width: '100%',
+                  maxWidth: '100%'
+                }}
+              >
                 <span className="sub" style={{ fontWeight: 700, fontSize: '0.88rem' }}>
                   Vaqt oraligʻi:
                 </span>
-                <div style={{ display: 'flex', gap: '6px' }}>
+                <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', flex: '1 1 auto', justifyContent: 'flex-end', minWidth: '220px' }}>
                   {[
                     { days: 7, label: '7 kun' },
                     { days: 14, label: '14 kun' },
@@ -401,15 +432,18 @@ export default function NarxlarPage({ onShowToast }) {
                       type="button"
                       onClick={() => setTimeframe(tf.days)}
                       style={{
-                        padding: '6px 14px',
+                        padding: '6px 12px',
                         borderRadius: '8px',
-                        fontSize: '0.82rem',
+                        fontSize: '0.8rem',
                         fontWeight: 700,
                         border: '1px solid var(--border-color)',
                         background: timeframe === tf.days ? 'var(--primary-color)' : 'var(--background-color)',
                         color: timeframe === tf.days ? '#fff' : 'var(--text-color)',
                         cursor: 'pointer',
-                        transition: '0.2s'
+                        transition: '0.2s',
+                        flex: '1 1 auto',
+                        textAlign: 'center',
+                        minWidth: '55px'
                       }}
                     >
                       {tf.label}
@@ -423,8 +457,10 @@ export default function NarxlarPage({ onShowToast }) {
                 style={{ 
                   position: 'relative', 
                   width: '100%', 
-                  overflowX: 'auto',
-                  userSelect: 'none'
+                  maxWidth: '100%',
+                  overflow: 'hidden',
+                  userSelect: 'none',
+                  borderRadius: '10px'
                 }}
               >
                 <svg 
@@ -592,7 +628,19 @@ export default function NarxlarPage({ onShowToast }) {
               <button
                 type="button"
                 className="ag-btn ag-btn-yellow"
-                style={{ marginTop: '20px', width: '100%', padding: '13px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', fontWeight: 700 }}
+                style={{ 
+                  marginTop: '20px', 
+                  width: '100%', 
+                  padding: '13px 16px', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center', 
+                  gap: '8px', 
+                  fontWeight: 700,
+                  whiteSpace: 'normal',
+                  textAlign: 'center',
+                  boxSizing: 'border-box'
+                }}
                 onClick={() => setAlertModalOpen(true)}
               >
                 <span>🔔 Narx oʻzgarsa xabar bering</span>
@@ -607,10 +655,13 @@ export default function NarxlarPage({ onShowToast }) {
                 borderRadius: 'var(--radius)', 
                 boxShadow: 'var(--shadow-sm)', 
                 border: '1px solid var(--border-color)', 
-                padding: '24px',
+                padding: 'clamp(14px, 3vw, 24px)',
                 display: 'flex',
                 flexDirection: 'column',
-                justifyContent: 'space-between'
+                justifyContent: 'space-between',
+                width: '100%',
+                maxWidth: '100%',
+                boxSizing: 'border-box'
               }}
             >
               <div>

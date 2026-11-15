@@ -3,79 +3,77 @@ import { AGRO_DATA } from '../data/agroData';
 import { useLanguage } from '../context/LanguageContext';
 import { fmt, getProductMarketPrice, getTodayFormatted } from '../utils/helpers';
 
-// ─── Slider ma'lumotlari ───────────────────────────────────────────────────
-const SLIDES = [
-  {
-    id: 1,
-    bg: 'https://files.cdn-files-a.com/admin/system_photos_stock/2000_69757996f1a68.jpg?format=avif',
-    title: 'Texnikani ijaraga oling',
-    sub: 'Kunlik yoki mavsumiy ijara,\nqulay shartlarda',
-    card: {
-      badge: 'TEXNIKA',
-      badgeColor: '#f59e0b',
-      title: "Traktor va Kombayn\nijarasi",
-      desc: 'Sertifikatlangan texnikalar, tajribali haydovchilar bilan birga.',
-      btn: 'Texnikaga o\'tish',
-      href: 'texnika',
-    },
-  },
-  {
-    id: 2,
-    bg: 'https://files.cdn-files-a.com/admin/system_photos_stock/2000_6af568c249666.jpg?format=avif',
-    title: "Urug' va ko'chatlar",
-    sub: 'Sertifikatlangan urug\'lar,\nyetkazib beruvchilardan.',
-    card: {
-      badge: "DO'KON",
-      badgeColor: '#22c55e',
-      title: "Urug' va ko'chatlarda\nkatta chegirma",
-      desc: "Sertifikatlangan urug'lar va ko'chatlar yetkazib beruvchilardan.",
-      btn: "Do'konga o'tish",
-      href: 'dokon',
-    },
-  },
-  {
-    id: 3,
-    bg: 'https://files.cdn-files-a.com/admin/system_photos_stock/2000_6970e9d133c02.jpg?format=avif',
-    title: "Narxlarni kuzating",
-    sub: "14 kunlik grafik va\nbozor solishtirmasi",
-    card: {
-      badge: 'NARXLAR',
-      badgeColor: '#6366f1',
-      title: "Qishloq xo'jaligi\nnarxlari",
-      desc: "Real vaqt rejimida narx monitoringi. Eng qulay narxda soting.",
-      btn: "Narxlarga o'tish",
-      href: 'narxlar',
-    },
-  },
-  {
-    id: 4,
-    bg: 'https://images.unsplash.com/photo-1500595046743-cd271d694d30?auto=format&fit=crop&w=1600&q=80',
-    title: "Chorvachilik bozori",
-    sub: "Mol-qo'y, parrandachilik\nva veterinar xizmatlar",
-    card: {
-      badge: 'CHORVA',
-      badgeColor: '#f43f5e',
-      title: "Chorva mollari\nsotish va sotib olish",
-      desc: "Veterinar tekshiruvidan o'tgan sog'lom chorva mollari bozori.",
-      btn: "Chorvachilikka o'tish",
-      href: 'chorvachilik',
-    },
-  },
-];
-
-const TAG_LINE = 'Fermer · Xaridor · Texnika egasi · Agronom · Fermer · Xaridor · Texnika egasi · Agronom';
-
 // ─── HeroSlider komponenti ─────────────────────────────────────────────────
 function HeroSlider({ onNavigate }) {
+  const { t } = useLanguage();
   const [current, setCurrent] = useState(0);
   const [animating, setAnimating] = useState(false);
+
+  const slides = [
+    {
+      id: 1,
+      bg: 'https://files.cdn-files-a.com/admin/system_photos_stock/2000_69757996f1a68.jpg?format=avif',
+      title: t('slide_1_title'),
+      sub: t('slide_1_sub'),
+      card: {
+        badge: t('slide_1_badge'),
+        badgeColor: '#f59e0b',
+        title: t('slide_1_card_title'),
+        desc: t('slide_1_card_desc'),
+        btn: t('slide_1_card_btn'),
+        href: 'texnika',
+      },
+    },
+    {
+      id: 2,
+      bg: 'https://files.cdn-files-a.com/admin/system_photos_stock/2000_6af568c249666.jpg?format=avif',
+      title: t('slide_2_title'),
+      sub: t('slide_2_sub'),
+      card: {
+        badge: t('slide_2_badge'),
+        badgeColor: '#22c55e',
+        title: t('slide_2_card_title'),
+        desc: t('slide_2_card_desc'),
+        btn: t('slide_2_card_btn'),
+        href: 'dokon',
+      },
+    },
+    {
+      id: 3,
+      bg: 'https://files.cdn-files-a.com/admin/system_photos_stock/2000_6970e9d133c02.jpg?format=avif',
+      title: t('slide_3_title'),
+      sub: t('slide_3_sub'),
+      card: {
+        badge: t('slide_3_badge'),
+        badgeColor: '#6366f1',
+        title: t('slide_3_card_title'),
+        desc: t('slide_3_card_desc'),
+        btn: t('slide_3_card_btn'),
+        href: 'narxlar',
+      },
+    },
+    {
+      id: 4,
+      bg: 'https://images.unsplash.com/photo-1500595046743-cd271d694d30?auto=format&fit=crop&w=1600&q=80',
+      title: t('slide_4_title'),
+      sub: t('slide_4_sub'),
+      card: {
+        badge: t('slide_4_badge'),
+        badgeColor: '#f43f5e',
+        title: t('slide_4_card_title'),
+        desc: t('slide_4_card_desc'),
+        btn: t('slide_4_card_btn'),
+        href: 'chorvachilik',
+      },
+    },
+  ];
 
   const goTo = useCallback((idx) => {
     if (animating) return;
     setAnimating(true);
-    setCurrent((idx + SLIDES.length) % SLIDES.length);
+    setCurrent((idx + slides.length) % slides.length);
     setTimeout(() => setAnimating(false), 500);
-  }, [animating]);
+  }, [animating, slides.length]);
 
   // Auto-slide har 5 soniyada
   useEffect(() => {
@@ -83,7 +81,8 @@ function HeroSlider({ onNavigate }) {
     return () => clearInterval(timer);
   }, [current, goTo]);
 
-  const s = SLIDES[current];
+  const s = slides[current];
+  const tagLineText = t('tag_line') || 'Fermer · Xaridor · Texnika egasi · Agronom';
 
   return (
     <div style={{ position: 'relative', width: '100%', overflow: 'hidden', borderRadius: '0' }}>
@@ -252,7 +251,7 @@ function HeroSlider({ onNavigate }) {
           transform: 'translateX(-50%)',
           display: 'flex', gap: '8px', zIndex: 5,
         }}>
-          {SLIDES.map((_, i) => (
+          {slides.map((_, i) => (
             <button
               key={i}
               type="button"
@@ -286,7 +285,7 @@ function HeroSlider({ onNavigate }) {
           fontWeight: 500,
           letterSpacing: '0.3px',
         }}>
-          🌱 {TAG_LINE} &nbsp;&nbsp;&nbsp; 🌱 {TAG_LINE}
+          🌱 {tagLineText} &nbsp;&nbsp;&nbsp; 🌱 {tagLineText}
         </div>
         <style>{`
           @keyframes marquee-scroll {
@@ -367,7 +366,7 @@ export default function HomePage({ onNavigate }) {
               boxShadow: '0 2px 6px rgba(0,0,0,0.04)'
             }}>
               <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#22c55e', boxShadow: '0 0 6px #22c55e' }}></span>
-              Bugungi bozor narxlari: {getTodayFormatted()}
+              {t('today_market_prices') || 'Bugungi bozor narxlari:'} {getTodayFormatted()}
             </span>
           </div>
 
@@ -386,7 +385,7 @@ export default function HomePage({ onNavigate }) {
                   className="ticker-card"
                   onClick={() => onNavigate('narxlar')}
                   style={{ cursor: 'pointer' }}
-                  title={`${p.name}: Bugungi narx ${fmt(curPrice)} soʻm`}
+                  title={`${p.name}: ${fmt(curPrice)} ${t('price_unit')}`}
                 >
                   <span className="t-thumb">
                     <img src={p.img} alt={p.name} loading="lazy" />
@@ -405,6 +404,241 @@ export default function HomePage({ onNavigate }) {
             })}
           </div>
 
+        </div>
+      </section>
+
+      {/* ── Key Platform Steps / Capabilities (Including Step 3: AI Agronom) ── */}
+      <section className="section" style={{ paddingTop: '10px', paddingBottom: '36px' }}>
+        <div className="container">
+          <div className="section-head" style={{ marginBottom: '28px' }}>
+            <span className="kicker">{t('steps_kicker')}</span>
+            <h2>{t('steps_title')}</h2>
+            <p className="lead">{t('steps_lead')}</p>
+          </div>
+
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+            gap: '20px'
+          }}>
+            {/* Step 1: Market & Prices */}
+            <div 
+              onClick={() => onNavigate('bozor')}
+              style={{
+                background: 'var(--surface-color)',
+                border: '1px solid var(--border-color)',
+                borderRadius: '18px',
+                padding: '24px 20px',
+                cursor: 'pointer',
+                transition: 'all 0.25s ease',
+                boxShadow: '0 4px 16px rgba(0,0,0,0.03)',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-4px)';
+                e.currentTarget.style.borderColor = 'var(--primary-color)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.borderColor = 'var(--border-color)';
+              }}
+            >
+              <div>
+                <div style={{
+                  width: '38px',
+                  height: '38px',
+                  borderRadius: '50%',
+                  background: '#22c55e',
+                  color: '#fff',
+                  fontWeight: 900,
+                  fontSize: '18px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxShadow: '0 4px 12px rgba(34,197,94,0.3)',
+                  marginBottom: '14px'
+                }}>
+                  1
+                </div>
+                <h3 style={{ fontSize: '1.2rem', fontWeight: 800, margin: '0 0 6px', color: 'var(--text-color)' }}>
+                  {t('step_1_title')}
+                </h3>
+                <p style={{ fontSize: '0.86rem', color: 'var(--muted-color)', margin: 0, lineHeight: 1.5 }}>
+                  {t('step_1_desc')}
+                </p>
+              </div>
+              <div style={{ marginTop: '16px', fontSize: '0.82rem', fontWeight: 700, color: '#22c55e' }}>
+                {t('hero_cta_market')} →
+              </div>
+            </div>
+
+            {/* Step 2: Machinery */}
+            <div 
+              onClick={() => onNavigate('texnika')}
+              style={{
+                background: 'var(--surface-color)',
+                border: '1px solid var(--border-color)',
+                borderRadius: '18px',
+                padding: '24px 20px',
+                cursor: 'pointer',
+                transition: 'all 0.25s ease',
+                boxShadow: '0 4px 16px rgba(0,0,0,0.03)',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-4px)';
+                e.currentTarget.style.borderColor = '#6366f1';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.borderColor = 'var(--border-color)';
+              }}
+            >
+              <div>
+                <div style={{
+                  width: '38px',
+                  height: '38px',
+                  borderRadius: '50%',
+                  background: '#6366f1',
+                  color: '#fff',
+                  fontWeight: 900,
+                  fontSize: '18px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxShadow: '0 4px 12px rgba(99,102,241,0.3)',
+                  marginBottom: '14px'
+                }}>
+                  2
+                </div>
+                <h3 style={{ fontSize: '1.2rem', fontWeight: 800, margin: '0 0 6px', color: 'var(--text-color)' }}>
+                  {t('step_2_title')}
+                </h3>
+                <p style={{ fontSize: '0.86rem', color: 'var(--muted-color)', margin: 0, lineHeight: 1.5 }}>
+                  {t('step_2_desc')}
+                </p>
+              </div>
+              <div style={{ marginTop: '16px', fontSize: '0.82rem', fontWeight: 700, color: '#6366f1' }}>
+                {t('slide_1_card_btn')} →
+              </div>
+            </div>
+
+            {/* Step 3: Exact AI Agronom Card Matching User Screenshot */}
+            <div 
+              onClick={() => onNavigate('agronom')}
+              style={{
+                background: 'var(--surface-color)',
+                border: '2px solid rgba(217, 119, 6, 0.5)',
+                borderRadius: '18px',
+                padding: '24px 20px',
+                cursor: 'pointer',
+                transition: 'all 0.25s ease',
+                boxShadow: '0 6px 20px rgba(217,119,6,0.12)',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                position: 'relative',
+                overflow: 'hidden'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-4px)';
+                e.currentTarget.style.borderColor = '#d97706';
+                e.currentTarget.style.boxShadow = '0 10px 28px rgba(217,119,6,0.25)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.borderColor = 'rgba(217, 119, 6, 0.5)';
+                e.currentTarget.style.boxShadow = '0 6px 20px rgba(217,119,6,0.12)';
+              }}
+            >
+              <div>
+                <div style={{
+                  width: '38px',
+                  height: '38px',
+                  borderRadius: '50%',
+                  background: '#d97706',
+                  color: '#fff',
+                  fontWeight: 900,
+                  fontSize: '18px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxShadow: '0 4px 12px rgba(217,119,6,0.38)',
+                  marginBottom: '14px'
+                }}>
+                  3
+                </div>
+                <h3 style={{ fontSize: '1.25rem', fontWeight: 800, margin: '0 0 6px', color: 'var(--text-color)' }}>
+                  {t('ai_agronom_title')}
+                </h3>
+                <p style={{ fontSize: '0.88rem', color: 'var(--muted-color)', margin: 0, lineHeight: 1.5 }}>
+                  {t('ai_agronom_subtitle')}
+                </p>
+              </div>
+              <div style={{ marginTop: '16px', fontSize: '0.84rem', fontWeight: 800, color: '#d97706', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <i className="fa-solid fa-microchip"></i>
+                <span>{t('ai_diagnose_btn')} →</span>
+              </div>
+            </div>
+
+            {/* Step 4: Farm & Store */}
+            <div 
+              onClick={() => onNavigate('dokon')}
+              style={{
+                background: 'var(--surface-color)',
+                border: '1px solid var(--border-color)',
+                borderRadius: '18px',
+                padding: '24px 20px',
+                cursor: 'pointer',
+                transition: 'all 0.25s ease',
+                boxShadow: '0 4px 16px rgba(0,0,0,0.03)',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-4px)';
+                e.currentTarget.style.borderColor = '#10b981';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.borderColor = 'var(--border-color)';
+              }}
+            >
+              <div>
+                <div style={{
+                  width: '38px',
+                  height: '38px',
+                  borderRadius: '50%',
+                  background: '#10b981',
+                  color: '#fff',
+                  fontWeight: 900,
+                  fontSize: '18px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxShadow: '0 4px 12px rgba(16,185,129,0.3)',
+                  marginBottom: '14px'
+                }}>
+                  4
+                </div>
+                <h3 style={{ fontSize: '1.2rem', fontWeight: 800, margin: '0 0 6px', color: 'var(--text-color)' }}>
+                  {t('step_4_title')}
+                </h3>
+                <p style={{ fontSize: '0.86rem', color: 'var(--muted-color)', margin: 0, lineHeight: 1.5 }}>
+                  {t('step_4_desc')}
+                </p>
+              </div>
+              <div style={{ marginTop: '16px', fontSize: '0.82rem', fontWeight: 700, color: '#10b981' }}>
+                {t('slide_2_card_btn')} →
+              </div>
+            </div>
+
+          </div>
         </div>
       </section>
 

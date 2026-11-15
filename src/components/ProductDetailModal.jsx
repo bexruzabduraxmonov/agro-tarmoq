@@ -1,21 +1,23 @@
-﻿import React, { useState } from "react";
+import React, { useState } from "react";
 import { AGRO_DATA } from "../data/agroData";
+import { useLanguage } from "../context/LanguageContext";
 import { fmt } from "../utils/helpers";
 
-const trendInfo = {
-  "1":  { icon: "▲", cls: "trend-up",   label: "Narx koʻtarilmoqda" },
-  "-1": { icon: "▼", cls: "trend-down", label: "Narx arzonlashmoqda" },
-  "0":  { icon: "■", cls: "",           label: "Barqaror narx" },
-};
-
-export default function ProductDetailModal({ product, onClose, onAddToCart, t }) {
+export default function ProductDetailModal({ product, onClose, onAddToCart }) {
+  const { t, lang } = useLanguage();
   const [qty, setQty] = useState(1);
   const [isFavorite, setIsFavorite] = useState(false);
   const [copied, setCopied] = useState(false);
 
   if (!product) return null;
 
-  const trend = trendInfo[String(product.trend)];
+  const trendMap = {
+    "1":  { icon: "▲", cls: "trend-up",   label: t('trend_label_up') || "Narx oshmoqda" },
+    "-1": { icon: "▼", cls: "trend-down", label: t('trend_label_down') || "Narx tushmoqda" },
+    "0":  { icon: "■", cls: "",           label: t('trend_label_stable') || "Barqaror narx" },
+  };
+
+  const trend = trendMap[String(product.trend)];
   const catLabel = AGRO_DATA.catLabel[product.cat] || product.cat;
   const rating = product.rating || 4.9;
   const reviewsCount = product.reviewsCount || 128;
@@ -26,7 +28,7 @@ export default function ProductDetailModal({ product, onClose, onAddToCart, t })
     if (navigator.share) {
       navigator.share({
         title: product.name,
-        text: `${product.name} — Agro Tarmoq platformasida ${fmt(product.price)} soʻm`,
+        text: `${product.name} — Agro Tarmoq (${fmt(product.price)} ${t('price_unit')})`,
         url: window.location.href,
       }).catch(() => {});
     } else {
@@ -50,7 +52,7 @@ export default function ProductDetailModal({ product, onClose, onAddToCart, t })
             type="button" 
             className={`uzum-icon-circle ${isFavorite ? "active" : ""}`}
             onClick={() => setIsFavorite(!isFavorite)}
-            aria-label="Saralanganga qoʻshish"
+            aria-label="Wishlist"
           >
             <i className={isFavorite ? "fa-solid fa-heart" : "fa-regular fa-heart"}></i>
           </button>
@@ -58,7 +60,7 @@ export default function ProductDetailModal({ product, onClose, onAddToCart, t })
             type="button" 
             className="uzum-icon-circle"
             onClick={handleShare}
-            aria-label="Ulashish"
+            aria-label="Share"
           >
             <i className={copied ? "fa-solid fa-check" : "fa-solid fa-share-nodes"}></i>
           </button>
@@ -66,7 +68,7 @@ export default function ProductDetailModal({ product, onClose, onAddToCart, t })
             type="button" 
             className="uzum-modal-close" 
             onClick={onClose} 
-            aria-label="Yopish"
+            aria-label={t('menu_close')}
           >
             <i className="fa-solid fa-xmark"></i>
           </button>
@@ -81,7 +83,7 @@ export default function ProductDetailModal({ product, onClose, onAddToCart, t })
             </span>
           )}
           <span className="uzum-modal-views-badge">
-            <i className="fa-regular fa-eye"></i> 1.4k marta koʻrildi
+            <i className="fa-regular fa-eye"></i> 1.4k {t('modal_views')}
           </span>
         </div>
 
@@ -89,7 +91,7 @@ export default function ProductDetailModal({ product, onClose, onAddToCart, t })
         <div className="uzum-modal-body">
           {/* Breadcrumb / Category */}
           <div className="uzum-modal-cat-row">
-            <span className="uzum-modal-category">{catLabel}</span>
+            <span className="uzum-modal-category">{t(`cat_${product.cat}`, catLabel)}</span>
             <span className="uzum-modal-sku">ID: #{product.id}</span>
           </div>
 
@@ -104,22 +106,24 @@ export default function ProductDetailModal({ product, onClose, onAddToCart, t })
               <i className="fa-solid fa-star"></i>
               <span className="rate-num">{rating}</span>
             </div>
-            <span className="uzum-modal-reviews-count">({reviewsCount} ta sharh)</span>
+            <span className="uzum-modal-reviews-count">({reviewsCount} {t('modal_reviews')})</span>
             <span className="uzum-modal-dot">•</span>
-            <span className="uzum-modal-sold-count">500+ marta buyurtma qilingan</span>
+            <span className="uzum-modal-sold-count">{t('modal_orders')}</span>
           </div>
 
           {/* Price Box — Uzum Style */}
           <div className="uzum-modal-price-card">
             <div className="uzum-price-main">
               <span className="uzum-price-val">{fmt(totalPrice)}</span>
-              <span className="uzum-price-cur">soʻm</span>
+              <span className="uzum-price-cur">{t('price_unit')}</span>
               <span className="uzum-price-per">/ {qty > 1 ? `${qty} ${product.unit}` : product.unit}</span>
             </div>
             {/* Installment Badge */}
             <div className="uzum-installment-tag">
-              <span className="inst-badge">Muddatli toʻlov</span>
-              <span className="inst-text">oyiga <strong>{fmt(monthlyPrice)} soʻmdan</strong> / 6 oy</span>
+              <span className="inst-badge">{t('modal_installment')}</span>
+              <span className="inst-text">
+                {t('modal_installment_per_month')} <strong>{fmt(monthlyPrice)} {t('price_unit')}</strong> {t('modal_installment_for')}
+              </span>
             </div>
           </div>
 
@@ -130,8 +134,8 @@ export default function ProductDetailModal({ product, onClose, onAddToCart, t })
                 <i className="fa-solid fa-truck-fast"></i>
               </div>
               <div className="uzum-del-content">
-                <div className="uzum-del-title">Tezkor yetkazib berish (1 kunda)</div>
-                <div className="uzum-del-desc">Topshirish punktiga bepul yoki manzilingizgacha kuryer orqali</div>
+                <div className="uzum-del-title">{t('modal_fast_delivery')}</div>
+                <div className="uzum-del-desc">{t('modal_fast_delivery_desc')}</div>
               </div>
             </div>
             <div className="uzum-delivery-item">
@@ -139,21 +143,21 @@ export default function ProductDetailModal({ product, onClose, onAddToCart, t })
                 <i className="fa-solid fa-shield-check"></i>
               </div>
               <div className="uzum-del-content">
-                <div className="uzum-del-title">100% Sifat kafolati va qaytarish</div>
-                <div className="uzum-del-desc">Qabul qilish paytida mahsulot sifatini tekshirib olish imkoniyati</div>
+                <div className="uzum-del-title">{t('modal_quality_guarantee')}</div>
+                <div className="uzum-del-desc">{t('modal_quality_guarantee_desc')}</div>
               </div>
             </div>
           </div>
 
           {/* Quantity Selector */}
           <div className="uzum-qty-row">
-            <span className="uzum-qty-label">Miqdor ({product.unit}):</span>
+            <span className="uzum-qty-label">{t('modal_qty')} ({product.unit}):</span>
             <div className="uzum-qty-counter">
               <button 
                 type="button" 
                 onClick={() => setQty(Math.max(1, qty - 1))}
                 disabled={qty <= 1}
-                aria-label="Kamaytirish"
+                aria-label="Decrease"
               >
                 <i className="fa-solid fa-minus"></i>
               </button>
@@ -161,7 +165,7 @@ export default function ProductDetailModal({ product, onClose, onAddToCart, t })
               <button 
                 type="button" 
                 onClick={() => setQty(qty + 1)}
-                aria-label="Koʻpaytirish"
+                aria-label="Increase"
               >
                 <i className="fa-solid fa-plus"></i>
               </button>
@@ -180,14 +184,14 @@ export default function ProductDetailModal({ product, onClose, onAddToCart, t })
               </div>
             </div>
             <div className="uzum-farmer-badge">
-              <i className="fa-solid fa-certificate"></i> Tasdiqlangan fermer
+              <i className="fa-solid fa-certificate"></i> {t('modal_verified_farmer')}
             </div>
           </div>
 
           {/* Description */}
           {product.desc && (
             <div className="uzum-desc-section">
-              <h3 className="uzum-subheading">Mahsulot haqida qisqacha</h3>
+              <h3 className="uzum-subheading">{t('modal_about_product')}</h3>
               <p className="uzum-desc-text">{product.desc}</p>
             </div>
           )}
@@ -195,7 +199,7 @@ export default function ProductDetailModal({ product, onClose, onAddToCart, t })
           {/* Specifications Table */}
           {product.specs && product.specs.length > 0 && (
             <div className="uzum-specs-section">
-              <h3 className="uzum-subheading">Xususiyatlari va tafsilotlar</h3>
+              <h3 className="uzum-subheading">{t('modal_specs')}</h3>
               <div className="uzum-specs-list">
                 {product.specs.map((item, idx) => {
                   const parts = item.split(":");
@@ -224,7 +228,7 @@ export default function ProductDetailModal({ product, onClose, onAddToCart, t })
               }}
             >
               <i className="fa-solid fa-cart-shopping"></i>
-              Savatga qoʻshish ({fmt(totalPrice)} soʻm)
+              {t('add_to_cart')} ({fmt(totalPrice)} {t('price_unit')})
             </button>
             <button
               type="button"
@@ -234,11 +238,10 @@ export default function ProductDetailModal({ product, onClose, onAddToCart, t })
                   onAddToCart(product);
                 }
                 onClose();
-                // Go to cart or checkout
                 window.location.hash = "cart";
               }}
             >
-              1 bosishda xarid
+              {t('checkout_btn')}
             </button>
           </div>
         </div>

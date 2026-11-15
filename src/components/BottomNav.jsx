@@ -40,11 +40,12 @@ export default function BottomNav({ currentPage, onNavigate, cartCount, onOpenCa
       onClick: () => onNavigate('bozor')
     },
     {
-      id: 'search',
-      label: t('tab_search'),
-      icon: 'fa-solid fa-magnifying-glass',
-      active: currentPage === 'search',
-      onClick: () => onNavigate('search')
+      id: 'agronom',
+      label: 'AI Bot',
+      icon: 'fa-solid fa-robot',
+      active: currentPage === 'agronom',
+      badge: 'AI',
+      onClick: () => onNavigate('agronom')
     },
     {
       id: 'cart',
