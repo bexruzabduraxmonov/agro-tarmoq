@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { AGRO_DATA } from "../data/agroData";
 import { useLanguage } from "../context/LanguageContext";
+import { useUser } from "../context/UserContext";
 import { fmt } from "../utils/helpers";
 import ProductDetailModal from "../components/ProductDetailModal";
 
 export default function BozorPage({ onAddToCart }) {
   const { t } = useLanguage();
+  const { userProducts } = useUser();
   const [activeCat, setActiveCat] = useState("all");
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [addedIds, setAddedIds] = useState({});
@@ -17,7 +19,9 @@ export default function BozorPage({ onAddToCart }) {
     "0":  { icon: "■", cls: "",           label: t('trend_label_stable') || "Barqaror" },
   };
 
-  const filteredProducts = AGRO_DATA.products.filter(
+  const allProducts = [...userProducts, ...AGRO_DATA.products];
+
+  const filteredProducts = allProducts.filter(
     (p) => activeCat === "all" || p.cat === activeCat
   );
 
@@ -90,11 +94,17 @@ export default function BozorPage({ onAddToCart }) {
                   <div className="uzum-card-img">
                     <img src={p.img} alt={p.name} loading="lazy" />
 
-                    {/* Trend / Discount Badge */}
-                    {trend?.cls && (
-                      <span className={`uzum-card-trend ${trend.cls}`}>
-                        {trend.icon} {trend.label}
+                    {/* Trend / Discount / Agreed Price Badge */}
+                    {p.isAgreedPrice ? (
+                      <span className="uzum-card-trend" style={{ background: '#059669', color: '#fff', fontSize: '0.74rem', padding: '3px 8px' }}>
+                        🛡️ Kelishilgan narx
                       </span>
+                    ) : (
+                      trend?.cls && (
+                        <span className={`uzum-card-trend ${trend.cls}`}>
+                          {trend.icon} {trend.label}
+                        </span>
+                      )
                     )}
 
                     {/* Wishlist Button */}

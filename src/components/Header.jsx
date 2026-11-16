@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { AGRO_DATA } from '../data/agroData';
 import { useLanguage } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
+import { useUser } from '../context/UserContext';
 import Logo from './Logo';
 import LanguageSwitcher from './LanguageSwitcher';
 
 export default function Header({ currentPage, setCurrentPage, cartCount, onOpenCart, onSearch, onShowToast }) {
   const { t } = useLanguage();
   const { isDark, toggleTheme } = useTheme();
+  const { user } = useUser();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [moreMenuOpen, setMoreMenuOpen] = useState(false);
   const [searchVal, setSearchVal] = useState('');
@@ -211,10 +213,30 @@ export default function Header({ currentPage, setCurrentPage, cartCount, onOpenC
               type="button" 
               className={`account-btn ${currentPage === 'royxatdan-otish' ? 'active' : ''}`}
               onClick={() => handleNav('royxatdan-otish.html')}
-              aria-label={t('account')} 
-              title={t('account')}
+              aria-label={user ? user.name : t('account')} 
+              title={user ? `${user.name} (${t('tab_profile')})` : t('account')}
+              style={user ? { 
+                display: 'inline-flex', 
+                alignItems: 'center', 
+                gap: '6px', 
+                padding: '6px 12px', 
+                width: 'auto', 
+                borderRadius: '12px', 
+                background: 'var(--green-soft)', 
+                border: '1px solid var(--green-soft-border)', 
+                color: 'var(--primary-color)' 
+              } : {}}
             >
-              <i className="fa-regular fa-user"></i>
+              {user ? (
+                <>
+                  <span style={{ fontSize: '1rem' }}>{user.role === 'fermer' ? '🌾' : user.role === 'texnika' ? '🚜' : user.role === 'agronom' ? '🌿' : '🛒'}</span>
+                  <span className="hide-on-mobile" style={{ fontSize: '0.86rem', fontWeight: 700, maxWidth: '110px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    {user.name.split(' ')[0]}
+                  </span>
+                </>
+              ) : (
+                <i className="fa-regular fa-user"></i>
+              )}
             </button>
 
             <button 

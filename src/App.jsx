@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './site123.css';
 import { LanguageProvider } from './context/LanguageContext';
 import { ThemeProvider } from './context/ThemeContext';
+import { UserProvider } from './context/UserContext';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import CartOverlay from './components/CartOverlay';
@@ -118,6 +119,7 @@ export default function App() {
   return (
     <ThemeProvider>
     <LanguageProvider>
+    <UserProvider>
       <div className="app-container">
         {/* Header */}
         <Header
@@ -177,7 +179,8 @@ export default function App() {
       {currentPage === 'royxatdan-otish' && (
         <AuthPage 
           onShowToast={showToast} 
-          onLoginSuccess={() => handleNavigate('home')} 
+          onNavigate={handleNavigate}
+          onLoginSuccess={() => handleNavigate('royxatdan-otish')} 
         />
       )}
 
@@ -225,6 +228,7 @@ export default function App() {
         {toastMsg}
       </div>
     </div>
+    </UserProvider>
   </LanguageProvider>
   </ThemeProvider>
   );

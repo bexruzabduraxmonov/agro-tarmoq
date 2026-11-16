@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../context/LanguageContext';
+import { useUser } from '../context/UserContext';
 
 export default function BottomNav({ currentPage, onNavigate, cartCount, onOpenCart }) {
   const { t } = useLanguage();
+  const { user } = useUser();
   const [isStandalone, setIsStandalone] = useState(false);
 
   useEffect(() => {
@@ -57,8 +59,8 @@ export default function BottomNav({ currentPage, onNavigate, cartCount, onOpenCa
     },
     {
       id: 'royxatdan-otish',
-      label: t('tab_profile'),
-      icon: 'fa-regular fa-user',
+      label: user ? user.name.split(' ')[0] : t('tab_profile'),
+      icon: user ? 'fa-solid fa-user-check' : 'fa-regular fa-user',
       active: currentPage === 'royxatdan-otish',
       onClick: () => onNavigate('royxatdan-otish')
     }
