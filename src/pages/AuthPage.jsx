@@ -82,37 +82,167 @@ export default function AuthPage({ onShowToast, onNavigate, onLoginSuccess }) {
   const [editRole, setEditRole] = useState(user?.role || 'fermer');
 
   // Interactive Chat & Bot state
-  const [activeChatId, setActiveChatId] = useState('agronom'); // 'agronom' | 'tractor' | 'support'
+  // Comprehensive Chat Contacts with Sellers, Wholesalers, Machinery & Farmers
+  const CHAT_CONTACTS = [
+    {
+      id: 'seller_jamshid',
+      name: 'Jamshid Karimov',
+      role: 'Oʻgʻit va Urugʻ sotuvchisi',
+      category: 'sotuvchi',
+      categoryBadge: 'Sotuvchi',
+      badgeColor: '#10b981',
+      avatar: '🌱',
+      avatarBg: '#dcfce7',
+      phone: '+998 97 789 12 34',
+      online: true,
+      lastSeen: 'Online',
+      lastMessage: 'Yangi karbamid va superfosfat oʻgʻitlari keldi.',
+      time: '14:15',
+      unread: 1
+    },
+    {
+      id: 'buyer_otabek',
+      name: 'Otabek Rahimov',
+      role: 'Ulgurji xaridor (Olib-sotar)',
+      category: 'olib_sotar',
+      categoryBadge: 'Olib-sotar',
+      badgeColor: '#d97706',
+      avatar: '💼',
+      avatarBg: '#fef3c7',
+      phone: '+998 93 321 65 43',
+      online: true,
+      lastSeen: 'Online',
+      lastMessage: '10 tonna kartoshkani dalangizdan naqdga olamiz.',
+      time: '13:30',
+      unread: 2
+    },
+    {
+      id: 'tractor_bekzod',
+      name: 'Bekzod Toshev',
+      role: 'MTZ-82 Traktor egasi (Ijara)',
+      category: 'texnika',
+      categoryBadge: 'Texnika ijarasi',
+      badgeColor: '#0284c7',
+      avatar: '🚜',
+      avatarBg: '#e0f2fe',
+      phone: '+998 90 456 78 90',
+      online: true,
+      lastSeen: 'Online',
+      lastMessage: 'MTZ traktorim haydovchisi bilan tayyor.',
+      time: '12:00',
+      unread: 0
+    },
+    {
+      id: 'client_anvar',
+      name: 'Anvar Qodirov',
+      role: 'Traktor ijarachi (Mijoz)',
+      category: 'texnika',
+      categoryBadge: 'Texnika ijarasi',
+      badgeColor: '#0284c7',
+      avatar: '🌾',
+      avatarBg: '#e0f2fe',
+      phone: '+998 94 111 22 33',
+      online: false,
+      lastSeen: '20 daqiqa oldin',
+      lastMessage: 'Ertaga 5 gektar yerni chuqur haydash kerak edi.',
+      time: '11:00',
+      unread: 0
+    },
+    {
+      id: 'farmer_rustam',
+      name: 'Rustam aka (Fermer doʻst)',
+      role: 'Fermer xoʻjaligi rahbari',
+      category: 'fermer',
+      categoryBadge: 'Fermer / Doʻst',
+      badgeColor: '#059669',
+      avatar: '👨‍🌾',
+      avatarBg: '#d1fae5',
+      phone: '+998 91 654 98 70',
+      online: true,
+      lastSeen: 'Online',
+      lastMessage: 'Tomchilatib sugʻorish oʻrnatdik, zoʻr ishlayapti.',
+      time: 'Kecha',
+      unread: 0
+    },
+    {
+      id: 'ai_agronom',
+      name: 'Agro Tarmoq AI Agronom Bot',
+      role: '24/7 Sunʼiy Intellekt Yordamchisi',
+      category: 'ai',
+      categoryBadge: 'AI Bot',
+      badgeColor: '#8b5cf6',
+      avatar: '🤖',
+      avatarBg: '#ede9fe',
+      phone: '24/7 Avtomatik',
+      online: true,
+      lastSeen: 'Doimiy online (24/7)',
+      lastMessage: 'Ekin kasalliklari va oʻgʻitlash boʻyicha yordamga tayyorman.',
+      time: 'Hozir',
+      unread: 0
+    }
+  ];
+
+  const [activeChatId, setActiveChatId] = useState('seller_jamshid');
+  const [chatCategoryFilter, setChatCategoryFilter] = useState('all');
+  const [chatSearchQuery, setChatSearchQuery] = useState('');
+  const [chatViewMode, setChatViewMode] = useState('list'); // 'list' | 'conversation'
   const [chatInput, setChatInput] = useState('');
   const [isBotTyping, setIsBotTyping] = useState(false);
   const chatMessagesEndRef = useRef(null);
 
   const [chatThreads, setChatThreads] = useState({
-    agronom: [
+    seller_jamshid: [
       {
         id: 1,
-        sender: 'bot',
-        title: "🤖 AI Agronom Yordamchisi",
-        text: "Assalomu alaykum! Men Agro Tarmoq sunʼiy intellekt agronomiman. Ekin kasalliklarini aniqlash, oʻgʻit meʼyorlari, zararkunandalarga qarshi kurash va traktor/texnika boʻyicha qanday yordam bera olaman?",
-        time: "10:24"
+        sender: 'partner',
+        title: "🌱 Jamshid Karimov (Sotuvchi)",
+        text: "Assalomu alaykum! Yangi karbamid, superfosfat va ammofos oʻgʻitlari keldi. Sifatli gollandiya pomidor va bodring urugʻlari ham bor. Qaysi biri kerak edi?",
+        time: "14:15"
       }
     ],
-    tractor: [
+    buyer_otabek: [
+      {
+        id: 1,
+        sender: 'partner',
+        title: "💼 Otabek Rahimov (Olib-sotar)",
+        text: "Salom Akmal aka! Bozorga olib chiqish uchun 10-15 tonna sifatli qizil kartoshka yoki piyoz qidiryapmiz. Dalaning oʻzidan naqd pulga olib ketamiz, narxini kelishamiz.",
+        time: "13:30"
+      }
+    ],
+    tractor_bekzod: [
       {
         id: 1,
         sender: 'partner',
         title: "🚜 Bekzod Toshev (MTZ)",
-        text: "Assalomu alaykum! MTZ-82 Belarus traktorim ijaraga boʻsh. Plug, kultivator va haydovchisi bilan birga boradi. Qaysi viloyatga va qachonga kerak edi?",
-        time: "09:40"
+        text: "Assalomu alaykum! MTZ-82 Belarus traktorim ijaraga boʻsh. Plug, borona va haydovchisi bilan birga boradi. Qaysi viloyatga va necha gektarga kerak edi?",
+        time: "12:00"
       }
     ],
-    support: [
+    client_anvar: [
       {
         id: 1,
         sender: 'partner',
-        title: "🛡️ Agro Tarmoq Qoʻllab-quvvatlash",
-        text: "Assalomu alaykum! Agro Tarmoq maʼmuriyati. Eʼlon berish, traktor ijarasi yoki mahsulotlarni rasmiy kelishilgan narxda sotish boʻyicha savolingiz bormi?",
+        title: "🌾 Anvar Qodirov (Mijoz)",
+        text: "Assalomu alaykum! Eʼloningizni koʻrdim. Ertaga 5 gektar yerni chuqur haydashga traktor kerak edi, kunlik ijarasi necha pul boʻladi?",
+        time: "11:00"
+      }
+    ],
+    farmer_rustam: [
+      {
+        id: 1,
+        sender: 'partner',
+        title: "👨‍🌾 Rustam aka (Fermer doʻst)",
+        text: "Salom doʻstim! Bu yilgi pomidor va gʻalla hosili qanday boʻldi? Biz suv masalasini hal qildik, tomchilatib sugʻorish oʻrnatdik, hosildorlik 30% oshdi.",
         time: "Kecha"
+      }
+    ],
+    ai_agronom: [
+      {
+        id: 1,
+        sender: 'bot',
+        title: "🤖 AI Agronom Yordamchisi",
+        text: "Assalomu alaykum! Men Agro Tarmoq sunʼiy intellekt agronomiman. Ekin kasalliklarini aniqlash, oʻgʻit meʼyorlari, zararkunandalarga qarshi kurash va parvarish boʻyicha qanday yordam bera olaman?",
+        time: "Hozir"
       }
     ]
   });
@@ -158,6 +288,76 @@ export default function AuthPage({ onShowToast, onNavigate, onLoginSuccess }) {
         onShowToast("Profil rasmi yangilandi!");
       };
       reader.readAsDataURL(file);
+    }
+  };
+
+  // Handle chat messages sending with automatic realistic replies & AI
+  const handleSendChatMessage = (customText) => {
+    const textToSend = (customText || chatInput).trim();
+    if (!textToSend) return;
+
+    const currentTime = new Date().toLocaleTimeString('uz-UZ', { hour: '2-digit', minute: '2-digit' });
+    const userMsg = {
+      id: Date.now(),
+      sender: 'user',
+      text: textToSend,
+      time: currentTime
+    };
+
+    setChatThreads((prev) => ({
+      ...prev,
+      [activeChatId]: [...(prev[activeChatId] || []), userMsg]
+    }));
+
+    setChatInput('');
+    setIsBotTyping(true);
+
+    if (activeChatId === 'ai_agronom') {
+      setTimeout(() => {
+        const aiResponse = generateAiAgronomAnswer(textToSend, lang);
+        const botMsg = {
+          id: Date.now() + 1,
+          sender: 'bot',
+          title: aiResponse.title || "🤖 AI Agronom",
+          text: aiResponse.text,
+          action: aiResponse.action,
+          time: new Date().toLocaleTimeString('uz-UZ', { hour: '2-digit', minute: '2-digit' })
+        };
+        setChatThreads((prev) => ({
+          ...prev,
+          ai_agronom: [...(prev.ai_agronom || []), botMsg]
+        }));
+        setIsBotTyping(false);
+      }, 700);
+    } else {
+      setTimeout(() => {
+        let replyText = "Xabaringizni oldim, tez orada bogʻlanaman!";
+        if (activeChatId === 'tractor_bekzod') {
+          replyText = "Rahmat! Narxini soatiga 150 000 soʻmdan yoki gektariga 350 000 soʻmdan kelishamiz. Barcha agregatlari va tajribali haydovchisi bilan birga boradi. Telefon qiling: +998 90 456 78 90";
+        } else if (activeChatId === 'client_anvar') {
+          replyText = "Ajoyib! Demak ertaga soat 08:00 ga 5 gektar yerga kutaveramiz. Manzilni xaritada yuboraman.";
+        } else if (activeChatId === 'buyer_otabek') {
+          replyText = "Kelishdik! Agar mahsulot sifati standartga javob bersa, dalangizdan oʻzimiz yuklab olib ketamiz, pulini naqd toʻlaymiz. Telefon raqamim: +998 93 321 65 43";
+        } else if (activeChatId === 'seller_jamshid') {
+          replyText = "Tushundim! Buyurtmangizni tayyorlab qoʻyamiz. Qancha miqdorda oʻgʻit yoki urugʻ kerakligini aytsangiz, ulgurji narxdan chegirma qilib beramiz: +998 97 789 12 34";
+        } else if (activeChatId === 'farmer_rustam') {
+          replyText = "Salomat boʻl doʻstim! Kelasi hafta siz tomonlarga oʻtaman, dalalarni birga koʻrib tajriba almashamiz.";
+        }
+
+        const partnerContact = CHAT_CONTACTS.find(c => c.id === activeChatId);
+        const partnerMsg = {
+          id: Date.now() + 1,
+          sender: 'partner',
+          title: partnerContact ? `${partnerContact.avatar} ${partnerContact.name}` : "Hamkor",
+          text: replyText,
+          time: new Date().toLocaleTimeString('uz-UZ', { hour: '2-digit', minute: '2-digit' })
+        };
+        setChatThreads((prev) => ({
+          ...prev,
+          [activeChatId]: [...(prev[activeChatId] || []), partnerMsg]
+        }));
+        setIsBotTyping(false);
+      }, 750);
     }
   };
 
@@ -271,78 +471,6 @@ export default function AuthPage({ onShowToast, onNavigate, onLoginSuccess }) {
     }
   };
 
-  // Handle Interactive Chat Message Send
-  const handleSendChatMessage = (textToSend = null) => {
-    const text = (textToSend || chatInput).trim();
-    if (!text) return;
-
-    const currentTime = new Date().toLocaleTimeString('uz-UZ', { hour: '2-digit', minute: '2-digit' });
-
-    const newMsg = {
-      id: Date.now(),
-      sender: 'user',
-      text,
-      time: currentTime
-    };
-
-    setChatThreads((prev) => ({
-      ...prev,
-      [activeChatId]: [...(prev[activeChatId] || []), newMsg]
-    }));
-    setChatInput('');
-
-    if (activeChatId === 'agronom') {
-      setIsBotTyping(true);
-      setTimeout(() => {
-        const aiResponse = generateAiAgronomAnswer(text, lang || 'uz');
-        const botReply = {
-          id: Date.now() + 1,
-          sender: 'bot',
-          title: aiResponse.title,
-          text: aiResponse.text,
-          action: aiResponse.action,
-          time: new Date().toLocaleTimeString('uz-UZ', { hour: '2-digit', minute: '2-digit' })
-        };
-        setChatThreads((prev) => ({
-          ...prev,
-          agronom: [...(prev.agronom || []), botReply]
-        }));
-        setIsBotTyping(false);
-      }, 700);
-    } else if (activeChatId === 'tractor') {
-      setIsBotTyping(true);
-      setTimeout(() => {
-        const tractorReply = {
-          id: Date.now() + 1,
-          sender: 'partner',
-          title: "🚜 Bekzod Toshev (MTZ)",
-          text: "Rahmat! Ekin maydoningiz necha gektar? Haydovchisi va barcha agregatlari bilan tayyormiz. Telefonlashib shartnomani aniqlashtiramiz: +998 90 123 45 67.",
-          time: new Date().toLocaleTimeString('uz-UZ', { hour: '2-digit', minute: '2-digit' })
-        };
-        setChatThreads((prev) => ({
-          ...prev,
-          tractor: [...(prev.tractor || []), tractorReply]
-        }));
-        setIsBotTyping(false);
-      }, 900);
-    } else {
-      setIsBotTyping(true);
-      setTimeout(() => {
-        const supportReply = {
-          id: Date.now() + 1,
-          sender: 'partner',
-          title: "🛡️ Agro Tarmoq Qoʻllab-quvvatlash",
-          text: "Murojaatingiz qabul qilindi! Barcha eʼlonlar va kelishilgan narxlar 10 daqiqada tasdiqlanadi. Qoʻshimcha savolingiz boʻlsa, bemalol yozing.",
-          time: new Date().toLocaleTimeString('uz-UZ', { hour: '2-digit', minute: '2-digit' })
-        };
-        setChatThreads((prev) => ({
-          ...prev,
-          support: [...(prev.support || []), supportReply]
-        }));
-        setIsBotTyping(false);
-      }, 800);
-    }
-  };
 
   // ==========================================
   // VIEW 1: NOT LOGGED IN (REGISTER / LOGIN)
@@ -820,265 +948,463 @@ export default function AuthPage({ onShowToast, onNavigate, onLoginSuccess }) {
       // REAL INTERACTIVE CHAT & BOT SECTION
       // ==========================================
       case 'chat': {
+        const activeContact = CHAT_CONTACTS.find(c => c.id === activeChatId) || CHAT_CONTACTS[0];
         const activeMsgs = chatThreads[activeChatId] || [];
 
+        const filteredContacts = CHAT_CONTACTS.filter(contact => {
+          const matchCat = chatCategoryFilter === 'all' || contact.category === chatCategoryFilter;
+          const matchQuery = !chatSearchQuery.trim() || 
+            contact.name.toLowerCase().includes(chatSearchQuery.toLowerCase()) ||
+            contact.role.toLowerCase().includes(chatSearchQuery.toLowerCase()) ||
+            contact.lastMessage.toLowerCase().includes(chatSearchQuery.toLowerCase());
+          return matchCat && matchQuery;
+        });
+
         return (
-          <div style={{ display: 'flex', flexDirection: 'column', height: '640px', background: 'var(--surface-color)', borderRadius: '20px', border: '1px solid var(--border-color)', overflow: 'hidden' }}>
+          <div style={{ position: 'relative', display: 'flex', height: '640px', background: 'var(--surface-color)', borderRadius: '20px', border: '1px solid var(--border-color)', overflow: 'hidden' }}>
             
-            {/* 1. Chat Channels Selector Tabs */}
-            <div style={{ display: 'flex', background: 'var(--background-color)', borderBottom: '1px solid var(--border-color)', padding: '6px 8px', gap: '6px', overflowX: 'auto' }}>
-              <button
-                type="button"
-                onClick={() => setActiveChatId('agronom')}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  padding: '8px 14px',
-                  borderRadius: '12px',
-                  border: 'none',
-                  background: activeChatId === 'agronom' ? 'var(--surface-color)' : 'transparent',
-                  color: activeChatId === 'agronom' ? '#10b981' : 'var(--text-color)',
-                  fontWeight: 700,
-                  fontSize: '0.86rem',
-                  cursor: 'pointer',
-                  boxShadow: activeChatId === 'agronom' ? '0 2px 8px rgba(0,0,0,0.06)' : 'none'
-                }}
-              >
-                <span>🤖</span>
-                <span>AI Agronom</span>
-                <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10b981' }}></span>
-              </button>
+            {/* 1. FLOATING CIRCULAR AI BUTTON AT THE VERY BOTTOM */}
+            <button
+              type="button"
+              onClick={() => {
+                setActiveChatId('ai_agronom');
+                setChatViewMode('conversation');
+                onShowToast("🤖 AI Agronom botiga ulandingiz!");
+              }}
+              className="agro-chat-floating-ai-btn"
+              title="AI Agronom bilan suhbatlashish"
+              style={{
+                position: 'absolute',
+                bottom: '18px',
+                right: '18px',
+                zIndex: 35,
+                width: '56px',
+                height: '56px',
+                borderRadius: '50%',
+                background: 'linear-gradient(135deg, #10b981 0%, #047857 100%)',
+                color: '#ffffff',
+                border: '3px solid #ffffff',
+                boxShadow: '0 8px 24px rgba(16, 185, 129, 0.45)',
+                cursor: 'pointer',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+                outline: 'none'
+              }}
+            >
+              <span style={{ fontSize: '1.4rem', lineHeight: 1 }}>🤖</span>
+              <span style={{ fontSize: '0.62rem', fontWeight: 900, letterSpacing: '0.5px', marginTop: '1px' }}>AI</span>
+            </button>
 
-              <button
-                type="button"
-                onClick={() => setActiveChatId('tractor')}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  padding: '8px 14px',
-                  borderRadius: '12px',
-                  border: 'none',
-                  background: activeChatId === 'tractor' ? 'var(--surface-color)' : 'transparent',
-                  color: activeChatId === 'tractor' ? '#10b981' : 'var(--text-color)',
-                  fontWeight: 700,
-                  fontSize: '0.86rem',
-                  cursor: 'pointer',
-                  boxShadow: activeChatId === 'tractor' ? '0 2px 8px rgba(0,0,0,0.06)' : 'none'
-                }}
-              >
-                <span>🚜</span>
-                <span>Bekzod (MTZ)</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setActiveChatId('support')}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  padding: '8px 14px',
-                  borderRadius: '12px',
-                  border: 'none',
-                  background: activeChatId === 'support' ? 'var(--surface-color)' : 'transparent',
-                  color: activeChatId === 'support' ? '#10b981' : 'var(--text-color)',
-                  fontWeight: 700,
-                  fontSize: '0.86rem',
-                  cursor: 'pointer',
-                  boxShadow: activeChatId === 'support' ? '0 2px 8px rgba(0,0,0,0.06)' : 'none'
-                }}
-              >
-                <span>🛡️</span>
-                <span>Qoʻllab-quvvatlash</span>
-              </button>
-            </div>
-
-            {/* 2. Active Channel Header */}
-            <div style={{ padding: '12px 18px', background: 'var(--surface-color)', borderBottom: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <div style={{ width: '38px', height: '38px', borderRadius: '50%', background: activeChatId === 'agronom' ? '#dcfce7' : '#e0f2fe', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem' }}>
-                  {activeChatId === 'agronom' ? '🤖' : activeChatId === 'tractor' ? '🚜' : '🛡️'}
+            {/* 2. CONTACTS LIST PANEL */}
+            <div 
+              className={`agro-chat-contacts-col ${chatViewMode === 'conversation' ? 'hide-mobile' : ''}`}
+              style={{
+                width: '320px',
+                minWidth: '280px',
+                borderRight: '1px solid var(--border-color)',
+                display: 'flex',
+                flexDirection: 'column',
+                background: 'var(--surface-color)',
+                height: '100%'
+              }}
+            >
+              {/* Header with Search */}
+              <div style={{ padding: '14px 16px', borderBottom: '1px solid var(--border-color)', background: 'var(--surface-color)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
+                  <h3 style={{ margin: 0, fontSize: '1.15rem', fontWeight: 800, color: 'var(--text-color)' }}>
+                    💬 Xabarlar
+                  </h3>
+                  <span style={{ fontSize: '0.76rem', fontWeight: 700, color: '#10b981', background: 'rgba(16, 185, 129, 0.12)', padding: '2px 8px', borderRadius: '12px' }}>
+                    {filteredContacts.length} ta suhbat
+                  </span>
                 </div>
-                <div>
-                  <h4 style={{ margin: 0, fontSize: '0.96rem', fontWeight: 800 }}>
-                    {activeChatId === 'agronom' ? 'Agro Tarmoq AI Agronom Bot' : activeChatId === 'tractor' ? 'Bekzod Toshev (Traktor egasi)' : 'Agro Tarmoq Qoʻllab-quvvatlash'}
-                  </h4>
-                  <div style={{ fontSize: '0.74rem', color: '#10b981', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 600 }}>
-                    <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10b981' }}></span>
-                    Online · Tezkor javob
-                  </div>
+
+                {/* Search input */}
+                <div style={{ position: 'relative' }}>
+                  <i className="fa-solid fa-magnifying-glass" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--muted-color)', fontSize: '0.85rem' }}></i>
+                  <input
+                    type="text"
+                    placeholder="Sotuvchi, xaridor yoki fermer..."
+                    value={chatSearchQuery}
+                    onChange={(e) => setChatSearchQuery(e.target.value)}
+                    style={{
+                      width: '100%',
+                      padding: '8px 12px 8px 34px',
+                      borderRadius: '12px',
+                      border: '1px solid var(--border-color)',
+                      background: 'var(--background-color)',
+                      color: 'var(--text-color)',
+                      fontSize: '0.85rem'
+                    }}
+                  />
+                  {chatSearchQuery && (
+                    <button
+                      type="button"
+                      onClick={() => setChatSearchQuery('')}
+                      style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: 'var(--muted-color)', cursor: 'pointer', fontSize: '0.8rem' }}
+                    >
+                      ✕
+                    </button>
+                  )}
                 </div>
               </div>
 
-              {activeChatId === 'agronom' && (
-                <button
-                  type="button"
-                  onClick={() => onNavigate && onNavigate('agronom')}
-                  className="ag-btn ag-btn-sm ag-btn-green"
-                  style={{ borderRadius: '10px', fontSize: '0.78rem', padding: '6px 12px' }}
-                >
-                  📸 Skaner
-                </button>
-              )}
-            </div>
-
-            {/* 3. Quick Prompts Bar (when agronom is active) */}
-            {activeChatId === 'agronom' && (
-              <div style={{ padding: '8px 14px', background: 'var(--background-color)', borderBottom: '1px solid var(--border-color)', display: 'flex', gap: '8px', overflowX: 'auto', whiteSpace: 'nowrap' }}>
-                {chatQuickPrompts.map((qp, idx) => (
+              {/* Filter Category Chips */}
+              <div style={{ display: 'flex', gap: '6px', padding: '8px 12px', overflowX: 'auto', borderBottom: '1px solid var(--border-color)', background: 'var(--background-color)', whiteSpace: 'nowrap' }}>
+                {[
+                  { id: 'all', label: 'Barchasi' },
+                  { id: 'sotuvchi', label: '🌱 Sotuvchilar' },
+                  { id: 'olib_sotar', label: '💼 Olib-sotarlar' },
+                  { id: 'texnika', label: '🚜 Texnika ijarasi' },
+                  { id: 'fermer', label: '👨‍🌾 Fermerlar & Doʻstlar' }
+                ].map(cat => (
                   <button
-                    key={idx}
+                    key={cat.id}
                     type="button"
-                    onClick={() => handleSendChatMessage(qp.text)}
+                    onClick={() => setChatCategoryFilter(cat.id)}
                     style={{
-                      background: 'var(--surface-color)',
-                      border: '1px solid var(--border-color)',
-                      borderRadius: '20px',
-                      padding: '5px 12px',
-                      fontSize: '0.78rem',
-                      fontWeight: 600,
+                      padding: '5px 11px',
+                      borderRadius: '14px',
+                      border: 'none',
+                      fontSize: '0.74rem',
+                      fontWeight: 700,
                       cursor: 'pointer',
-                      color: 'var(--text-color)',
-                      transition: 'all 0.15s ease'
+                      background: chatCategoryFilter === cat.id ? '#15803d' : 'var(--surface-color)',
+                      color: chatCategoryFilter === cat.id ? '#ffffff' : 'var(--text-color)',
+                      boxShadow: chatCategoryFilter === cat.id ? '0 2px 6px rgba(21, 128, 61, 0.3)' : 'none',
+                      transition: 'all 0.15s ease',
+                      flexShrink: 0
                     }}
                   >
-                    {qp.label}
+                    {cat.label}
                   </button>
                 ))}
               </div>
-            )}
 
-            {/* 4. Chat Messages Scrollable Body */}
-            <div style={{ flex: 1, padding: '18px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '14px', background: 'var(--background-color)' }}>
-              {activeMsgs.map((msg) => {
-                const isUser = msg.sender === 'user';
-                return (
-                  <div
-                    key={msg.id}
+              {/* Contacts List Items */}
+              <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
+                {filteredContacts.length === 0 ? (
+                  <div style={{ padding: '30px 16px', textAlign: 'center', color: 'var(--muted-color)', fontSize: '0.88rem' }}>
+                    Hech qanday suhbat topilmadi
+                  </div>
+                ) : (
+                  filteredContacts.map(contact => {
+                    const isSelected = contact.id === activeChatId;
+                    return (
+                      <div
+                        key={contact.id}
+                        onClick={() => {
+                          setActiveChatId(contact.id);
+                          setChatViewMode('conversation');
+                        }}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '12px',
+                          padding: '12px 14px',
+                          borderBottom: '1px solid var(--border-color)',
+                          cursor: 'pointer',
+                          background: isSelected ? 'rgba(16, 185, 129, 0.1)' : 'transparent',
+                          transition: 'background 0.15s ease'
+                        }}
+                      >
+                        {/* Avatar */}
+                        <div style={{ position: 'relative', width: '42px', height: '42px', borderRadius: '50%', background: contact.avatarBg || '#e0f2fe', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.3rem', flexShrink: 0 }}>
+                          {contact.avatar}
+                          {contact.online && (
+                            <span style={{ position: 'absolute', bottom: '0px', right: '0px', width: '10px', height: '10px', borderRadius: '50%', background: '#10b981', border: '2px solid var(--surface-color)' }}></span>
+                          )}
+                        </div>
+
+                        {/* Info */}
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2px' }}>
+                            <span style={{ fontWeight: 800, fontSize: '0.86rem', color: 'var(--text-color)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                              {contact.name}
+                            </span>
+                            <span style={{ fontSize: '0.7rem', color: 'var(--muted-color)' }}>
+                              {contact.time}
+                            </span>
+                          </div>
+
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '2px' }}>
+                            <span style={{ fontSize: '0.66rem', fontWeight: 800, padding: '1px 6px', borderRadius: '6px', background: `${contact.badgeColor}20`, color: contact.badgeColor }}>
+                              {contact.categoryBadge}
+                            </span>
+                          </div>
+
+                          <div style={{ fontSize: '0.78rem', color: 'var(--muted-color)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                            {contact.lastMessage}
+                          </div>
+                        </div>
+
+                        {/* Unread badge */}
+                        {contact.unread > 0 && (
+                          <span style={{ minWidth: '18px', height: '18px', borderRadius: '999px', background: '#ef4444', color: '#fff', fontSize: '0.68rem', fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 4px', flexShrink: 0 }}>
+                            {contact.unread}
+                          </span>
+                        )}
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+            </div>
+
+            {/* 3. ACTIVE CONVERSATION PANE */}
+            <div 
+              className={`agro-chat-conversation-col ${chatViewMode === 'list' ? 'hide-mobile' : ''}`}
+              style={{
+                flex: 1,
+                display: 'flex',
+                flexDirection: 'column',
+                height: '100%',
+                background: 'var(--background-color)',
+                minWidth: 0
+              }}
+            >
+              {/* Conversation Top Header */}
+              <div style={{ padding: '10px 16px', background: 'var(--surface-color)', borderBottom: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0 }}>
+                  {/* Back to list button */}
+                  <button
+                    type="button"
+                    onClick={() => setChatViewMode('list')}
+                    className="agro-chat-back-btn"
                     style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: isUser ? 'flex-end' : 'flex-start',
-                      maxWidth: '85%',
-                      alignSelf: isUser ? 'flex-end' : 'flex-start'
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '32px',
+                      height: '32px',
+                      borderRadius: '50%',
+                      background: 'var(--background-color)',
+                      border: '1px solid var(--border-color)',
+                      color: 'var(--text-color)',
+                      cursor: 'pointer',
+                      fontSize: '0.85rem'
                     }}
+                    title="Suhbatlar roʻyxatiga qaytish"
                   >
-                    {msg.title && (
-                      <span style={{ fontSize: '0.76rem', fontWeight: 800, color: 'var(--muted-color)', marginBottom: '3px', paddingLeft: isUser ? 0 : '4px' }}>
-                        {msg.title}
+                    <i className="fa-solid fa-arrow-left"></i>
+                  </button>
+
+                  <div style={{ width: '38px', height: '38px', borderRadius: '50%', background: activeContact.avatarBg || '#e0f2fe', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.25rem', flexShrink: 0 }}>
+                    {activeContact.avatar}
+                  </div>
+
+                  <div style={{ minWidth: 0 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <h4 style={{ margin: 0, fontSize: '0.92rem', fontWeight: 800, color: 'var(--text-color)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        {activeContact.name}
+                      </h4>
+                      <span style={{ fontSize: '0.66rem', fontWeight: 800, padding: '1px 6px', borderRadius: '6px', background: `${activeContact.badgeColor}20`, color: activeContact.badgeColor, flexShrink: 0 }}>
+                        {activeContact.categoryBadge}
                       </span>
-                    )}
-                    <div
+                    </div>
+                    <div style={{ fontSize: '0.72rem', color: activeContact.online ? '#10b981' : 'var(--muted-color)', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 600 }}>
+                      <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: activeContact.online ? '#10b981' : '#94a3b8' }}></span>
+                      {activeContact.lastSeen}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Right call / action buttons */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  {activeContact.phone && activeContact.id !== 'ai_agronom' && (
+                    <a
+                      href={`tel:${activeContact.phone.replace(/\s+/g, '')}`}
                       style={{
-                        padding: '12px 16px',
-                        borderRadius: isUser ? '18px 18px 4px 18px' : '18px 18px 18px 4px',
-                        background: isUser ? '#15803d' : 'var(--surface-color)',
-                        color: isUser ? '#ffffff' : 'var(--text-color)',
-                        border: isUser ? 'none' : '1px solid var(--border-color)',
-                        boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
-                        fontSize: '0.92rem',
-                        lineHeight: 1.5,
-                        whiteSpace: 'pre-wrap',
-                        wordBreak: 'break-word'
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        padding: '6px 12px',
+                        borderRadius: '20px',
+                        background: '#10b981',
+                        color: '#ffffff',
+                        textDecoration: 'none',
+                        fontSize: '0.78rem',
+                        fontWeight: 700,
+                        boxShadow: '0 2px 8px rgba(16, 185, 129, 0.3)'
                       }}
                     >
-                      {msg.text}
+                      <i className="fa-solid fa-phone"></i>
+                      <span>Qoʻngʻiroq</span>
+                    </a>
+                  )}
 
-                      {msg.action && (
-                        <div style={{ marginTop: '10px', paddingTop: '8px', borderTop: isUser ? '1px solid rgba(255,255,255,0.2)' : '1px solid var(--border-color)' }}>
-                          <button
-                            type="button"
-                            onClick={() => onNavigate && onNavigate(msg.action.page || 'agronom')}
-                            style={{
-                              background: isUser ? '#ffffff' : '#10b981',
-                              color: isUser ? '#15803d' : '#ffffff',
-                              border: 'none',
-                              borderRadius: '8px',
-                              padding: '6px 12px',
-                              fontSize: '0.8rem',
-                              fontWeight: 800,
-                              cursor: 'pointer'
-                            }}
-                          >
-                            {msg.action.label || "Koʻrish"}
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                    <span style={{ fontSize: '0.7rem', color: 'var(--muted-color)', marginTop: '3px', padding: '0 4px' }}>
-                      {msg.time}
-                    </span>
-                  </div>
-                );
-              })}
+                  {activeContact.id === 'ai_agronom' && (
+                    <button
+                      type="button"
+                      onClick={() => onNavigate && onNavigate('agronom')}
+                      className="ag-btn ag-btn-sm ag-btn-green"
+                      style={{ borderRadius: '12px', fontSize: '0.76rem', padding: '6px 12px' }}
+                    >
+                      📸 Skaner
+                    </button>
+                  )}
+                </div>
+              </div>
 
-              {/* Bot Typing Indicator */}
-              {isBotTyping && (
-                <div style={{ alignSelf: 'flex-start', background: 'var(--surface-color)', border: '1px solid var(--border-color)', padding: '10px 16px', borderRadius: '18px', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.84rem', color: 'var(--muted-color)' }}>
-                  <span>🤖</span>
-                  <span>AI agronom javob tayyorlamoqda...</span>
+              {/* Quick Prompts Bar (when AI is active) */}
+              {activeContact.id === 'ai_agronom' && (
+                <div style={{ padding: '8px 14px', background: 'var(--surface-color)', borderBottom: '1px solid var(--border-color)', display: 'flex', gap: '8px', overflowX: 'auto', whiteSpace: 'nowrap' }}>
+                  {chatQuickPrompts.map((qp, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => handleSendChatMessage(qp.text)}
+                      style={{
+                        background: 'var(--background-color)',
+                        border: '1px solid var(--border-color)',
+                        borderRadius: '16px',
+                        padding: '5px 12px',
+                        fontSize: '0.76rem',
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                        color: 'var(--text-color)',
+                        transition: 'all 0.15s ease'
+                      }}
+                    >
+                      {qp.label}
+                    </button>
+                  ))}
                 </div>
               )}
 
-              <div ref={chatMessagesEndRef} />
+              {/* Messages Body */}
+              <div style={{ flex: 1, padding: '16px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '12px', background: 'var(--background-color)' }}>
+                {activeMsgs.map((msg) => {
+                  const isUser = msg.sender === 'user';
+                  return (
+                    <div
+                      key={msg.id}
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: isUser ? 'flex-end' : 'flex-start',
+                        maxWidth: '82%',
+                        alignSelf: isUser ? 'flex-end' : 'flex-start'
+                      }}
+                    >
+                      {msg.title && (
+                        <span style={{ fontSize: '0.74rem', fontWeight: 800, color: 'var(--muted-color)', marginBottom: '3px', paddingLeft: isUser ? 0 : '4px' }}>
+                          {msg.title}
+                        </span>
+                      )}
+                      <div
+                        style={{
+                          padding: '10px 14px',
+                          borderRadius: isUser ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
+                          background: isUser ? '#15803d' : 'var(--surface-color)',
+                          color: isUser ? '#ffffff' : 'var(--text-color)',
+                          border: isUser ? 'none' : '1px solid var(--border-color)',
+                          boxShadow: '0 2px 6px rgba(0,0,0,0.03)',
+                          fontSize: '0.9rem',
+                          lineHeight: 1.5,
+                          whiteSpace: 'pre-wrap',
+                          wordBreak: 'break-word'
+                        }}
+                      >
+                        {msg.text}
+
+                        {msg.action && (
+                          <div style={{ marginTop: '8px', paddingTop: '6px', borderTop: isUser ? '1px solid rgba(255,255,255,0.2)' : '1px solid var(--border-color)' }}>
+                            <button
+                              type="button"
+                              onClick={() => onNavigate && onNavigate(msg.action.page || 'agronom')}
+                              style={{
+                                background: isUser ? '#ffffff' : '#10b981',
+                                color: isUser ? '#15803d' : '#ffffff',
+                                border: 'none',
+                                borderRadius: '8px',
+                                padding: '5px 10px',
+                                fontSize: '0.78rem',
+                                fontWeight: 800,
+                                cursor: 'pointer'
+                              }}
+                            >
+                              {msg.action.label || "Koʻrish"}
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                      <span style={{ fontSize: '0.68rem', color: 'var(--muted-color)', marginTop: '2px', padding: '0 4px' }}>
+                        {msg.time}
+                      </span>
+                    </div>
+                  );
+                })}
+
+                {/* Typing indicator */}
+                {isBotTyping && (
+                  <div style={{ alignSelf: 'flex-start', background: 'var(--surface-color)', border: '1px solid var(--border-color)', padding: '8px 14px', borderRadius: '16px', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.82rem', color: 'var(--muted-color)' }}>
+                    <span>✍️</span>
+                    <span>{activeContact.id === 'ai_agronom' ? 'AI agronom javob tayyorlamoqda...' : `${activeContact.name} yozmoqda...`}</span>
+                  </div>
+                )}
+
+                <div ref={chatMessagesEndRef} />
+              </div>
+
+              {/* Chat Input Bar */}
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  handleSendChatMessage();
+                }}
+                style={{ padding: '10px 14px', background: 'var(--surface-color)', borderTop: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', gap: '8px' }}
+              >
+                <button
+                  type="button"
+                  onClick={() => onShowToast("Rasm yoki hujjat biriktirish")}
+                  style={{ background: 'var(--background-color)', border: '1px solid var(--border-color)', width: '38px', height: '38px', borderRadius: '50%', color: 'var(--muted-color)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                  title="Fayl biriktirish"
+                >
+                  <i className="fa-solid fa-paperclip"></i>
+                </button>
+
+                <input
+                  type="text"
+                  placeholder={activeContact.id === 'ai_agronom' ? "Ekin kasalligi yoki savolingizni yozing..." : `${activeContact.name}ga xabar yozing...`}
+                  value={chatInput}
+                  onChange={(e) => setChatInput(e.target.value)}
+                  style={{
+                    flex: 1,
+                    padding: '10px 14px',
+                    borderRadius: '20px',
+                    border: '1px solid var(--border-color)',
+                    background: 'var(--background-color)',
+                    color: 'var(--text-color)',
+                    fontSize: '0.9rem'
+                  }}
+                />
+
+                <button
+                  type="submit"
+                  style={{
+                    background: '#15803d',
+                    color: '#ffffff',
+                    border: 'none',
+                    width: '38px',
+                    height: '38px',
+                    borderRadius: '50%',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '0.95rem',
+                    boxShadow: '0 4px 10px rgba(21, 128, 61, 0.3)'
+                  }}
+                  title="Yuborish"
+                >
+                  <i className="fa-solid fa-paper-plane"></i>
+                </button>
+              </form>
+
             </div>
-
-            {/* 5. Chat Input Bar */}
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                handleSendChatMessage();
-              }}
-              style={{ padding: '12px 16px', background: 'var(--surface-color)', borderTop: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', gap: '10px' }}
-            >
-              <button
-                type="button"
-                onClick={() => onShowToast("Rasm yoki fayl biriktirish")}
-                style={{ background: 'var(--background-color)', border: '1px solid var(--border-color)', width: '40px', height: '40px', borderRadius: '50%', color: 'var(--muted-color)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                title="Rasm yuklash"
-              >
-                <i className="fa-solid fa-paperclip"></i>
-              </button>
-
-              <input
-                type="text"
-                placeholder={activeChatId === 'agronom' ? "Ekin kasalligi yoki savolingizni yozing..." : "Xabaringizni yozing..."}
-                value={chatInput}
-                onChange={(e) => setChatInput(e.target.value)}
-                style={{
-                  flex: 1,
-                  padding: '12px 16px',
-                  borderRadius: '24px',
-                  border: '1px solid var(--border-color)',
-                  background: 'var(--background-color)',
-                  color: 'var(--text-color)',
-                  fontSize: '0.92rem'
-                }}
-              />
-
-              <button
-                type="submit"
-                style={{
-                  background: '#15803d',
-                  color: '#ffffff',
-                  border: 'none',
-                  width: '42px',
-                  height: '42px',
-                  borderRadius: '50%',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '1rem',
-                  boxShadow: '0 4px 12px rgba(21, 128, 61, 0.3)'
-                }}
-                title="Yuborish"
-              >
-                <i className="fa-solid fa-paper-plane"></i>
-              </button>
-            </form>
 
           </div>
         );
@@ -1474,32 +1800,6 @@ export default function AuthPage({ onShowToast, onNavigate, onLoginSuccess }) {
 
               </div>
 
-              {/* 3. Stats Row (E'lonlar, Followers, Following) */}
-              <div className="agro-stats-cards-row">
-                <div className="agro-stat-card" onClick={() => openSection('listings')} style={{ cursor: 'pointer' }}>
-                  <div className="agro-stat-val">
-                    <i className="fa-solid fa-box"></i>
-                    <span>{totalUserAdsCount}</span>
-                  </div>
-                  <div className="agro-stat-label">Eʼlonlar</div>
-                </div>
-
-                <div className="agro-stat-card" onClick={() => openSection('stats')} style={{ cursor: 'pointer' }}>
-                  <div className="agro-stat-val">
-                    <i className="fa-solid fa-bookmark"></i>
-                    <span>24.7K</span>
-                  </div>
-                  <div className="agro-stat-label">Followers</div>
-                </div>
-
-                <div className="agro-stat-card" onClick={() => openSection('stats')} style={{ cursor: 'pointer' }}>
-                  <div className="agro-stat-val">
-                    <i className="fa-solid fa-users"></i>
-                    <span>312</span>
-                  </div>
-                  <div className="agro-stat-label">Following</div>
-                </div>
-              </div>
 
               {/* 4. Action Buttons: [Profilni tahrirlash] and [Ulashish] */}
               <div className="agro-action-buttons-row">
