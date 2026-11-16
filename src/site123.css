@@ -3311,43 +3311,49 @@ body:has(.agro-bottom-nav.is-standalone) {
 
 .agro-avatar-wrapper {
   position: relative;
-  width: 92px;
-  height: 92px;
+  width: 96px;
+  height: 96px;
   border-radius: 50%;
-  border: 4px solid #a7f3d0;
+  border: 4px solid #ffffff;
   background: #ffffff;
-  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.25);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
   flex-shrink: 0;
   cursor: pointer;
 }
 
 [data-theme="dark"] .agro-avatar-wrapper {
-  border-color: #065f46;
+  border-color: #1e293b;
   background: #151d28;
 }
 
 .agro-avatar-camera-btn {
   position: absolute;
-  bottom: 2px;
-  right: 2px;
-  width: 30px;
-  height: 30px;
+  bottom: 0px;
+  right: 0px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   background: #064e3b;
   color: #ffffff !important;
   display: flex;
   align-items: center;
   justifyContent: center;
-  font-size: 0.75rem;
-  border: 2.5px solid #ffffff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  border: 3px solid #ffffff;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
   cursor: pointer;
   padding: 0;
-  line-height: 1;
+  margin: 0;
+  z-index: 4;
+  transition: transform 0.18s ease, background 0.18s ease;
+}
+
+.agro-avatar-camera-btn:hover {
+  transform: scale(1.08);
+  background: #047857;
 }
 
 [data-theme="dark"] .agro-avatar-camera-btn {
-  border-color: #151d28;
+  border-color: #1e293b;
 }
 
 .agro-profile-name-info {

@@ -144,6 +144,23 @@ export default function AuthPage({ onShowToast, onNavigate, onLoginSuccess }) {
     setMobileModalOpen(true);
   };
 
+  // Handle avatar upload from camera button
+  const handleAvatarFileChange = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        onShowToast("Rasm hajmi 5MB dan oshmasligi kerak!");
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        updateUser({ avatar: event.target.result });
+        onShowToast("Profil rasmi yangilandi!");
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   // Handle Login & Register submission
   const handleAuthSubmit = (e) => {
     e.preventDefault();
@@ -1371,63 +1388,75 @@ export default function AuthPage({ onShowToast, onNavigate, onLoginSuccess }) {
               {/* User Identity: Avatar + Greeting + ID */}
               <div className="agro-profile-id-row">
                 
-                {/* High-Fidelity Handsome Illustrated Farmer Avatar */}
-                <div className="agro-avatar-wrapper" onClick={() => openSection('settings')}>
-                  <svg viewBox="0 0 100 100" style={{ width: '100%', height: '100%', borderRadius: '50%', display: 'block' }}>
-                    <defs>
-                      <linearGradient id="avatarBgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#a7f3d0"/>
-                        <stop offset="100%" stopColor="#34d399"/>
-                      </linearGradient>
-                      <linearGradient id="hoodieGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#064e3b"/>
-                        <stop offset="100%" stopColor="#022c22"/>
-                      </linearGradient>
-                    </defs>
+                {/* High-Fidelity Illustrated Farmer Avatar (Matches Mockup) */}
+                <div className="agro-avatar-wrapper">
+                  {user?.avatar ? (
+                    <img 
+                      src={user.avatar} 
+                      alt={user?.name || 'Profil'} 
+                      style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%', display: 'block' }} 
+                    />
+                  ) : (
+                    <svg viewBox="0 0 100 100" style={{ width: '100%', height: '100%', borderRadius: '50%', display: 'block' }}>
+                      <defs>
+                        <linearGradient id="avatarBgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stopColor="#86efac"/>
+                          <stop offset="100%" stopColor="#34d399"/>
+                        </linearGradient>
+                        <linearGradient id="hoodieGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stopColor="#064e3b"/>
+                          <stop offset="100%" stopColor="#022c22"/>
+                        </linearGradient>
+                      </defs>
 
-                    {/* Mint Green Background Circle */}
-                    <circle cx="50" cy="50" r="50" fill="url(#avatarBgGrad)"/>
+                      {/* Mint Green Background Circle */}
+                      <circle cx="50" cy="50" r="50" fill="url(#avatarBgGrad)"/>
 
-                    {/* Body / Dark Green Hoodie */}
-                    <path d="M14 100 C15 70, 28 62, 50 62 C72 62, 85 70, 86 100 Z" fill="url(#hoodieGrad)"/>
+                      {/* Body / Dark Green Hoodie */}
+                      <path d="M12 100 C14 68, 26 60, 50 60 C74 60, 86 68, 88 100 Z" fill="url(#hoodieGrad)"/>
 
-                    {/* Inner Dark Collar / Hood Opening */}
-                    <path d="M35 62 C35 78, 65 78, 65 62 Z" fill="#03221b"/>
+                      {/* Inner Dark Collar / Hood Opening */}
+                      <path d="M34 60 C34 76, 66 76, 66 60 Z" fill="#022018"/>
 
-                    {/* Neck */}
-                    <path d="M42 50 L42 66 C42 70, 58 70, 58 66 L58 50 Z" fill="#fbd2b3"/>
-                    <path d="M42 58 C46 63, 54 63, 58 58 Z" fill="#f4b595" opacity="0.5"/>
+                      {/* Neck */}
+                      <path d="M42 48 L42 64 C42 68, 58 68, 58 64 L58 48 Z" fill="#fed7aa"/>
+                      <path d="M42 56 C46 61, 54 61, 58 56 Z" fill="#fbcfe8" opacity="0.3"/>
 
-                    {/* Ears */}
-                    <ellipse cx="32" cy="45" rx="3.5" ry="5.5" fill="#fbd2b3"/>
-                    <ellipse cx="68" cy="45" rx="3.5" ry="5.5" fill="#fbd2b3"/>
+                      {/* Ears */}
+                      <ellipse cx="31" cy="45" rx="3.5" ry="5.5" fill="#fed7aa"/>
+                      <ellipse cx="69" cy="45" rx="3.5" ry="5.5" fill="#fed7aa"/>
 
-                    {/* Face Contour */}
-                    <path d="M33 42 C33 26, 67 26, 67 42 C67 56, 58 62, 50 62 C42 62, 33 56, 33 42 Z" fill="#fed7aa"/>
+                      {/* Face Contour (Clean Modern Minimalist Flat Art) */}
+                      <path d="M32 40 C32 24, 68 24, 68 40 C68 55, 59 62, 50 62 C41 62, 32 55, 32 40 Z" fill="#fed7aa"/>
 
-                    {/* Eyes and subtle brows (minimalist clean style) */}
-                    <path d="M41 42 Q44 40 46 42" stroke="#475569" strokeWidth="1.2" fill="none" strokeLinecap="round"/>
-                    <path d="M54 42 Q56 40 59 42" stroke="#475569" strokeWidth="1.2" fill="none" strokeLinecap="round"/>
-                    <circle cx="44" cy="44" r="1.5" fill="#1e293b"/>
-                    <circle cx="56" cy="44" r="1.5" fill="#1e293b"/>
+                      {/* Stylish Haircut (clean modern black sweep) */}
+                      <path d="M29 39 C29 18, 44 13, 69 17 C73 23, 71 33, 69 38 C65 29, 54 27, 42 31 C36 34, 31 36, 29 39 Z" fill="#0f172a"/>
+                      <path d="M29 37 C30 24, 42 18, 58 18 C67 18, 72 22, 71 27 C64 23, 46 23, 33 29 Z" fill="#1e293b"/>
+                      <path d="M30 37 L32 44 L34 40 Z" fill="#0f172a"/>
+                      <path d="M70 35 L68 44 L66 39 Z" fill="#0f172a"/>
 
-                    {/* Stylish Haircut (black, sweeping naturally over forehead) */}
-                    <path d="M30 40 C30 20, 44 14, 68 18 C72 24, 70 33, 68 38 C64 30, 54 28, 42 32 C36 35, 32 37, 30 40 Z" fill="#0f172a"/>
-                    <path d="M30 38 C31 25, 42 19, 58 19 C66 19, 71 23, 70 28 C64 24, 46 24, 34 30 Z" fill="#1e293b"/>
-                    <path d="M31 38 L33 45 L35 41 Z" fill="#0f172a"/>
-                    <path d="M69 36 L67 45 L65 40 Z" fill="#0f172a"/>
+                      {/* Hoodie White Drawstrings */}
+                      <line x1="46" y1="63" x2="46" y2="76" stroke="#ffffff" strokeWidth="1.6" strokeLinecap="round"/>
+                      <line x1="54" y1="63" x2="54" y2="78" stroke="#ffffff" strokeWidth="1.6" strokeLinecap="round"/>
+                    </svg>
+                  )}
 
-                    {/* Hoodie White Drawstrings */}
-                    <line x1="47" y1="64" x2="47" y2="76" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round"/>
-                    <line x1="53" y1="64" x2="53" y2="78" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round"/>
-
-                    {/* Mint Leaf on Left Chest */}
-                    <path d="M67 76 C62 72, 66 66, 72 68 C74 74, 70 78, 67 76 Z" fill="#34d399"/>
-                    <line x1="67" y1="76" x2="71" y2="70" stroke="#064e3b" strokeWidth="0.8"/>
-                  </svg>
-                  <button type="button" className="agro-avatar-camera-btn" aria-label="Rasm almashtirish">
-                    <i className="fa-solid fa-camera" style={{ color: '#ffffff', fontSize: '12px' }}></i>
-                  </button>
+                  {/* Camera Upload Button */}
+                  <label 
+                    className="agro-avatar-camera-btn" 
+                    aria-label="Rasm almashtirish" 
+                    title="Rasm yuklash"
+                  >
+                    <input 
+                      type="file" 
+                      accept="image/*" 
+                      style={{ display: 'none' }} 
+                      onChange={handleAvatarFileChange}
+                    />
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="#ffffff" style={{ display: 'block' }}>
+                      <path d="M4 4h3l2-2h6l2 2h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zm8 3a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 2a3 3 0 1 1 0 6 3 3 0 0 1 0-6z" />
+                    </svg>
+                  </label>
                 </div>
 
                 {/* User Name and Phone Number */}
