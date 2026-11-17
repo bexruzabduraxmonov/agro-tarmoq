@@ -133,7 +133,7 @@ export default function App() {
 
       {/* Pages Switcher */}
       {currentPage === 'home' && (
-        <HomePage onNavigate={handleNavigate} />
+        <HomePage onNavigate={handleNavigate} onAddToCart={handleAddToCart} onShowToast={showToast} />
       )}
 
       {currentPage === 'bozor' && (

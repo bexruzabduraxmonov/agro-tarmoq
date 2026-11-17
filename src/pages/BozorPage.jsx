@@ -92,7 +92,15 @@ export default function BozorPage({ onAddToCart }) {
                 >
                   {/* Image Container with Badges & Wishlist */}
                   <div className="uzum-card-img">
-                    <img src={p.img} alt={p.name} loading="lazy" />
+                    <img 
+                      src={p.img || p.image} 
+                      alt={p.name} 
+                      loading="lazy" 
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&w=500&q=80';
+                      }}
+                    />
 
                     {/* Trend / Discount / Agreed Price Badge */}
                     {p.isAgreedPrice ? (

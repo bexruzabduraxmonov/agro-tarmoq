@@ -1,4 +1,4 @@
-﻿// Agro Tarmoq 24/7 Avtomatik Yangiliklar Xizmati
+// Agro Tarmoq 24/7 Avtomatik Yangiliklar Xizmati
 // Rasmiy manbalar:
 // 1. Qishloq xo'jaligi vazirligi (@uzagroministry)
 // 2. O'zgidromet (@hydrometuz)
@@ -196,7 +196,7 @@ const BASE_NEWS_POOL = [
     title: "Kosmik sunʼiy yoʻldosh orqali yer shoʻrlanishi va ekin unuvchanligini kuzatish tizimi ishga tushdi",
     aiSummary: "Endi har bir fermer oʻz dalasining NDVI vegetatsiya indeksini va namlik darajasini onlayn xarita orqali koʻra oladi. Bu ortiqcha oʻgʻit va suv sarfini 25% gacha tejaydi.",
     fullContent: "Qishloq xoʻjaligi vazirligining Raqamlashtirish markazi tomonidan ishga tushirilgan 'Smart Agromonitoring' platformasi orqali respublikadagi barcha ekin maydonlari doimiy skaner qilinmoqda. Muammoli nuqtalar aniqlanganda fermerning telefoniga ogohlantirish keladi.",
-    img: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80",
+    img: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80",
     timeOffsetHours: 32
   }
 ];

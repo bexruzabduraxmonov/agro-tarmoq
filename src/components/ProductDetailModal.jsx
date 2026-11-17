@@ -76,7 +76,14 @@ export default function ProductDetailModal({ product, onClose, onAddToCart }) {
 
         {/* Product Image Header with Trend Tag */}
         <div className="uzum-modal-image">
-          <img src={product.img} alt={product.name} />
+          <img 
+            src={product.img || product.image} 
+            alt={product.name || product.title} 
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&w=600&q=80';
+            }}
+          />
           {trend && (
             <span className={`uzum-modal-badge ${trend.cls}`}>
               {trend.icon} {trend.label}

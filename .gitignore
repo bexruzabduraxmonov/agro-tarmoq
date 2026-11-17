@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Temporary scraping scripts
+scrape_*
+scraper/
+categories.json

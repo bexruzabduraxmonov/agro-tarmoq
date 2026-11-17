@@ -13,7 +13,7 @@
       { id: 'narxlar', href: 'narxlar.html', e: '📊', t: 'Narxlar', d: '14 kunlik grafik va bozor solishtirmasi', img: 'https://files.cdn-files-a.com/uploads/12463689/normal_gi-6ad09c1a2746d.jpg?format=avif' },
       { id: 'obhavo', href: 'obhavo.html', e: '📅', t: 'Ob-havo va kalendar', d: 'Ekish, sugʻorish va hosil oylari', img: 'https://files.cdn-files-a.com/uploads/12463689/normal_gi-6ad09c1a27477.jpg?format=avif' },
       { id: 'texnika', href: 'texnika.html', e: '🚜', t: 'Texnika ijarasi', d: 'Traktor, kombayn va dron', img: 'https://files.cdn-files-a.com/uploads/12463689/normal_gi-6ad09c1a274aa.jpg?format=avif' },
-      { id: 'agronom', href: 'agronom.html', e: '🤖', t: 'AI Agronom', d: 'Sunʼiy intellekt asosida kasallik tashxisi', img: 'https://files.cdn-files-a.com/uploads/12463689/normal_gi-6ad09c1a274b2.jpg?format=avif' },
+      { id: 'agronom', href: 'agronom.html', e: '🤖', t: 'Agronom', d: 'Kasalliklar kutubxonasi va chorasi', img: 'https://files.cdn-files-a.com/uploads/12463689/normal_gi-6ad09c1a274b2.jpg?format=avif' },
       { id: 'xojalik', href: 'xojalik.html', e: '💰', t: 'Mening xoʻjaligim', d: 'Daromad, xarajat va foyda hisobi', img: 'https://files.cdn-files-a.com/uploads/12463689/normal_gi-6ad09c1a274b8.jpg?format=avif' },
       { id: 'dokon', href: 'dokon.html', e: '🌱', t: 'Doʻkon', d: 'Urugʻ, oʻgʻit va dori narxlari', img: 'https://files.cdn-files-a.com/uploads/12463689/normal_gi-6ad09c1a274bf.jpg?format=avif' },
       { id: 'ishlar', href: 'ishlar.html', e: '🧑‍🌾', t: 'Ishlar', d: 'Mavsumiy va doimiy ish eʼlonlari', img: 'https://files.cdn-files-a.com/uploads/12463689/normal_gi-6ad09c1a274c6.jpg?format=avif' },
@@ -23,42 +23,42 @@
     products: [
       // === SABZAVOTLAR ===
       { 
-        id: 'pomidor', name: 'Pomidor (Qizil, serhosil nav)', cat: 'sabzavot', emoji: '🍅', price: 12000, unit: 'kg', 
+        id: 'pomidor', name: 'Pomidor (Qizil, serhosil nav)', cat: 'sabzavot', emoji: '🍅', price: 18000, unit: 'kg', 
         farmer: 'Akmal Karimov', region: 'Toshkent viloyati', trend: 1, rating: 4.9, reviewsCount: 142,
         desc: 'Issiqxonada tabiiy quyosh nurida yetishtirilgan, suvli va xushboʻy qizil pomidor. Hech qanday kimyoviy tezlatkichlarsiz yetiltirilgan.',
-        specs: ['Navi: Volgogradskiy elita', 'Yetishtirish: Issiqxona / Organik', 'Saqlash muddati: 10-14 kun (8-12°C)', 'Yetkazish: 24 soat ichida'],
+        specs: ['Navi: Merlis F1', 'Yetishtirish: Issiqxona / Organik', 'Saqlash muddati: 10-14 kun (8-12°C)', 'Yetkazish: 24 soat ichida'],
         img: 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&w=600&q=80' 
       },
       { 
-        id: 'bodring', name: 'Bodring (Navroʻz navi, mayda)', cat: 'sabzavot', emoji: '🥒', price: 9000, unit: 'kg', 
+        id: 'bodring', name: 'Bodring (Navroʻz navi, mayda)', cat: 'sabzavot', emoji: '🥒', price: 14000, unit: 'kg', 
         farmer: 'Zilola Yusupova', region: 'Fargʻona viloyati', trend: -1, rating: 4.8, reviewsCount: 98,
         desc: 'Qisir-qisir, mayda tikanli, shirin va yangi uzilgan bodringlar. Salatlar va tuzlash uchun ideal tanlov.',
         specs: ['Navi: Navroʻz F1', 'Uzunligi: 9-12 sm', 'Terim vaqti: Bugun ertalab', 'Yetkazish: Sovutilgan furgonda'],
         img: 'https://images.unsplash.com/photo-1604977042946-1eecc30f269e?auto=format&fit=crop&w=600&q=80' 
       },
       { 
-        id: 'kartoshka', name: 'Kartoshka (Qizil, qumloq yer hosili)', cat: 'sabzavot', emoji: '🥔', price: 6500, unit: 'kg', 
+        id: 'kartoshka', name: 'Kartoshka (Qizil, qumloq yer hosili)', cat: 'sabzavot', emoji: '🥔', price: 5800, unit: 'kg', 
         farmer: 'Sherzod Ismoilov', region: 'Samarqand viloyati', trend: 1, rating: 4.7, reviewsCount: 230,
         desc: 'Samarqand togʻ etaklarida yetishtirilgan toʻyimli, toshsiz va qurt tushmagan saralangan kartoshka.',
         specs: ['Navi: Gala / Santa', 'Oʻlchami: 50-70 mm (Katta)', 'Kraxmalliligi: 16%', 'Foydalanish: Qovurish va pishirishga'],
         img: 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=600&q=80' 
       },
       { 
-        id: 'piyoz', name: 'Piyoz (Zarafshon sariq piyozi)', cat: 'sabzavot', emoji: '🧅', price: 5500, unit: 'kg', 
+        id: 'piyoz', name: 'Piyoz (Zarafshon sariq piyozi)', cat: 'sabzavot', emoji: '🧅', price: 3500, unit: 'kg', 
         farmer: 'Nodira Rahimova', region: 'Buxoro viloyati', trend: 0, rating: 4.9, reviewsCount: 115,
         desc: 'Uzoq muddat chirimay saqlanadigan, quruq poʻstloqli, achchiq-shirin Buxoro saralangan piyozi.',
         specs: ['Navi: Zarafshon sariq', 'Kalibri: 60-80 mm', 'Quruq moddasi: 14%', 'Qadoqlanishi: 25 kg toʻr qop'],
         img: 'https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?auto=format&fit=crop&w=600&q=80' 
       },
       { 
-        id: 'sabzi', name: 'Sabzi (Sariq va qizil mirzoyi)', cat: 'sabzavot', emoji: '🥕', price: 7000, unit: 'kg', 
+        id: 'sabzi', name: 'Sabzi (Sariq va qizil mirzoyi)', cat: 'sabzavot', emoji: '🥕', price: 4200, unit: 'kg', 
         farmer: 'Baxtiyor Ergashev', region: 'Andijon viloyati', trend: -1, rating: 4.8, reviewsCount: 88,
         desc: 'Osh va pishiriqlar uchun ajoyib, shirali, toza yuvilgan va saralangan Andijon sabzisi.',
         specs: ['Navi: Mirzoyi sariq / Mushak', 'Yuvilgan: Ha, toza saralangan', 'Yetkazish: Toʻr qoplarda', 'Shakar darajasi: Yuqori'],
         img: 'https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?auto=format&fit=crop&w=600&q=80' 
       },
       { 
-        id: 'karam', name: 'Karam (Yashil, qattiq boshli)', cat: 'sabzavot', emoji: '🥬', price: 4800, unit: 'kg', 
+        id: 'karam', name: 'Karam (Yashil, qattiq boshli)', cat: 'sabzavot', emoji: '🥬', price: 4200, unit: 'kg', 
         farmer: 'Malika Sattorova', region: 'Namangan viloyati', trend: 1, rating: 4.6, reviewsCount: 64,
         desc: 'Vitamini koʻp, barglari zich oʻralgan, barra va suvli oq-yashil karam.',
         specs: ['Ogʻirligi: 2-3.5 kg/dona', 'Navi: Slava / Kolobok', 'Saqlanishi: 30 kungacha', 'Salatlar va dimlashga mos'],
@@ -67,72 +67,72 @@
 
       // === MEVALAR ===
       { 
-        id: 'olma', name: 'Olma (Beshyulduz / Golden)', cat: 'meva', emoji: '🍎', price: 14000, unit: 'kg', 
+        id: 'olma', name: 'Olma (Beshyulduz / Golden)', cat: 'meva', emoji: '🍎', price: 16000, unit: 'kg', 
         farmer: 'Jasur Tursunov', region: 'Toshkent viloyati', trend: 1, rating: 5.0, reviewsCount: 312,
         desc: 'Boʻstonliq togʻ yonbagʻirlaridagi bogʻlardan terilgan qip-qizil, shirali va xushboʻy tabiiy olma.',
         specs: ['Navi: Red Delicious / Golden', 'Hosil: 2026 yangi terim', 'Kaliy va vitamin C ga boy', 'Quti: 10 kg standart yashik'],
         img: 'https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?auto=format&fit=crop&w=600&q=80' 
       },
       { 
-        id: 'uzum', name: 'Uzum (Qora kishmish & Husayni)', cat: 'meva', emoji: '🍇', price: 17000, unit: 'kg', 
+        id: 'uzum', name: 'Uzum (Qora kishmish & Husayni)', cat: 'meva', emoji: '🍇', price: 22000, unit: 'kg', 
         farmer: 'Dilnoza Nazarova', region: 'Samarqand viloyati', trend: -1, rating: 4.9, reviewsCount: 205,
         desc: 'Urugʻsiz mayin qora kishmish va uzunchoq Husayni (Kelinbarmoq) uzumlari. Shirinlik darajasi 24% brix.',
         specs: ['Navi: Qora kishmish / Husayni', 'Shirinlik: 24 BRIX', 'Dona kattaligi: Yirik', 'Qadoq: Maxsus meva yashigi'],
         img: 'https://images.unsplash.com/photo-1596363505729-4190a9506133?auto=format&fit=crop&w=600&q=80' 
       },
       { 
-        id: 'nok', name: 'Nok (Lesnaya krasavitsa)', cat: 'meva', emoji: '🍐', price: 15500, unit: 'kg', 
+        id: 'nok', name: 'Nok (Lesnaya krasavitsa)', cat: 'meva', emoji: '🍐', price: 18000, unit: 'kg', 
         farmer: 'Rustam Qodirov', region: 'Fargʻona viloyati', trend: 1, rating: 4.7, reviewsCount: 76,
         desc: 'Ogʻizda eriydigan, asaldek totli, yupqa poʻstloqli Fargʻona noki.',
         specs: ['Navi: Oʻrmon goʻzali', 'Hidi: Xushboʻy muskat', 'Qadoqlanishi: 8 kg yashik', '100% tabiiy oʻgʻitlangan'],
-        img: 'https://images.unsplash.com/photo-1615484477778-ca3b783256fd?auto=format&fit=crop&w=600&q=80' 
+        img: 'https://images.unsplash.com/photo-1514756331096-242fdeb70d4a?auto=format&fit=crop&w=600&q=80' 
       },
       { 
-        id: 'orik', name: 'Oʻrik (Yubiley & Qandak)', cat: 'meva', emoji: '🍑', price: 19000, unit: 'kg', 
+        id: 'orik', name: 'Oʻrik (Yubiley & Qandak)', cat: 'meva', emoji: '🍑', price: 22000, unit: 'kg', 
         farmer: 'Shahnoza Aliyeva', region: 'Andijon viloyati', trend: 0, rating: 4.8, reviewsCount: 110,
         desc: 'Quyosh taftida pishgan, qand miqdori yuqori, danagi oson ajraladigan Andijon oʻrigi.',
         specs: ['Navi: Qandak shirin', 'Terilgan vaqti: Yangi terim', 'Yumshoqligi: Oʻrtacha qattiq', 'Eksportbop saralangan'],
         img: 'https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?auto=format&fit=crop&w=600&q=80' 
       },
       { 
-        id: 'olcha', name: 'Olcha va Gilos (Qora gilos)', cat: 'meva', emoji: '🍒', price: 21000, unit: 'kg', 
+        id: 'olcha', name: 'Olcha va Gilos (Qora gilos)', cat: 'meva', emoji: '🍒', price: 28000, unit: 'kg', 
         farmer: 'Ulugʻbek Sodiqov', region: 'Namangan viloyati', trend: -1, rating: 4.9, reviewsCount: 154,
         desc: 'Namangan adirlaridan saralangan, qora qizil, yirik donali shirin gilos va nordon olcha.',
         specs: ['Kalibri: 28-32 mm', 'Rang: Toʻq qizil / Ruby', 'Saqlanishi: Maxsus sovutgichda', 'Bandlari bilan terilgan'],
         img: 'https://images.unsplash.com/photo-1528821128474-27f963b062bf?auto=format&fit=crop&w=600&q=80' 
       },
       { 
-        id: 'qovun', name: 'Qovun (Mirzachoʻl / Obi novvot)', cat: 'meva', emoji: '🍈', price: 13000, unit: 'kg', 
+        id: 'qovun', name: 'Qovun (Mirzachoʻl / Obi novvot)', cat: 'meva', emoji: '🍈', price: 15000, unit: 'kg', 
         farmer: 'Gulnora Xolmatova', region: 'Buxoro viloyati', trend: 1, rating: 5.0, reviewsCount: 180,
         desc: 'Mashhur Mirzachoʻl va Buxoro obi-novvoti. Asal isi keluvchi, tishi mayin qovun.',
         specs: ['Navi: Obi Novvot', 'Ogʻirligi: 4-7 kg', 'Shirinlik: Asal taʼmida', 'Ekilgan joy: Dasht unumdor yer'],
-        img: 'https://images.unsplash.com/photo-1571575173927-aa3f8f4eed76?auto=format&fit=crop&w=600&q=80' 
+        img: 'https://images.unsplash.com/photo-1598511726623-d2e9996892f0?auto=format&fit=crop&w=600&q=80' 
       },
 
       // === GOʻSHT ===
       { 
-        id: 'molgo', name: 'Mol goʻshti (Yumshoq lahm va suyakli)', cat: 'gosh', emoji: '🥩', price: 95000, unit: 'kg', 
+        id: 'molgo', name: 'Mol goʻshti (Yumshoq lahm va suyakli)', cat: 'gosh', emoji: '🥩', price: 98000, unit: 'kg', 
         farmer: 'Farhod Abdullayev', region: 'Samarqand viloyati', trend: 1, rating: 4.9, reviewsCount: 340,
         desc: 'Halol soʻyilgan, togʻ yaylovlarida boqilgan yosh buqa goʻshti. Toza, yogʻsiz lahm qismi.',
         specs: ['Sertifikat: 100% Halol & Vet nazorati', 'Yoshi: 1.5 yoshli buqa', 'Saqlanishi: 0-4°C haroratda', 'Yetkazish: Termoboksda'],
-        img: 'https://images.unsplash.com/photo-1603048588665-791ca8aea617?auto=format&fit=crop&w=600&q=80' 
+        img: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80' 
       },
       { 
-        id: 'qoygo', name: 'Qoʻy goʻshti (Hisori qoʻy qovurgʻa)', cat: 'gosh', emoji: '🍖', price: 110000, unit: 'kg', 
+        id: 'qoygo', name: 'Qoʻy goʻshti (Hisori qoʻy qovurgʻa)', cat: 'gosh', emoji: '🍖', price: 115000, unit: 'kg', 
         farmer: 'Kamola Toʻrayeva', region: 'Toshkent viloyati', trend: -1, rating: 5.0, reviewsCount: 220,
         desc: 'Oʻt-oʻlan bilan yaylovda boqilgan Hisor zotli barra qoʻzi goʻshti. Qovurgʻa va lahm qismlari.',
         specs: ['Zoti: Hisori barra', 'Soʻyish vaqti: Har kuni tongda', 'Sertifikat: Veterinariya maʼlumotnomasi 4-forma', 'Yetkazish: Sovutilgan holda'],
         img: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80' 
       },
       { 
-        id: 'tovuq', name: 'Tovuq goʻshti (Broyler uy tovuqlari)', cat: 'gosh', emoji: '🍗', price: 38000, unit: 'kg', 
+        id: 'tovuq', name: 'Tovuq goʻshti (Broyler uy tovuqlari)', cat: 'gosh', emoji: '🍗', price: 34000, unit: 'kg', 
         farmer: 'Aziz Mirzayev', region: 'Fargʻona viloyati', trend: 0, rating: 4.7, reviewsCount: 165,
         desc: 'Tabiiy donga boqilgan, gormonlarsiz yetishtirilgan parranda goʻshti. Butun va boʻlingan tovuq.',
         specs: ['Boqilishi: Tabiiy gʻalla va koʻkat', 'Ogʻirligi: 1.4 - 2.0 kg', 'Halol kafolat: Mavjud', 'Muzlatilmagan (Barra)'],
         img: 'https://images.unsplash.com/photo-1587593810167-a84920ea0781?auto=format&fit=crop&w=600&q=80' 
       },
       { 
-        id: 'echkigo', name: 'Echki goʻshti (Parhezbop yosh echki)', cat: 'gosh', emoji: '🐐', price: 102000, unit: 'kg', 
+        id: 'echkigo', name: 'Echki goʻshti (Parhezbop yosh echki)', cat: 'gosh', emoji: '🐐', price: 105000, unit: 'kg', 
         farmer: 'Sobir Jalilov', region: 'Buxoro viloyati', trend: 1, rating: 4.8, reviewsCount: 52,
         desc: 'Xolesterini kam, oshqozon-ichak uchun juda foydali boʻlgan parhezbop togʻ echkisi goʻshti.',
         specs: ['Turi: Yosh togʻ echkisi', 'Xolesterin: Minimal', 'Shifobaxsh: Parhezbop', 'Veterinariya nazoratidan oʻtgan'],
@@ -159,7 +159,7 @@
         farmer: 'Lola Usmonova', region: 'Namangan viloyati', trend: -1, rating: 4.8, reviewsCount: 142,
         desc: 'Qalampir va shakarsiz, toza sutdan ivitib olingan mayin va toʻyimli uy tvorogi.',
         specs: ['Yogʻlilik: 9%', 'Oqsillar: 18g / 100g', 'Hech qanday konservantsiz', 'Qadoq: 1 kg vakuum idish'],
-        img: 'https://images.unsplash.com/photo-1567117632960-5942cb071537?auto=format&fit=crop&w=600&q=80' 
+        img: 'https://images.unsplash.com/photo-1486297678162-eb2a19b0a32d?auto=format&fit=crop&w=600&q=80' 
       },
       { 
         id: 'pishloq', name: 'Pishloq (Gollandcha va Suluguni)', cat: 'sut', emoji: '🧈', price: 58000, unit: 'kg', 
@@ -182,7 +182,7 @@
         farmer: 'Paxtachilik Elita Xoʻjaligi', region: 'Buxoro viloyati', trend: 0, rating: 4.8, reviewsCount: 175,
         desc: 'Vilt kasalligiga bardoshli, tolasi uzun va pishiq boʻlgan elita seleksiya paxta chigit urugʻi.',
         specs: ['Navi: Buxoro-102 / S-6524', 'Tolaning chiqishi: 39-40%', 'Dorilangan: Fungitsid bilan himoyalangan', 'Qadoq: 25 kg qop'],
-        img: 'https://images.unsplash.com/photo-1594904351111-a072f80b1a71?auto=format&fit=crop&w=600&q=80' 
+        img: 'https://images.unsplash.com/photo-1606041008023-472dfb5e530f?auto=format&fit=crop&w=600&q=80' 
       },
       { 
         id: 'urug_makka', name: 'Makkajoʻxori urugʻi (Gibrid donli Pioneer)', cat: 'urug', emoji: '🌽', price: 6200, unit: 'kg', 
@@ -219,14 +219,14 @@
         farmer: 'Navoiy Kimyo Zavodi', region: 'Navoiy viloyati', trend: 0, rating: 4.8, reviewsCount: 290,
         desc: 'Ildiz tizimini mustahkamlaydigan, gullash va hosil tugishni jadallashtiradigan murakkab ammofos oʻgʻiti.',
         specs: ['Fosfor (P2O5): 46%', 'Azot (N): 11%', 'Ildiz oziqlantirish: Ekish oldidan', 'Qadoq: 25 kg namlikdan himoyalangan qop'],
-        img: 'https://images.unsplash.com/photo-1585314062340-f1a5a7c9328d?auto=format&fit=crop&w=600&q=80' 
+        img: 'https://images.unsplash.com/photo-1628352081506-83c43123ed6d?auto=format&fit=crop&w=600&q=80' 
       },
       { 
         id: 'ogit_kaliy', name: 'Kaliyli oʻgʻit (Kaliy sulfat K-50%)', cat: 'mineral_ogit', emoji: '🧂', price: 65000, unit: 'qop (25 kg)', 
         farmer: 'OʻzKimyo AgroTaʼminot', region: 'Toshkent viloyati', trend: -1, rating: 4.7, reviewsCount: 140,
         desc: 'Meva va sabzavotlarning shirinligini oshiruvchi, sovuq va qurgʻoqchilikka chidamliligini taʼminlovchi xlorsiz kaliy.',
         specs: ['Kaliy (K2O): 50%', 'Xlorsiz: Tomchilatib sugʻorishga mos', 'Oʻsimlik immunitetini oshiradi', 'Qadoq: 25 kg'],
-        img: 'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=600&q=80' 
+        img: 'https://images.unsplash.com/photo-1574943320219-553eb213f72d?auto=format&fit=crop&w=600&q=80' 
       },
 
       // === ORGANIK OʻGʻITLAR ===
@@ -238,18 +238,18 @@
         img: 'https://images.unsplash.com/photo-1500595046743-cd271d694d30?auto=format&fit=crop&w=600&q=80' 
       },
       { 
-        id: 'ogit_kompost', name: 'Biokompost (Tabiiy oʻsimlik oʻgʻiti)', cat: 'organik_ogit', emoji: '🍂', price: 18000, unit: 'qop (30 kg)', 
+        id: 'ogit_kompost', name: 'Biokompost (Tabiiy oʻsimlik oʻgʻiti)', cat: 'organik_ogit', emoji: '🍂', price: 1800, unit: 'kg', 
         farmer: 'Ekologik Kompost Markazi', region: 'Samarqand viloyati', trend: 1, rating: 4.9, reviewsCount: 160,
         desc: 'Oʻsimlik qoldiqlari va biomassa fermentatsiyasidan olingan toza, yumshoq organik oziqa.',
         specs: ['Organika: 65% dan ortiq', 'Namlik: 35-40%', 'Tuproq qatlami uchun mikrobiologik oziqa', 'Qadoq: 30 kg havo oʻtkazuvchi qop'],
-        img: 'https://images.unsplash.com/photo-1592417817098-8f3d69103a46?auto=format&fit=crop&w=600&q=80' 
+        img: 'https://images.unsplash.com/photo-1500595046743-cd271d694d30?auto=format&fit=crop&w=600&q=80' 
       },
       { 
-        id: 'ogit_chirindi', name: 'Chirindi (Kaliforniya chuvalchang Biogumusi)', cat: 'organik_ogit', emoji: '🪱', price: 2500, unit: 'kg', 
+        id: 'ogit_chirindi', name: 'Chirindi (Kaliforniya chuvalchang Biogumusi)', cat: 'organik_ogit', emoji: '🪱', price: 2400, unit: 'kg', 
         farmer: 'OʻzBiogumus Klasteri', region: 'Andijon viloyati', trend: 1, rating: 5.0, reviewsCount: 420,
         desc: 'Qizil Kaliforniya chuvalchanglari tomonidan qayta ishlangan 100% sof va elangan konsentrlangan biogumus.',
         specs: ['Namlik: 40-45%', 'Gumik kislotalar: 15-20%', 'Tozaligi: 2 mm elakdan oʻtgan', 'Gul va koʻchatlar uchun birinchi raqamli oʻgʻit'],
-        img: 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=600&q=80' 
+        img: 'https://images.unsplash.com/photo-1628352081506-83c43123ed6d?auto=format&fit=crop&w=600&q=80' 
       },
 
       // === HIMOYA VOSITALARI ===
@@ -258,14 +258,14 @@
         farmer: 'Agro Dorixona Markazi', region: 'Toshkent viloyati', trend: 1, rating: 4.9, reviewsCount: 280,
         desc: 'Shiralar, trips, oqqanot va barcha turdagi zararkunandalarga qarshi uzoq muddatli tizimli taʼsirga ega preparat.',
         specs: ['Taʼsir etuvchi modda: Tiametoksam 250 g/kg', 'Himoya davri: 21-28 kun', 'Qoʻllash meʼyori: 10 litr suvga 2-4 gr', 'Original Shveytsariya litsenziyasi'],
-        img: 'https://images.unsplash.com/photo-1563636619-e9143da7973b?auto=format&fit=crop&w=600&q=80' 
+        img: 'https://images.unsplash.com/photo-1589923188900-85dae523342b?auto=format&fit=crop&w=600&q=80' 
       },
       { 
         id: 'himoya_fungitsid', name: 'Fungitsid ("Ridomil Gold" kasalliklarga qarshi)', cat: 'himoya', emoji: '💊', price: 78000, unit: 'dona', 
         farmer: 'Agro Kimyo Taʼminot', region: 'Fargʻona viloyati', trend: 0, rating: 4.8, reviewsCount: 195,
         desc: 'Fitoftora, un shudring, chirish va zamburugʻli kasalliklarni ildizidan yoʻqotuvchi yuqori samarali fungitsid.',
         specs: ['Tarkibi: Mefenoksam + Mankotseb', 'Davolash va profilaktika', 'Yomgʻirga chidamlilik: 2 soatdan soʻng', 'Qadoq: 250 g va 1 kg'],
-        img: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80' 
+        img: 'https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?auto=format&fit=crop&w=600&q=80' 
       },
       { 
         id: 'himoya_gerbitsid', name: 'Gerbitsid ("Gezagard" begona oʻtlarga)', cat: 'himoya', emoji: '🌿', price: 85000, unit: 'litr', 
@@ -281,21 +281,21 @@
         farmer: 'Oʻzbekneftgaz Taʼminot', region: 'Respublika boʻylab', trend: 1, rating: 4.9, reviewsCount: 650,
         desc: 'Traktor va kombaynlar uchun tozalangan, motor forsunkalarini toza saqlovchi sertifikatlangan Yevro-5 dizel yoqilgʻisi.',
         specs: ['Standart: GOST Yevro-5', 'Setan soni: 51 dan yuqori', 'Yetkazish: Yoqilgʻi tashuvchi mashinada (min 1000 litr)', 'Sertifikat: Oʻzstandart'],
-        img: 'https://images.unsplash.com/photo-1611022513823-55f38013c048?auto=format&fit=crop&w=600&q=80' 
+        img: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=600&q=80' 
       },
       { 
         id: 'yoqilgi_benzin', name: 'Benzin (Ai-92 Agro agregatlar uchun)', cat: 'yoqilgi', emoji: '🛢️', price: 10500, unit: 'litr', 
         farmer: 'Agro Yoqilgʻi Baza', region: 'Respublika boʻylab', trend: 0, rating: 4.8, reviewsCount: 210,
         desc: 'Motobloklar, suv nasoslari va yengil qishloq xoʻjalik agregatlari uchun toza Ai-92 benzini.',
         specs: ['Oktan soni: 92.5', 'Oqim darajasi: Yengil oʻt oldirish', 'Yetkazish: Bochkada yoki fura bilan', 'Sifat kafolati: Toʻliq'],
-        img: 'https://images.unsplash.com/photo-1543699539-6d3fc3cdd27f?auto=format&fit=crop&w=600&q=80' 
+        img: 'https://images.unsplash.com/photo-1616401784845-180882ba9ba8?auto=format&fit=crop&w=600&q=80' 
       },
       { 
         id: 'yoqilgi_moy', name: 'Motor va gidravlik moylar (15W-40 & M10G2k)', cat: 'yoqilgi', emoji: '🛢️', price: 32000, unit: 'litr', 
         farmer: 'Texnika Moy Servis', region: 'Toshkent viloyati', trend: 1, rating: 4.8, reviewsCount: 180,
         desc: 'Ogʻir yuk ostida ishlaydigan traktor dvigatellari va gidravlika tizimlari uchun mineral va yarim sintetik moylar.',
         specs: ['Yopishqoqlik: SAE 15W-40 / ISO 46', 'Issiqlikka chidamli: +50°C gacha', 'Ish vaqti: 250-300 moto-soat', 'Qadoq: 20L kanistra va 200L bochka'],
-        img: 'https://images.unsplash.com/photo-1486006920555-c77dce18193b?auto=format&fit=crop&w=600&q=80' 
+        img: 'https://images.unsplash.com/photo-1616401784845-180882ba9ba8?auto=format&fit=crop&w=600&q=80' 
       },
 
       // === SUGʻORISH VOSITALARI ===
@@ -311,14 +311,14 @@
         farmer: 'Quvur Plast Zavod', region: 'Samarqand viloyati', trend: 0, rating: 4.7, reviewsCount: 95,
         desc: 'Quyosh nurlari va sovuqqa bardoshli, 10 atmosferagacha bosimga moʻljallangan qora suv quvurlari.',
         specs: ['Material: 100% birlamchi polietilen PE-100', 'Bosim: PN 6 - PN 10 bar', 'Xizmat muddati: 50 yil', 'Buxanka (rulon): 100 - 200 metr'],
-        img: 'https://images.unsplash.com/photo-1541888946425-d0fbb186c5f7?auto=format&fit=crop&w=600&q=80' 
+        img: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=600&q=80' 
       },
       { 
         id: 'sugorish_nasos', name: 'Suv nasoslari va qum-shagʻal filtrlari', cat: 'sugorish', emoji: '⚙️', price: 3500000, unit: 'dona', 
         farmer: 'AgroNasos Servis', region: 'Fargʻona viloyati', trend: 1, rating: 4.9, reviewsCount: 118,
         desc: 'Ariq va quduqdan suv chiqaruvchi kuchli elektr va dizel dvigatelli agrosanoat nasoslari va avtomatik filtrlari.',
         specs: ['Quvvati: 5.5 - 11 kW (Elektr) / 15 HP (Dizel)', 'Unumdorligi: 50-80 m³/soat', 'Bosim balandligi: 35 metr', 'Filtr: Diskli va toʻrli er-xotin tozalash'],
-        img: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80' 
+        img: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=600&q=80' 
       },
 
       // === AGROTEXNIKA ===
@@ -327,7 +327,7 @@
         farmer: 'Toshkent Traktor Zavodi Agromash', region: 'Toshkent viloyati', trend: 0, rating: 5.0, reviewsCount: 88,
         desc: 'Oʻzbekiston dalalari uchun eng ishonchli va universal toʻliq yetaklovchi (4x4) koʻp funksiyali Belarus traktori.',
         specs: ['Dvigatel quvvati: 81 ot kuchi (D-243)', 'Privod: 4x4 Toʻliq yetakchi', 'Kafolat: 2 yil yoki 2000 moto-soat', 'Lizing va kredit shartlari mavjud'],
-        img: 'https://images.unsplash.com/photo-1592878904946-b3cd8ae243d0?auto=format&fit=crop&w=600&q=80' 
+        img: 'https://images.unsplash.com/photo-1530267981375-f0de937f5f13?auto=format&fit=crop&w=600&q=80' 
       },
       { 
         id: 'texnika_kombayn', name: 'Gʻalla oʻrish kombayni (Claas Tucano 450)', cat: 'texnika_savdo', emoji: '🌾', price: 650000000, unit: 'dona', 
@@ -349,22 +349,6 @@
         desc: 'Begona oʻtlarni ildizi bilan qirqib, yerni yumshatib ketuvchi universal kultivator-chizel osma agregati.',
         specs: ['Ishlov berish kengligi: 3.2 metr', 'Ish chuqurligi: 12-25 sm', 'Pichoqlari: Mustahkamlangan legirlangan poʻlat', 'Traktor quvvati: 60-90 ot kuchi'],
         img: 'https://images.unsplash.com/photo-1589923188900-85dae523342b?auto=format&fit=crop&w=600&q=80' 
-      },
-
-      // === PARVARISHLASH VOSITALARI ===
-      { 
-        id: 'parvarish_stimulyator', name: 'Oʻsishni boshqaruvchi biostimulyator (Megafol)', cat: 'parvarish', emoji: '🌱', price: 55000, unit: 'litr', 
-        farmer: 'BioAgro Texnologiyalar Instituti', region: 'Toshkent viloyati', trend: 1, rating: 4.9, reviewsCount: 165,
-        desc: 'Oʻsimlikni sovuq, issiq va qurgʻoqchilik stresslaridan chiqaruvchi tabiiy aminokislotalar majmuasi.',
-        specs: ['Aminokislotalar: 28%', 'Oʻsish energiyasi: 2 barobar tezlashtiradi', 'Bargdan oziqlantirish uchun', 'Barcha ekinlarga toʻgʻri keladi'],
-        img: 'https://images.unsplash.com/photo-1530595467537-0b5996c41f2d?auto=format&fit=crop&w=600&q=80' 
-      },
-      { 
-        id: 'parvarish_mikro', name: 'Kompleks mikroelementlar (Bor, Sink, Xelat Temir)', cat: 'parvarish', emoji: '🧪', price: 48000, unit: 'paket (1 kg)', 
-        farmer: 'Agro Element Laboratoriyasi', region: 'Samarqand viloyati', trend: 1, rating: 4.9, reviewsCount: 140,
-        desc: 'Gul toʻkilishining oldini oluvchi, mevalarning toʻliq shakllanishini taʼminlovchi xelatlangan mikroelementlar.',
-        specs: ['Shakli: 100% suvda eruvchan xelat (EDTA)', 'Tarkibi: B, Zn, Fe, Mn, Cu, Mo', 'Hosildorlik qoʻshilishi: +20-25%', 'Qadoq: 1 kg folgali paket'],
-        img: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=600&q=80' 
       }
     ],
     cats: [
@@ -379,8 +363,7 @@
       ['himoya', 'Himoya vositalari'],
       ['yoqilgi', 'Yoqilgʻi mahsulotlari'],
       ['sugorish', 'Sugʻorish vositalari'],
-      ['texnika_savdo', 'Agrotexnika'],
-      ['parvarish', 'Parvarishlash vositalari']
+      ['texnika_savdo', 'Agrotexnika']
     ],
     catLabel: {
       sabzavot: 'Sabzavot',
@@ -393,8 +376,7 @@
       himoya: 'Himoya vositalari',
       yoqilgi: 'Yoqilgʻi mahsulotlari',
       sugorish: 'Sugʻorish vositalari',
-      texnika_savdo: 'Agrotexnika',
-      parvarish: 'Parvarishlash vositalari'
+      texnika_savdo: 'Agrotexnika'
     },
     trendIcon: { 1: '▲', '-1': '▼', 0: '■' },
     trendClass: { 1: 'trend-up', '-1': 'trend-down', 0: '' },

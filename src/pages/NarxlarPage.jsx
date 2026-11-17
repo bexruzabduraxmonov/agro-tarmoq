@@ -168,8 +168,7 @@ export default function NarxlarPage({ onShowToast }) {
     himoya: 'Oʻsimliklarni himoya qilish',
     yoqilgi: 'Yoqilgʻi mahsulotlari',
     sugorish: 'Sugʻorish vositalari',
-    texnika_savdo: 'Agrotexnika vositalari',
-    parvarish: 'Parvarishlash vositalari'
+    texnika_savdo: 'Agrotexnika vositalari'
   };
 
   // Preset quick products

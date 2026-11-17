@@ -47,7 +47,15 @@ export default function DokonPage({ onShowToast }) {
             {filteredShop.map((item, idx) => (
               <article key={idx} className="ag-card">
                 <div className="card-media">
-                  <img src={item.img} alt={item.name} loading="lazy" />
+                  <img 
+                    src={item.img} 
+                    alt={item.name} 
+                    loading="lazy" 
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = 'https://images.unsplash.com/photo-1592841200221-a6898f307baa?auto=format&fit=crop&w=500&q=80';
+                    }}
+                  />
                 </div>
 
                 <div className="row">

@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",
+    "cheerio": "^1.2.0",
+    "node-fetch": "^2.7.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
   },
@@ -24,5 +26,18 @@
     "postcss": "^8.5.30",
     "tailwindcss": "^4.3.3",
     "vite": "^8.3.0"
-  }
+  },
+  "description": "Ushbu loyiha **React 19 + Vite + Tailwind CSS v4** texnologiyalari asosida yaratilgan zamonaviy, to'liq responsiv (mobil va kompyuterga moslashuvchan) qishloq xo'jaligi va agro-biznes veb-platformasidir.",
+  "main": "vite.config.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bexruzabduraxmonov/agro-tarmoq.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bexruzabduraxmonov/agro-tarmoq/issues"
+  },
+  "homepage": "https://github.com/bexruzabduraxmonov/agro-tarmoq#readme"
 }
