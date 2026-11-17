@@ -16,6 +16,7 @@ import {
   Calendar
 } from 'lucide-react';
 import { AGRO_DATA } from '../data/agroData';
+import ProductDetailModal from './ProductDetailModal';
 import { useLanguage } from '../context/LanguageContext';
 import { fmt, getProductMarketPrice, getTodayFormatted } from '../utils/helpers';
 
@@ -329,7 +330,7 @@ function AgroQuickNavCards({ onNavigate }) {
 }
 
 // ─── Uzum-style Agro Product Card ───────────────────────────────────────────
-function AgroProductCard({ product, onAddToCart, onShowToast }) {
+function AgroProductCard({ product, onAddToCart, onShowToast, onProductClick }) {
   const [isFavorite, setIsFavorite] = useState(false);
   const [added, setAdded] = useState(false);
 
@@ -357,7 +358,10 @@ function AgroProductCard({ product, onAddToCart, onShowToast }) {
   };
 
   return (
-    <div className="group bg-white rounded-2xl overflow-hidden border border-gray-100 hover:border-emerald-300 hover:shadow-xl transition-all duration-300 flex flex-col justify-between relative cursor-pointer">
+    <div
+      className="group bg-white rounded-2xl overflow-hidden border border-gray-100 hover:border-emerald-300 hover:shadow-xl transition-all duration-300 flex flex-col justify-between relative cursor-pointer"
+      onClick={() => onProductClick && onProductClick(product)}
+    >
       {/* Product Image Area */}
       <div className="relative w-full aspect-[4/4.5] overflow-hidden bg-[#f4f7f5] flex items-center justify-center">
         <img
@@ -491,6 +495,7 @@ function AgroProductCard({ product, onAddToCart, onShowToast }) {
 export default function UzumMarketHome({ onNavigate, onAddToCart, onShowToast }) {
   const { t } = useLanguage();
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedModal, setSelectedModal] = useState(null);
 
   // 100% Genuine, verified Agricultural Products with accurate images & 1 kg prices
   const agroProducts = [
@@ -1071,9 +1076,33 @@ export default function UzumMarketHome({ onNavigate, onAddToCart, onShowToast })
               product={prod}
               onAddToCart={onAddToCart}
               onShowToast={onShowToast}
+              onProductClick={(p) => setSelectedModal(p)}
             />
           ))}
         </div>
+
+        {/* Product Detail Modal */}
+        {selectedModal && (
+          <ProductDetailModal
+            product={{
+              ...selectedModal,
+              name: selectedModal.name || selectedModal.title,
+              img: selectedModal.img || selectedModal.image,
+              cat: selectedModal.cat || selectedModal.category,
+              desc: selectedModal.desc || '',
+              specs: selectedModal.specs || [],
+              farmer: selectedModal.farmer || selectedModal.region || '',
+              region: selectedModal.region || '',
+              emoji: selectedModal.emoji || '🌱',
+              trend: selectedModal.trend || 0,
+            }}
+            onClose={() => setSelectedModal(null)}
+            onAddToCart={(item) => {
+              if (onAddToCart) onAddToCart(item);
+              setSelectedModal(null);
+            }}
+          />
+        )}
 
         {/* ── Agro Tarmoq: Bugungi bozor narxlari (Daily Ticker) ── */}
         <div className="bg-white rounded-2xl p-4 sm:p-6 border border-gray-100 shadow-sm mb-8">
