@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import './site123.css';
 import { LanguageProvider } from './context/LanguageContext';
 import { ThemeProvider } from './context/ThemeContext';
@@ -7,21 +7,54 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import CartOverlay from './components/CartOverlay';
 import HomePage from './pages/HomePage';
-import BozorPage from './pages/BozorPage';
-import NarxlarPage from './pages/NarxlarPage';
-import ObHavoPage from './pages/ObHavoPage';
-import TexnikaPage from './pages/TexnikaPage';
-import AgronomPage from './pages/AgronomPage';
-import DokonPage from './pages/DokonPage';
-import XojalikPage from './pages/XojalikPage';
-import IshlarPage from './pages/IshlarPage';
-import YangiliklarPage from './pages/YangiliklarPage';
-import ChorvachilikPage from './pages/ChorvachilikPage';
-import AuthPage from './pages/AuthPage';
-import SearchPage from './pages/SearchPage';
 import PwaInstallBanner from './components/PwaInstallBanner';
 import BottomNav from './components/BottomNav';
 import AiAgronomBot from './components/AiAgronomBot';
+
+// Sahifalarni lazy import qilish orqali ilk sahifa tez ochilishini ta'minlash
+const BozorPage = lazy(() => import('./pages/BozorPage'));
+const NarxlarPage = lazy(() => import('./pages/NarxlarPage'));
+const ObHavoPage = lazy(() => import('./pages/ObHavoPage'));
+const TexnikaPage = lazy(() => import('./pages/TexnikaPage'));
+const AgronomPage = lazy(() => import('./pages/AgronomPage'));
+const DokonPage = lazy(() => import('./pages/DokonPage'));
+const XojalikPage = lazy(() => import('./pages/XojalikPage'));
+const IshlarPage = lazy(() => import('./pages/IshlarPage'));
+const YangiliklarPage = lazy(() => import('./pages/YangiliklarPage'));
+const ChorvachilikPage = lazy(() => import('./pages/ChorvachilikPage'));
+const AuthPage = lazy(() => import('./pages/AuthPage'));
+const SearchPage = lazy(() => import('./pages/SearchPage'));
+
+function PageLoader() {
+  return (
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      minHeight: '50vh',
+      gap: '12px',
+      color: '#059669',
+      fontSize: '15px',
+      fontWeight: '600'
+    }}>
+      <div style={{
+        width: '40px',
+        height: '40px',
+        border: '3px solid rgba(5, 150, 105, 0.2)',
+        borderTopColor: '#059669',
+        borderRadius: '50%',
+        animation: 'spin 0.7s linear infinite'
+      }} />
+      <span>Yuklanmoqda...</span>
+      <style>{`
+        @keyframes spin {
+          to { transform: rotate(360deg); }
+        }
+      `}</style>
+    </div>
+  );
+}
 
 export default function App() {
   const getInitialPage = () => {
@@ -131,67 +164,69 @@ export default function App() {
           onShowToast={showToast}
         />
 
-      {/* Pages Switcher */}
-      {currentPage === 'home' && (
-        <HomePage onNavigate={handleNavigate} onAddToCart={handleAddToCart} onShowToast={showToast} />
-      )}
+      {/* Pages Switcher with Suspense */}
+      <Suspense fallback={<PageLoader />}>
+        {currentPage === 'home' && (
+          <HomePage onNavigate={handleNavigate} onAddToCart={handleAddToCart} onShowToast={showToast} />
+        )}
 
-      {currentPage === 'bozor' && (
-        <BozorPage onAddToCart={handleAddToCart} />
-      )}
+        {currentPage === 'bozor' && (
+          <BozorPage onAddToCart={handleAddToCart} />
+        )}
 
-      {currentPage === 'narxlar' && (
-        <NarxlarPage onShowToast={showToast} />
-      )}
+        {currentPage === 'narxlar' && (
+          <NarxlarPage onShowToast={showToast} />
+        )}
 
-      {currentPage === 'obhavo' && (
-        <ObHavoPage onShowToast={showToast} />
-      )}
+        {currentPage === 'obhavo' && (
+          <ObHavoPage onShowToast={showToast} />
+        )}
 
-      {currentPage === 'texnika' && (
-        <TexnikaPage onShowToast={showToast} />
-      )}
+        {currentPage === 'texnika' && (
+          <TexnikaPage onShowToast={showToast} />
+        )}
 
-      {currentPage === 'agronom' && (
-        <AgronomPage onNavigate={handleNavigate} onShowToast={showToast} />
-      )}
+        {currentPage === 'agronom' && (
+          <AgronomPage onNavigate={handleNavigate} onShowToast={showToast} />
+        )}
 
-      {currentPage === 'dokon' && (
-        <DokonPage onShowToast={showToast} />
-      )}
+        {currentPage === 'dokon' && (
+          <DokonPage onShowToast={showToast} />
+        )}
 
-      {currentPage === 'xojalik' && (
-        <XojalikPage onShowToast={showToast} />
-      )}
+        {currentPage === 'xojalik' && (
+          <XojalikPage onShowToast={showToast} />
+        )}
 
-      {currentPage === 'ishlar' && (
-        <IshlarPage onShowToast={showToast} />
-      )}
+        {currentPage === 'ishlar' && (
+          <IshlarPage onShowToast={showToast} />
+        )}
 
-      {currentPage === 'yangiliklar' && (
-        <YangiliklarPage />
-      )}
+        {currentPage === 'yangiliklar' && (
+          <YangiliklarPage />
+        )}
 
-      {currentPage === 'chorvachilik' && (
-        <ChorvachilikPage onShowToast={showToast} />
-      )}
+        {currentPage === 'chorvachilik' && (
+          <ChorvachilikPage onShowToast={showToast} />
+        )}
 
-      {currentPage === 'royxatdan-otish' && (
-        <AuthPage 
-          onShowToast={showToast} 
-          onNavigate={handleNavigate}
-          onLoginSuccess={() => handleNavigate('royxatdan-otish')} 
-        />
-      )}
+        {currentPage === 'royxatdan-otish' && (
+          <AuthPage 
+            onShowToast={showToast} 
+            onNavigate={handleNavigate}
+            onLoginSuccess={() => handleNavigate('royxatdan-otish')} 
+          />
+        )}
 
-      {currentPage === 'search' && (
-        <SearchPage 
-          query={searchQuery}
-          setQuery={setSearchQuery}
-          onAddToCart={handleAddToCart} 
-          onNavigate={handleNavigate} 
-        />
-      )}
+        {currentPage === 'search' && (
+          <SearchPage 
+            query={searchQuery}
+            setQuery={setSearchQuery}
+            onAddToCart={handleAddToCart} 
+            onNavigate={handleNavigate} 
+          />
+        )}
+      </Suspense>
 
       {/* Footer */}
       <Footer onNavigate={handleNavigate} />
