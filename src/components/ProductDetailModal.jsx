@@ -18,7 +18,7 @@ export default function ProductDetailModal({ product, onClose, onAddToCart }) {
   };
 
   const trend = trendMap[String(product.trend)];
-  const catLabel = AGRO_DATA.catLabel[product.cat] || product.cat;
+  const catLabel = (AGRO_DATA.catLabel && product.cat && AGRO_DATA.catLabel[product.cat]) || product.cat || 'Mahsulot';
   const rating = product.rating || 4.9;
   const reviewsCount = product.reviewsCount || 128;
   const totalPrice = product.price * qty;
@@ -198,10 +198,47 @@ export default function ProductDetailModal({ product, onClose, onAddToCart }) {
           {/* Description */}
           {product.desc && (
             <div className="uzum-desc-section">
-              <h3 className="uzum-subheading">{t('modal_about_product')}</h3>
+              <h3 className="uzum-subheading">{t('modal_about_product') || "Mahsulot haqida"}</h3>
               <p className="uzum-desc-text">{product.desc}</p>
             </div>
           )}
+
+          {/* Foydalanish va Agrotexnik Qo'llanma (Instruction / Manual) */}
+          <div className="uzum-desc-section" style={{ background: '#f0fdf4', padding: '16px', borderRadius: '16px', border: '1px solid #bbf7d0', marginTop: '16px' }}>
+            <h3 className="uzum-subheading" style={{ color: '#166534', display: 'flex', itemsCenter: 'center', gap: '8px', marginBottom: '10px' }}>
+              <span>📋 Qo'llanma va Saqlash / Foydalanish qoidalari</span>
+            </h3>
+            <div style={{ fontSize: '0.88rem', color: '#14532d', lineHeight: '1.6' }}>
+              {product.cat === 'uruglar' || product.cat === 'urug' ? (
+                <div>
+                  <p style={{ margin: '0 0 6px' }}><strong>🌱 Ekish chuqurligi:</strong> 1.5 - 2.5 sm chuqurlikda nam tuproqqa ekiladi.</p>
+                  <p style={{ margin: '0 0 6px' }}><strong>🌡 Harorat:</strong> Tuproq harorati +14°C dan yuqori bo'lganda tez unib chiqadi.</p>
+                  <p style={{ margin: '0 0 6px' }}><strong>💧 Sug'orish:</strong> Unib chiqqunga qadar tuproq yuzasi qurib qolmasligi zarur.</p>
+                  <p style={{ margin: 0 }}><strong>📦 Saqlash:</strong> Quruq, qorong'u va salqin (10-15°C) xonada saqlansin.</p>
+                </div>
+              ) : product.cat === 'ogitlar' || product.cat === 'mineral_ogit' || product.cat === 'organik_ogit' || product.cat === 'himoya' ? (
+                <div>
+                  <p style={{ margin: '0 0 6px' }}><strong>🧪 Qo'llash me'yori:</strong> 10 litr suvga 25-30 gr aralashtirib tomir yoki barg orqali sepiladi.</p>
+                  <p style={{ margin: '0 0 6px' }}><strong>⏰ Qulay vaqt:</strong> Quyosh botgandan so'ng yoki erta tongda sepish tavsiya etiladi.</p>
+                  <p style={{ margin: '0 0 6px' }}><strong>🛡 Xavfsizlik:</strong> Rezina qo'lqop va respirator niqobdan foydalaning.</p>
+                  <p style={{ margin: 0 }}><strong>📦 Saqlash:</strong> Bolalar yetmaydigan, quruq va yopiq idishda saqlansin.</p>
+                </div>
+              ) : product.cat === 'texnika' ? (
+                <div>
+                  <p style={{ margin: '0 0 6px' }}><strong>⚙️ Ishga tushirish:</strong> Moy va sovutish suyuqligi sathi har smena oldidan tekshiriladi.</p>
+                  <p style={{ margin: '0 0 6px' }}><strong>⛽ Yoqilg'i:</strong> Tozalangan dizel yoki standart moylash moylaridan foydalaning.</p>
+                  <p style={{ margin: 0 }}><strong>🛠 Texnik xizmat:</strong> Har 50 moto-soatda havo filtri va shlanglar ko'rikdan o'tkaziladi.</p>
+                </div>
+              ) : (
+                <div>
+                  <p style={{ margin: '0 0 6px' }}><strong>❄️ Saqlash sharoiti:</strong> +4°C dan +10°C gacha salqin, qorong'u va shamollatiladigan joyda saqlang.</p>
+                  <p style={{ margin: '0 0 6px' }}><strong>⏳ Yangilik muddati:</strong> Terilgandan so'ng 10-14 kun davomida tabiiy xususiyatini to'liq saqlaydi.</p>
+                  <p style={{ margin: '0 0 6px' }}><strong>🥗 Tavsiya:</strong> Iste'mol qilishdan oldin oqar toza suvda yuvib oling.</p>
+                  <p style={{ margin: 0 }}><strong>🚚 Tashish:</strong> Mahsulot ezilmasligi uchun qattiq yashik yoki to'r qoplarda tashiladi.</p>
+                </div>
+              )}
+            </div>
+          </div>
 
           {/* Specifications Table */}
           {product.specs && product.specs.length > 0 && (

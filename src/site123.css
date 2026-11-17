@@ -1280,12 +1280,13 @@ ul {
   position: fixed;
   inset: 0;
   z-index: 999;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.65);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: center;
+  padding: 16px;
   animation: fadeInBackdrop 0.22s ease;
 }
 @keyframes fadeInBackdrop {
@@ -1295,15 +1296,15 @@ ul {
 
 .uzum-modal {
   background: var(--surface-color);
-  border-radius: 28px 28px 0 0;
+  border-radius: 24px;
   width: 100%;
-  max-width: 620px;
-  max-height: 94vh;
+  max-width: 680px;
+  max-height: 90vh;
   overflow-y: auto;
   position: relative;
   animation: slideUp 0.32s cubic-bezier(0.16, 1, 0.3, 1);
-  scrollbar-width: none;
-  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.3);
+  scrollbar-width: thin;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
 }
 .uzum-modal::-webkit-scrollbar { display: none; }
 @keyframes slideUp {
@@ -1803,7 +1804,14 @@ ul {
   .uzum-card-name { font-size: 0.85rem; }
   .uzum-card-price { font-size: 0.92rem; }
   .uzum-card-add { width: 32px; height: 32px; font-size: 0.8rem; }
-  .uzum-modal { border-radius: 20px 20px 0 0; }
+  .uzum-modal-backdrop {
+    align-items: flex-end;
+    padding: 0;
+  }
+  .uzum-modal { 
+    border-radius: 24px 24px 0 0; 
+    max-height: 92vh;
+  }
   .uzum-modal-body { padding: 16px 16px 28px; }
   .uzum-modal-title { font-size: 1.15rem; }
   .uzum-price-val { font-size: 1.4rem; }
