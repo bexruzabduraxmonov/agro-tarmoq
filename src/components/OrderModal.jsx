@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X, CheckCircle2, ShoppingBag, Truck } from 'lucide-react';
+import { sendOrderToTelegram } from '../utils/telegramNotifier';
 
 export default function OrderModal({ isOpen, onClose, product, cartItems, onOrderSuccess }) {
   if (!isOpen) return null;
@@ -16,6 +17,16 @@ export default function OrderModal({ isOpen, onClose, product, cartItems, onOrde
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
+    sendOrderToTelegram({
+      name: formData.name,
+      phone: formData.phone,
+      address: formData.address,
+      comment: formData.comment,
+      productName: product ? product.name : 'Savatdagi mahsulotlar',
+      totalInfo: product
+        ? `${product.price} so'm / ${product.unit}`
+        : `${cartItems?.length || 0} xil mahsulot`,
+    });
     setTimeout(() => {
       setLoading(false);
       setSuccess(true);

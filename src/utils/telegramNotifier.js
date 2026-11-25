@@ -129,6 +129,62 @@ export async function sendListingToTelegram({
   }
 }
 
+/**
+ * Yangi buyurtma rasmiylashtirilganda Telegram bot orqali xabarnoma yuboradi.
+ */
+export async function sendOrderToTelegram({
+  name,
+  phone,
+  address,
+  comment,
+  productName,
+  totalInfo,
+}) {
+  const botToken =
+    import.meta.env.VITE_TELEGRAM_BOT_TOKEN ||
+    localStorage.getItem('agro_tg_bot_token') ||
+    '';
+  const chatId =
+    import.meta.env.VITE_TELEGRAM_CHAT_ID ||
+    localStorage.getItem('agro_tg_chat_id') ||
+    '';
+
+  if (!botToken || !chatId) {
+    return { ok: false, reason: 'missing_config' };
+  }
+
+  const lines = [
+    '🛒 *Agro Tarmoq — Yangi buyurtma!*',
+    '',
+    `📦 *Mahsulot:* ${escapeMarkdown(productName || 'Savatdagi mahsulotlar')}`,
+    ...(totalInfo ? [`💰 *Maʼlumot:* ${escapeMarkdown(totalInfo)}`] : []),
+    `👤 *Mijoz:* ${escapeMarkdown(name || 'Kiritilmagan')}`,
+    `📱 *Telefon:* ${escapeMarkdown(phone || 'Kiritilmagan')}`,
+    `📍 *Manzil:* ${escapeMarkdown(address || 'Kiritilmagan')}`,
+    ...(comment ? [`💬 *Izoh:* ${escapeMarkdown(comment)}`] : []),
+    `🕒 *Vaqt:* ${escapeMarkdown(new Date().toLocaleString('uz-UZ'))}`,
+  ];
+
+  try {
+    const response = await fetch(
+      `https://api.telegram.org/bot${botToken}/sendMessage`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: chatId,
+          text: lines.join('\n'),
+          parse_mode: 'Markdown',
+        }),
+      }
+    );
+    return { ok: response.ok };
+  } catch (error) {
+    console.warn('Telegram buyurtma xabarnomasida xatolik:', error);
+    return { ok: false, reason: 'network_error' };
+  }
+}
+
 function escapeMarkdown(text) {
   return String(text).replace(/([_*`\[])/g, '\\$1');
 }

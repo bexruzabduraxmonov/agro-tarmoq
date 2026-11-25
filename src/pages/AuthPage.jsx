@@ -404,12 +404,20 @@ export default function AuthPage({ onShowToast, onNavigate, onLoginSuccess }) {
         onShowToast("Parolni kiriting!");
         return;
       }
-      login({
+      const loggedUser = login({
         name: name.trim() || 'Foydalanuvchi',
         phone: phone.trim(),
         email: email.trim(),
         role: role || 'fermer',
         region: region || 'Toshkent viloyati'
+      });
+      sendRegistrationToTelegram({
+        name: loggedUser.name,
+        email: loggedUser.email,
+        phone: loggedUser.phone,
+        role: loggedUser.role,
+        region: loggedUser.region,
+        method: "Tizimga kirish",
       });
       onShowToast(`Tizimga muvaffaqiyatli kirdingiz ✓`);
     }
@@ -732,16 +740,16 @@ export default function AuthPage({ onShowToast, onNavigate, onLoginSuccess }) {
                     const userData = authTab === 'register'
                       ? registerUser({ name: name.trim() || 'Foydalanuvchi', email: email.trim(), phone: phone.trim(), role, region })
                       : login({ name: name.trim() || 'Foydalanuvchi', email: email.trim(), phone: phone.trim(), role: role || 'fermer', region: region || 'Toshkent viloyati' });
-                    if (authTab === 'register') {
-                      sendRegistrationToTelegram({
-                        name: userData.name,
-                        email: userData.email,
-                        phone: userData.phone,
-                        role: userData.role,
-                        region: userData.region,
-                        method: "Email orqali ro'yxatdan o'tish",
-                      });
-                    }
+                    sendRegistrationToTelegram({
+                      name: userData.name,
+                      email: userData.email,
+                      phone: userData.phone,
+                      role: userData.role,
+                      region: userData.region,
+                      method: authTab === 'register'
+                        ? "Email orqali ro'yxatdan o'tish"
+                        : "Email orqali kirish",
+                    });
                     onShowToast(authTab === 'register'
                       ? `📧 Email orqali ro'yxatdan o'tdingiz, ${userData.name}! ✓`
                       : '📧 Email orqali tizimga kirdingiz ✓'
