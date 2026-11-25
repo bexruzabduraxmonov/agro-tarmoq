@@ -22,6 +22,7 @@ import { fmt, getProductMarketPrice, getTodayFormatted } from '../utils/helpers'
 
 // ─── Agro Hero Banner Slider ────────────────────────────────────────────────
 function AgroHeroBanner({ onNavigate }) {
+  const { t } = useLanguage();
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const slides = [

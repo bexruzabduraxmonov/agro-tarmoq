@@ -49,6 +49,7 @@ export default function AuthPage({ onShowToast, onNavigate, onLoginSuccess }) {
   const [role, setRole] = useState('fermer');
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [region, setRegion] = useState('Toshkent viloyati');
 
@@ -361,26 +362,43 @@ export default function AuthPage({ onShowToast, onNavigate, onLoginSuccess }) {
     }
   };
 
-  // Handle Login & Register submission
   const handleAuthSubmit = (e) => {
     e.preventDefault();
-    if (!phone.trim() || !password.trim()) {
-      onShowToast("Telefon raqami va parolni kiriting!");
-      return;
-    }
 
     if (authTab === 'register') {
+      if (!name.trim()) {
+        onShowToast("Ism va familiyangizni kiriting!");
+        return;
+      }
+      if (!email.trim()) {
+        onShowToast("Email manzilingizni kiriting!");
+        return;
+      }
+      if (!password.trim()) {
+        onShowToast("Parolni kiriting!");
+        return;
+      }
       const newUser = registerUser({
         name: name.trim() || 'Akmal',
         phone: phone.trim(),
+        email: email.trim(),
         role,
         region
       });
       onShowToast(`Xush kelibsiz, ${newUser.name}! Shaxsiy kabinetingiz ochildi ✓`);
     } else {
-      const loggedUser = login({
-        name: name.trim() || 'Akmal',
+      if (!email.trim() && !phone.trim()) {
+        onShowToast("Email yoki telefon raqamingizni kiriting!");
+        return;
+      }
+      if (!password.trim()) {
+        onShowToast("Parolni kiriting!");
+        return;
+      }
+      login({
+        name: name.trim() || 'Foydalanuvchi',
         phone: phone.trim(),
+        email: email.trim(),
         role: role || 'fermer',
         region: region || 'Toshkent viloyati'
       });
@@ -519,26 +537,35 @@ export default function AuthPage({ onShowToast, onNavigate, onLoginSuccess }) {
                 </button>
               </div>
 
-              <form onSubmit={handleAuthSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <form onSubmit={handleAuthSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                 {authTab === 'register' && (
                   <>
                     <div>
-                      <label style={{ display: 'block', fontWeight: 700, fontSize: '0.88rem', marginBottom: '6px' }}>
-                        Ism va familiyangiz
+                      <label style={{ display: 'block', fontWeight: 700, fontSize: '0.85rem', marginBottom: '6px', color: 'var(--muted-color)' }}>
+                        👤 Ism va familiyangiz
                       </label>
-                      <input 
-                        type="text" 
-                        className="header-search" 
-                        style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', border: '1px solid var(--border-color)' }}
+                      <input
+                        type="text"
+                        className="auth-input"
+                        style={{
+                          width: '100%', padding: '13px 16px', borderRadius: '14px',
+                          border: '1.5px solid var(--border-color)',
+                          background: 'var(--background-color)', color: 'var(--text-color)',
+                          fontSize: '0.95rem', fontWeight: 500,
+                          outline: 'none', boxSizing: 'border-box',
+                          transition: 'border-color 0.2s'
+                        }}
                         placeholder="Akmal Karimov"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
+                        onFocus={e => e.target.style.borderColor = 'var(--primary-color)'}
+                        onBlur={e => e.target.style.borderColor = 'var(--border-color)'}
                         required
                       />
                     </div>
 
                     <div>
-                      <label style={{ display: 'block', fontWeight: 700, fontSize: '0.88rem', marginBottom: '6px' }}>
+                      <label style={{ display: 'block', fontWeight: 700, fontSize: '0.85rem', marginBottom: '6px', color: 'var(--muted-color)' }}>
                         Platformadagi faoliyatingiz (Rolingiz)
                       </label>
                       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
@@ -548,7 +575,18 @@ export default function AuthPage({ onShowToast, onNavigate, onLoginSuccess }) {
                             type="button"
                             className={`chip ${role === r.id ? 'active' : ''}`}
                             onClick={() => setRole(r.id)}
-                            style={{ textAlign: 'center', justifyContent: 'center', padding: '10px', fontSize: '0.88rem' }}
+                            style={{
+                              textAlign: 'center',
+                              justifyContent: 'center',
+                              padding: '11px 10px',
+                              fontSize: '0.9rem',
+                              fontWeight: 700,
+                              color: role === r.id ? '#ffffff' : 'var(--text-color)',
+                              borderRadius: '14px',
+                              border: role === r.id
+                                ? '1.5px solid var(--primary-color)'
+                                : '1.5px solid var(--border-color)',
+                            }}
                           >
                             {r.label}
                           </button>
@@ -557,13 +595,19 @@ export default function AuthPage({ onShowToast, onNavigate, onLoginSuccess }) {
                     </div>
 
                     <div>
-                      <label style={{ display: 'block', fontWeight: 700, fontSize: '0.88rem', marginBottom: '6px' }}>
-                        Hududingiz (Viloyat)
+                      <label style={{ display: 'block', fontWeight: 700, fontSize: '0.85rem', marginBottom: '6px', color: 'var(--muted-color)' }}>
+                        📍 Hududingiz (Viloyat)
                       </label>
                       <select
                         value={region}
                         onChange={(e) => setRegion(e.target.value)}
-                        style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', border: '1px solid var(--border-color)', background: 'var(--surface-color)', color: 'var(--text-color)', fontWeight: 600 }}
+                        style={{
+                          width: '100%', padding: '13px 16px', borderRadius: '14px',
+                          border: '1.5px solid var(--border-color)',
+                          background: 'var(--background-color)', color: 'var(--text-color)',
+                          fontWeight: 600, fontSize: '0.95rem',
+                          outline: 'none', boxSizing: 'border-box'
+                        }}
                       >
                         {REGIONS.map(reg => (
                           <option key={reg} value={reg}>{reg}</option>
@@ -573,42 +617,139 @@ export default function AuthPage({ onShowToast, onNavigate, onLoginSuccess }) {
                   </>
                 )}
 
+                {/* Email — both register & login */}
                 <div>
-                  <label style={{ display: 'block', fontWeight: 700, fontSize: '0.88rem', marginBottom: '6px' }}>
-                    Telefon raqamingiz
+                  <label style={{ display: 'block', fontWeight: 700, fontSize: '0.85rem', marginBottom: '6px', color: 'var(--muted-color)' }}>
+                    📧 Email manzilingiz
                   </label>
-                  <input 
-                    type="tel" 
-                    className="header-search" 
-                    style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', border: '1px solid var(--border-color)' }}
-                    placeholder="+998 90 123 45 67"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
+                  <input
+                    type="email"
+                    className="auth-input"
+                    style={{
+                      width: '100%', padding: '13px 16px', borderRadius: '14px',
+                      border: '1.5px solid var(--border-color)',
+                      background: 'var(--background-color)', color: 'var(--text-color)',
+                      fontSize: '0.95rem', fontWeight: 500,
+                      outline: 'none', boxSizing: 'border-box',
+                      transition: 'border-color 0.2s'
+                    }}
+                    placeholder="example@gmail.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    onFocus={e => e.target.style.borderColor = 'var(--primary-color)'}
+                    onBlur={e => e.target.style.borderColor = 'var(--border-color)'}
                     required
                   />
                 </div>
 
+                {/* Phone — optional on register, hidden label on login */}
+                {authTab === 'register' && (
+                  <div>
+                    <label style={{ display: 'block', fontWeight: 700, fontSize: '0.85rem', marginBottom: '6px', color: 'var(--muted-color)' }}>
+                      📱 Telefon raqamingiz (ixtiyoriy)
+                    </label>
+                    <input
+                      type="tel"
+                      className="auth-input"
+                      style={{
+                        width: '100%', padding: '13px 16px', borderRadius: '14px',
+                        border: '1.5px solid var(--border-color)',
+                        background: 'var(--background-color)', color: 'var(--text-color)',
+                        fontSize: '0.95rem', fontWeight: 500,
+                        outline: 'none', boxSizing: 'border-box',
+                        transition: 'border-color 0.2s'
+                      }}
+                      placeholder="+998 90 123 45 67"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      onFocus={e => e.target.style.borderColor = 'var(--primary-color)'}
+                      onBlur={e => e.target.style.borderColor = 'var(--border-color)'}
+                    />
+                  </div>
+                )}
+
                 <div>
-                  <label style={{ display: 'block', fontWeight: 700, fontSize: '0.88rem', marginBottom: '6px' }}>
-                    Parol
+                  <label style={{ display: 'block', fontWeight: 700, fontSize: '0.85rem', marginBottom: '6px', color: 'var(--muted-color)' }}>
+                    🔒 Parol
                   </label>
-                  <input 
-                    type="password" 
-                    className="header-search" 
-                    style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', border: '1px solid var(--border-color)' }}
+                  <input
+                    type="password"
+                    className="auth-input"
+                    style={{
+                      width: '100%', padding: '13px 16px', borderRadius: '14px',
+                      border: '1.5px solid var(--border-color)',
+                      background: 'var(--background-color)', color: 'var(--text-color)',
+                      fontSize: '0.95rem', fontWeight: 500,
+                      outline: 'none', boxSizing: 'border-box',
+                      transition: 'border-color 0.2s'
+                    }}
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    onFocus={e => e.target.style.borderColor = 'var(--primary-color)'}
+                    onBlur={e => e.target.style.borderColor = 'var(--border-color)'}
                     required
+                    autoComplete={authTab === 'register' ? 'new-password' : 'current-password'}
                   />
                 </div>
 
-                <button 
-                  type="submit" 
-                  className="ag-btn ag-btn-green" 
-                  style={{ marginTop: '10px', width: '100%', padding: '14px', borderRadius: '14px', fontWeight: 800, fontSize: '1rem' }}
+                <button
+                  type="submit"
+                  className="ag-btn ag-btn-green"
+                  style={{ marginTop: '6px', width: '100%', padding: '15px', borderRadius: '14px', fontWeight: 800, fontSize: '1rem', letterSpacing: '0.3px' }}
                 >
-                  {authTab === 'register' ? "Roʻyxatdan oʻtish va Kabinetni ochish" : "Tizimga kirish"}
+                  {authTab === 'register' ? '✅ Roʻyxatdan oʻtish va Kabinetni ochish' : '🔑 Tizimga kirish'}
+                </button>
+
+                {/* Divider */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', margin: '4px 0' }}>
+                  <div style={{ flex: 1, height: '1px', background: 'var(--border-color)' }} />
+                  <span style={{ fontSize: '0.8rem', color: 'var(--muted-color)', fontWeight: 600, whiteSpace: 'nowrap' }}>yoki</span>
+                  <div style={{ flex: 1, height: '1px', background: 'var(--border-color)' }} />
+                </div>
+
+                {/* Email orqali ro'yxatdan o'tish tugmasi */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!email.trim()) {
+                      onShowToast('Email manzilingizni kiriting!');
+                      return;
+                    }
+                    if (!name.trim() && authTab === 'register') {
+                      onShowToast('Ismingizni kiriting!');
+                      return;
+                    }
+                    const userData = authTab === 'register'
+                      ? registerUser({ name: name.trim() || 'Foydalanuvchi', email: email.trim(), phone: phone.trim(), role, region })
+                      : login({ name: name.trim() || 'Foydalanuvchi', email: email.trim(), phone: phone.trim(), role: role || 'fermer', region: region || 'Toshkent viloyati' });
+                    onShowToast(authTab === 'register'
+                      ? `📧 Email orqali ro'yxatdan o'tdingiz, ${userData.name}! ✓`
+                      : '📧 Email orqali tizimga kirdingiz ✓'
+                    );
+                    if (onLoginSuccess) onLoginSuccess();
+                  }}
+                  style={{
+                    width: '100%',
+                    padding: '14px',
+                    borderRadius: '14px',
+                    border: '1.5px solid var(--border-color)',
+                    background: 'transparent',
+                    color: 'var(--text-color)',
+                    fontWeight: 700,
+                    fontSize: '0.95rem',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '10px',
+                    transition: 'border-color 0.2s, background 0.2s'
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--primary-color)'; e.currentTarget.style.background = 'var(--green-soft)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border-color)'; e.currentTarget.style.background = 'transparent'; }}
+                >
+                  <span style={{ fontSize: '1.2rem' }}>📧</span>
+                  {authTab === 'register' ? 'Email orqali roʻyxatdan oʻtish' : 'Email orqali kirish'}
                 </button>
               </form>
             </div>

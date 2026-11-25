@@ -68,7 +68,8 @@ export function UserProvider({ children }) {
     const updated = {
       id: userData.id || 'usr_' + Date.now(),
       name: userData.name || 'Foydalanuvchi',
-      phone: userData.phone,
+      phone: userData.phone || '',
+      email: userData.email || '',
       role: userData.role || 'fermer',
       region: userData.region || 'Toshkent viloyati',
       avatar: userData.avatar || '',

@@ -2,6 +2,37 @@
    Agro Tarmoq — Modern, Premium Agrotech Design System
    ========================================================================== */
 
+/* ============================================================
+   AUTH FORM INPUT — Placeholder yozuvlarini yorqin qilish
+   ============================================================ */
+input::placeholder,
+textarea::placeholder {
+  color: #8ba0b8 !important;
+  opacity: 1 !important;
+  font-weight: 500 !important;
+  font-size: 0.95rem !important;
+}
+
+[data-theme="dark"] input::placeholder,
+[data-theme="dark"] textarea::placeholder {
+  color: #7a93ae !important;
+  opacity: 1 !important;
+  font-weight: 500 !important;
+}
+
+/* Auth form inputlari alohida */
+.auth-input::placeholder {
+  color: #9ab0c6 !important;
+  opacity: 1 !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.01em;
+}
+
+[data-theme="dark"] .auth-input::placeholder {
+  color: #8aaac4 !important;
+  opacity: 1 !important;
+}
+
 :root {
   /* Brand Primary Colors */
   --primary-color: #15803d;
@@ -137,8 +168,9 @@
 [data-theme="dark"] .search-bar-input-box,
 [data-theme="dark"] .cart-drawer {
   background: #151d28 !important;
-  border-color: #243042 !important;
-  color: #f1f5f9 !important;
+  border-color: #2e3f54 !important;
+  color: #e8f0fe !important;
+  font-weight: 700 !important;
 }
 
 [data-theme="dark"] .home-card {
@@ -1841,12 +1873,13 @@ ul {
 .chip {
   padding: 9px 18px;
   border-radius: 999px;
-  border: 1px solid var(--border-color);
-  background: #ffffff;
-  font-weight: 600;
+  border: 1.5px solid var(--border-color);
+  background: var(--surface-color);
+  font-weight: 700;
   font-size: 0.88rem;
   transition: all 0.18s ease;
   color: var(--text-color);
+  opacity: 1;
 }
 
 .chip:hover {
