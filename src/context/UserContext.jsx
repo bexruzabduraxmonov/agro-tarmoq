@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { sendListingToTelegram } from '../utils/telegramNotifier';
 
 const UserContext = createContext();
 
@@ -111,6 +112,14 @@ export function UserProvider({ children }) {
       isUserListing: true
     };
     setUserEquip((prev) => [newEquip, ...prev]);
+    sendListingToTelegram({
+      type: 'equipment',
+      title: newEquip.name,
+      price: newEquip.price,
+      region: newEquip.region,
+      owner: newEquip.owner,
+      phone: newEquip.phone,
+    });
     return newEquip;
   };
 
@@ -156,6 +165,14 @@ export function UserProvider({ children }) {
       isUserListing: true
     };
     setUserProducts((prev) => [newProd, ...prev]);
+    sendListingToTelegram({
+      type: 'product',
+      title: newProd.name,
+      price: newProd.price,
+      region: newProd.region,
+      owner: newProd.farmer,
+      phone: newProd.phone,
+    });
     return newProd;
   };
 

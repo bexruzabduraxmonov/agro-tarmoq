@@ -4,6 +4,7 @@ import { useUser } from '../context/UserContext';
 import { fmt } from '../utils/helpers';
 import { AGRO_DATA } from '../data/agroData';
 import { generateAiAgronomAnswer } from '../utils/aiAgronomEngine';
+import { sendRegistrationToTelegram } from '../utils/telegramNotifier';
 import officialLogoImg from '../assets/logo.png';
 
 // Preset sample equipment images
@@ -385,6 +386,14 @@ export default function AuthPage({ onShowToast, onNavigate, onLoginSuccess }) {
         role,
         region
       });
+      sendRegistrationToTelegram({
+        name: newUser.name,
+        email: newUser.email,
+        phone: newUser.phone,
+        role: newUser.role,
+        region: newUser.region,
+        method: "Ro'yxatdan o'tish (asosiy)",
+      });
       onShowToast(`Xush kelibsiz, ${newUser.name}! Shaxsiy kabinetingiz ochildi ✓`);
     } else {
       if (!email.trim() && !phone.trim()) {
@@ -723,6 +732,16 @@ export default function AuthPage({ onShowToast, onNavigate, onLoginSuccess }) {
                     const userData = authTab === 'register'
                       ? registerUser({ name: name.trim() || 'Foydalanuvchi', email: email.trim(), phone: phone.trim(), role, region })
                       : login({ name: name.trim() || 'Foydalanuvchi', email: email.trim(), phone: phone.trim(), role: role || 'fermer', region: region || 'Toshkent viloyati' });
+                    if (authTab === 'register') {
+                      sendRegistrationToTelegram({
+                        name: userData.name,
+                        email: userData.email,
+                        phone: userData.phone,
+                        role: userData.role,
+                        region: userData.region,
+                        method: "Email orqali ro'yxatdan o'tish",
+                      });
+                    }
                     onShowToast(authTab === 'register'
                       ? `📧 Email orqali ro'yxatdan o'tdingiz, ${userData.name}! ✓`
                       : '📧 Email orqali tizimga kirdingiz ✓'
