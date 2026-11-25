@@ -41,6 +41,7 @@ export default function AuthPage({ onShowToast, onNavigate, onLoginSuccess }) {
   const { t, lang } = useLanguage();
   const { 
     user, login, register: registerUser, logout, updateUser,
+    saveAccountRecord, verifyAccountPassword, resetPasswordByEmail,
     userEquip, addEquipment, removeEquipment, toggleEquipmentStatus,
     userProducts, addProduct, removeProduct 
   } = useUser();
@@ -53,6 +54,10 @@ export default function AuthPage({ onShowToast, onNavigate, onLoginSuccess }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [region, setRegion] = useState('Toshkent viloyati');
+  const [resetMode, setResetMode] = useState(false);
+  const [resetEmail, setResetEmail] = useState('');
+  const [resetNewPass, setResetNewPass] = useState('');
+  const [resetConfirmPass, setResetConfirmPass] = useState('');
 
   // Profile active section view ('listings' | 'add-tractor' | 'add-produce' | 'orders' | 'chat' | 'stats' | 'settings' | 'help')
   const [activeView, setActiveView] = useState('listings');
@@ -80,8 +85,11 @@ export default function AuthPage({ onShowToast, onNavigate, onLoginSuccess }) {
   // Profile Settings form states
   const [editName, setEditName] = useState(user?.name || 'Akmal');
   const [editPhone, setEditPhone] = useState(user?.phone || '+998 90 123 45 67');
+  const [editEmail, setEditEmail] = useState(user?.email || '');
   const [editRegion, setEditRegion] = useState(user?.region || 'Toshkent viloyati');
   const [editRole, setEditRole] = useState(user?.role || 'fermer');
+  const [newSettingPassword, setNewSettingPassword] = useState('');
+  const [confirmSettingPassword, setConfirmSettingPassword] = useState('');
 
   // Interactive Chat & Bot state
   // Comprehensive Chat Contacts with Sellers, Wholesalers, Machinery & Farmers
@@ -363,7 +371,7 @@ export default function AuthPage({ onShowToast, onNavigate, onLoginSuccess }) {
     }
   };
 
-  const handleAuthSubmit = (e) => {
+  const handleAuthSubmit = async (e) => {
     e.preventDefault();
 
     if (authTab === 'register') {
@@ -386,6 +394,7 @@ export default function AuthPage({ onShowToast, onNavigate, onLoginSuccess }) {
         role,
         region
       });
+      await saveAccountRecord(newUser, password);
       sendRegistrationToTelegram({
         name: newUser.name,
         email: newUser.email,
@@ -404,12 +413,17 @@ export default function AuthPage({ onShowToast, onNavigate, onLoginSuccess }) {
         onShowToast("Parolni kiriting!");
         return;
       }
+      const check = await verifyAccountPassword(email.trim(), password);
+      if (!check.ok) {
+        onShowToast(check.message || "Email yoki parol notoʻgʻri!");
+        return;
+      }
       const loggedUser = login({
-        name: name.trim() || 'Foydalanuvchi',
-        phone: phone.trim(),
+        name: check.account?.name || name.trim() || 'Foydalanuvchi',
+        phone: check.account?.phone || phone.trim(),
         email: email.trim(),
-        role: role || 'fermer',
-        region: region || 'Toshkent viloyati'
+        role: check.account?.role || role || 'fermer',
+        region: check.account?.region || region || 'Toshkent viloyati'
       });
       sendRegistrationToTelegram({
         name: loggedUser.name,
@@ -423,6 +437,34 @@ export default function AuthPage({ onShowToast, onNavigate, onLoginSuccess }) {
     }
 
     if (onLoginSuccess) onLoginSuccess();
+  };
+
+  const handleResetPassword = async (e) => {
+    e.preventDefault();
+    if (!resetEmail.trim()) {
+      onShowToast("Email manzilingizni kiriting!");
+      return;
+    }
+    if (resetNewPass.length < 4) {
+      onShowToast("Yangi parol kamida 4 ta belgidan iborat boʻlishi kerak!");
+      return;
+    }
+    if (resetNewPass !== resetConfirmPass) {
+      onShowToast("Parollar bir-biriga mos kelmadi!");
+      return;
+    }
+    const res = await resetPasswordByEmail(resetEmail, resetNewPass);
+    if (!res.ok) {
+      onShowToast(res.message);
+      return;
+    }
+    setEmail(resetEmail.trim());
+    setPassword('');
+    setResetNewPass('');
+    setResetConfirmPass('');
+    setResetMode(false);
+    setAuthTab('login');
+    onShowToast("Parolingiz muvaffaqiyatli tiklandi! Endi yangi parol bilan kiring ✓");
   };
 
   // Handle Equipment Addition
@@ -481,18 +523,46 @@ export default function AuthPage({ onShowToast, onNavigate, onLoginSuccess }) {
   };
 
   // Handle Profile Update
-  const handleSaveProfile = (e) => {
+  const handleSaveProfile = async (e) => {
     e.preventDefault();
-    updateUser({
+    const patch = {
       name: editName,
       phone: editPhone,
+      email: editEmail,
       region: editRegion,
       role: editRole
-    });
+    };
+    updateUser(patch);
+    await saveAccountRecord({ ...user, ...patch });
     onShowToast("Profil maʼlumotlari muvaffaqiyatli yangilandi ✓");
     if (window.innerWidth < 992) {
       setMobileModalOpen(false);
     }
+  };
+
+  const handleChangePasswordInSettings = async (e) => {
+    e.preventDefault();
+    const targetEmail = editEmail.trim() || user?.email || '';
+    if (!targetEmail) {
+      onShowToast("Avval yuqoridagi maydonga email manzilingizni kiriting!");
+      return;
+    }
+    if (newSettingPassword.length < 4) {
+      onShowToast("Yangi parol kamida 4 ta belgidan iborat boʻlishi kerak!");
+      return;
+    }
+    if (newSettingPassword !== confirmSettingPassword) {
+      onShowToast("Yangi parollar bir-biriga mos kelmadi!");
+      return;
+    }
+    const res = await resetPasswordByEmail(targetEmail, newSettingPassword);
+    if (!res.ok) {
+      onShowToast(res.message);
+      return;
+    }
+    setNewSettingPassword('');
+    setConfirmSettingPassword('');
+    onShowToast("Parolingiz muvaffaqiyatli yangilandi ✓");
   };
 
   // Handle Share Profile
@@ -538,21 +608,123 @@ export default function AuthPage({ onShowToast, onNavigate, onLoginSuccess }) {
               <div className="chips-row" style={{ display: 'flex', justifyContent: 'center', marginBottom: '24px', gap: '8px' }}>
                 <button
                   type="button"
-                  className={`chip ${authTab === 'register' ? 'active' : ''}`}
-                  onClick={() => setAuthTab('register')}
+                  className={`chip ${authTab === 'register' && !resetMode ? 'active' : ''}`}
+                  onClick={() => { setAuthTab('register'); setResetMode(false); }}
                   style={{ padding: '10px 24px', flex: 1, textAlign: 'center', justifyContent: 'center' }}
                 >
                   {t('register_btn', 'Roʻyxatdan oʻtish')}
                 </button>
                 <button
                   type="button"
-                  className={`chip ${authTab === 'login' ? 'active' : ''}`}
-                  onClick={() => setAuthTab('login')}
+                  className={`chip ${authTab === 'login' && !resetMode ? 'active' : ''}`}
+                  onClick={() => { setAuthTab('login'); setResetMode(false); }}
                   style={{ padding: '10px 24px', flex: 1, textAlign: 'center', justifyContent: 'center' }}
                 >
                   {t('login_btn', 'Kirish')}
                 </button>
               </div>
+
+              {resetMode ? (
+                <form onSubmit={handleResetPassword} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                  <div style={{
+                    padding: '12px 14px',
+                    borderRadius: '14px',
+                    background: 'var(--green-soft)',
+                    border: '1px solid var(--green-soft-border)',
+                    fontSize: '0.86rem',
+                    color: 'var(--text-color)',
+                    lineHeight: 1.45
+                  }}>
+                    🔑 <strong>Parolni tiklash:</strong> Email manzilingizni kiriting va yangi parol oʻrnating.
+                  </div>
+
+                  <div>
+                    <label style={{ display: 'block', fontWeight: 700, fontSize: '0.85rem', marginBottom: '6px', color: 'var(--muted-color)' }}>
+                      📧 Email manzilingiz
+                    </label>
+                    <input
+                      type="email"
+                      className="auth-input"
+                      style={{
+                        width: '100%', padding: '13px 16px', borderRadius: '14px',
+                        border: '1.5px solid var(--border-color)',
+                        background: 'var(--background-color)', color: 'var(--text-color)',
+                        fontSize: '0.95rem', fontWeight: 500,
+                        outline: 'none', boxSizing: 'border-box'
+                      }}
+                      placeholder="example@gmail.com"
+                      value={resetEmail}
+                      onChange={(e) => setResetEmail(e.target.value)}
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label style={{ display: 'block', fontWeight: 700, fontSize: '0.85rem', marginBottom: '6px', color: 'var(--muted-color)' }}>
+                      🔒 Yangi parol
+                    </label>
+                    <input
+                      type="password"
+                      className="auth-input"
+                      style={{
+                        width: '100%', padding: '13px 16px', borderRadius: '14px',
+                        border: '1.5px solid var(--border-color)',
+                        background: 'var(--background-color)', color: 'var(--text-color)',
+                        fontSize: '0.95rem', fontWeight: 500,
+                        outline: 'none', boxSizing: 'border-box'
+                      }}
+                      placeholder="Kamida 4 ta belgi"
+                      value={resetNewPass}
+                      onChange={(e) => setResetNewPass(e.target.value)}
+                      required
+                      autoComplete="new-password"
+                    />
+                  </div>
+
+                  <div>
+                    <label style={{ display: 'block', fontWeight: 700, fontSize: '0.85rem', marginBottom: '6px', color: 'var(--muted-color)' }}>
+                      🔒 Yangi parolni tasdiqlang
+                    </label>
+                    <input
+                      type="password"
+                      className="auth-input"
+                      style={{
+                        width: '100%', padding: '13px 16px', borderRadius: '14px',
+                        border: '1.5px solid var(--border-color)',
+                        background: 'var(--background-color)', color: 'var(--text-color)',
+                        fontSize: '0.95rem', fontWeight: 500,
+                        outline: 'none', boxSizing: 'border-box'
+                      }}
+                      placeholder="••••••••"
+                      value={resetConfirmPass}
+                      onChange={(e) => setResetConfirmPass(e.target.value)}
+                      required
+                      autoComplete="new-password"
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="ag-btn ag-btn-green"
+                    style={{ marginTop: '4px', width: '100%', padding: '14px', borderRadius: '14px', fontWeight: 800, fontSize: '0.98rem' }}
+                  >
+                    ✅ Parolni yangilash
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setResetMode(false)}
+                    style={{
+                      width: '100%', padding: '12px', borderRadius: '14px',
+                      border: '1.5px solid var(--border-color)',
+                      background: 'transparent', color: 'var(--text-color)',
+                      fontWeight: 700, cursor: 'pointer'
+                    }}
+                  >
+                    ← Kirishga qaytish
+                  </button>
+                </form>
+              ) : (
 
               <form onSubmit={handleAuthSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                 {authTab === 'register' && (
@@ -686,9 +858,31 @@ export default function AuthPage({ onShowToast, onNavigate, onLoginSuccess }) {
                 )}
 
                 <div>
-                  <label style={{ display: 'block', fontWeight: 700, fontSize: '0.85rem', marginBottom: '6px', color: 'var(--muted-color)' }}>
-                    🔒 Parol
-                  </label>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                    <label style={{ fontWeight: 700, fontSize: '0.85rem', color: 'var(--muted-color)' }}>
+                      🔒 Parol
+                    </label>
+                    {authTab === 'login' && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setResetEmail(email || '');
+                          setResetMode(true);
+                        }}
+                        style={{
+                          background: 'none',
+                          border: 'none',
+                          color: 'var(--primary-color)',
+                          fontSize: '0.82rem',
+                          fontWeight: 700,
+                          cursor: 'pointer',
+                          padding: 0
+                        }}
+                      >
+                        Parolni unutdingizmi?
+                      </button>
+                    )}
+                  </div>
                   <input
                     type="password"
                     className="auth-input"
@@ -779,6 +973,7 @@ export default function AuthPage({ onShowToast, onNavigate, onLoginSuccess }) {
                   {authTab === 'register' ? 'Email orqali roʻyxatdan oʻtish' : 'Email orqali kirish'}
                 </button>
               </form>
+              )}
             </div>
           </div>
         </section>
@@ -1616,6 +1811,18 @@ export default function AuthPage({ onShowToast, onNavigate, onLoginSuccess }) {
               </div>
 
               <div>
+                <label style={{ display: 'block', fontWeight: 700, fontSize: '0.86rem', marginBottom: '6px' }}>Email manzili</label>
+                <input
+                  type="email"
+                  className="auth-input"
+                  placeholder="example@gmail.com"
+                  value={editEmail}
+                  onChange={(e) => setEditEmail(e.target.value)}
+                  style={{ width: '100%', padding: '12px 14px', borderRadius: '12px', border: '1px solid var(--border-color)', background: 'var(--background-color)', color: 'var(--text-color)' }}
+                />
+              </div>
+
+              <div>
                 <label style={{ display: 'block', fontWeight: 700, fontSize: '0.86rem', marginBottom: '6px' }}>Telefon raqami</label>
                 <input
                   type="tel"
@@ -1660,6 +1867,56 @@ export default function AuthPage({ onShowToast, onNavigate, onLoginSuccess }) {
                 Saqlash
               </button>
             </form>
+
+            {/* Parolni o'zgartirish / tiklash bo'limi */}
+            <div style={{ marginTop: '28px', paddingTop: '22px', borderTop: '1px solid var(--border-color)' }}>
+              <h4 style={{ margin: '0 0 12px 0', fontSize: '1.1rem', fontWeight: 800 }}>🔒 Parolni oʻzgartirish / tiklash</h4>
+              <form onSubmit={handleChangePasswordInSettings} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <div>
+                  <label style={{ display: 'block', fontWeight: 700, fontSize: '0.86rem', marginBottom: '6px' }}>Yangi parol</label>
+                  <input
+                    type="password"
+                    className="auth-input"
+                    placeholder="Kamida 4 ta belgi"
+                    value={newSettingPassword}
+                    onChange={(e) => setNewSettingPassword(e.target.value)}
+                    required
+                    autoComplete="new-password"
+                    style={{ width: '100%', padding: '12px 14px', borderRadius: '12px', border: '1px solid var(--border-color)', background: 'var(--background-color)', color: 'var(--text-color)' }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontWeight: 700, fontSize: '0.86rem', marginBottom: '6px' }}>Yangi parolni tasdiqlang</label>
+                  <input
+                    type="password"
+                    className="auth-input"
+                    placeholder="••••••••"
+                    value={confirmSettingPassword}
+                    onChange={(e) => setConfirmSettingPassword(e.target.value)}
+                    required
+                    autoComplete="new-password"
+                    style={{ width: '100%', padding: '12px 14px', borderRadius: '12px', border: '1px solid var(--border-color)', background: 'var(--background-color)', color: 'var(--text-color)' }}
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  className="ag-btn"
+                  style={{
+                    marginTop: '4px',
+                    padding: '12px',
+                    borderRadius: '12px',
+                    fontWeight: 800,
+                    background: 'var(--green-soft)',
+                    color: 'var(--primary-color)',
+                    border: '1px solid var(--green-soft-border)'
+                  }}
+                >
+                  🔑 Parolni yangilash
+                </button>
+              </form>
+            </div>
           </div>
         );
 

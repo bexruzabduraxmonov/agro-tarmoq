@@ -2,6 +2,36 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { sendListingToTelegram } from '../utils/telegramNotifier';
 
 const UserContext = createContext();
+const ACCOUNTS_STORAGE_KEY = 'agro_accounts';
+
+async function hashPassword(password) {
+  const raw = String(password || '');
+  if (typeof window !== 'undefined' && window.crypto?.subtle) {
+    const data = new TextEncoder().encode(raw);
+    const digest = await window.crypto.subtle.digest('SHA-256', data);
+    return Array.from(new Uint8Array(digest))
+      .map((b) => b.toString(16).padStart(2, '0'))
+      .join('');
+  }
+  return btoa(unescape(encodeURIComponent(raw)));
+}
+
+function readAccounts() {
+  try {
+    const saved = localStorage.getItem(ACCOUNTS_STORAGE_KEY);
+    return saved ? JSON.parse(saved) : [];
+  } catch {
+    return [];
+  }
+}
+
+function writeAccounts(accounts) {
+  try {
+    localStorage.setItem(ACCOUNTS_STORAGE_KEY, JSON.stringify(accounts));
+  } catch {
+    // ignore
+  }
+}
 
 export function UserProvider({ children }) {
   // 1. Current User State
@@ -91,6 +121,75 @@ export function UserProvider({ children }) {
 
   const updateUser = (patch) => {
     setUser((prev) => (prev ? { ...prev, ...patch } : null));
+  };
+
+  const saveAccountRecord = async (userData, password) => {
+    const normalizedEmail = (userData?.email || '').trim().toLowerCase();
+    if (!normalizedEmail) return;
+    const accounts = readAccounts();
+    const idx = accounts.findIndex((a) => a.email === normalizedEmail);
+    const passwordHash = password ? await hashPassword(password) : accounts[idx]?.passwordHash || '';
+    const record = {
+      email: normalizedEmail,
+      name: userData?.name || accounts[idx]?.name || 'Foydalanuvchi',
+      phone: userData?.phone || accounts[idx]?.phone || '',
+      role: userData?.role || accounts[idx]?.role || 'fermer',
+      region: userData?.region || accounts[idx]?.region || 'Toshkent viloyati',
+      passwordHash,
+      updatedAt: new Date().toISOString(),
+    };
+    if (idx >= 0) {
+      accounts[idx] = { ...accounts[idx], ...record };
+    } else {
+      accounts.push(record);
+    }
+    writeAccounts(accounts);
+  };
+
+  const verifyAccountPassword = async (email, password) => {
+    const normalizedEmail = (email || '').trim().toLowerCase();
+    const accounts = readAccounts();
+    const found = accounts.find((a) => a.email === normalizedEmail);
+    if (!found || !found.passwordHash) {
+      return { ok: true, account: found || null };
+    }
+    const candidateHash = await hashPassword(password);
+    if (candidateHash !== found.passwordHash) {
+      return { ok: false, message: "Email yoki parol notoʻgʻri!" };
+    }
+    return { ok: true, account: found };
+  };
+
+  const resetPasswordByEmail = async (email, newPassword) => {
+    const normalizedEmail = (email || '').trim().toLowerCase();
+    if (!normalizedEmail) {
+      return { ok: false, message: "Email manzilingizni kiriting!" };
+    }
+    if (!newPassword || newPassword.length < 4) {
+      return { ok: false, message: "Yangi parol kamida 4 ta belgidan iborat boʻlishi kerak!" };
+    }
+    const accounts = readAccounts();
+    const idx = accounts.findIndex((a) => a.email === normalizedEmail);
+    const passwordHash = await hashPassword(newPassword);
+    if (idx >= 0) {
+      accounts[idx] = {
+        ...accounts[idx],
+        passwordHash,
+        updatedAt: new Date().toISOString(),
+      };
+    } else {
+      accounts.push({
+        email: normalizedEmail,
+        name: user?.name || 'Foydalanuvchi',
+        phone: user?.phone || '',
+        role: user?.role || 'fermer',
+        region: user?.region || 'Toshkent viloyati',
+        passwordHash,
+        updatedAt: new Date().toISOString(),
+      });
+    }
+    writeAccounts(accounts);
+    return { ok: true };
   };
 
   // Add equipment (e.g. tractor rental)
@@ -188,6 +287,9 @@ export function UserProvider({ children }) {
         register,
         logout,
         updateUser,
+        saveAccountRecord,
+        verifyAccountPassword,
+        resetPasswordByEmail,
         userEquip,
         addEquipment,
         removeEquipment,
